@@ -1,4 +1,4 @@
-# 🚀 jlmayorgaco-me | Personal Research & Engineering Hub
+# Personal Research & Engineering Hub
 
 Welcome to my personal brand engine. This repository is more than just a website; it's a **self-curating R&D pipeline** designed to bridge the gap between Senior Web Engineering and Advanced Control Systems Research.
 
