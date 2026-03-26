@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/research/PostList.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('research');
+const sortedPosts = posts
+  .filter(p => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout title="Research" description="Technical notes, experiments, and learnings from my research work">
+  <div class="research-page">
+    <header class="page-header">
+      <div class="header-panel">
+        <div class="header-content">
+          <div class="header-icon">
+            <Icon name="research" size={32} />
+          </div>
+          <div class="header-text">
+            <h1 class="page-title">Research</h1>
+            <p class="page-description">
+              Technical notes, experiments, and learnings from working with robotics, 
+              distributed control systems, and full-stack development.
+            </p>
+          </div>
+        </div>
+        <div class="header-stats">
+          <div class="stat-box">
+            <span class="stat-value">{sortedPosts.length}</span>
+            <span class="stat-label">Entries</span>
+          </div>
+          <div class="stat-leds">
+            <span class="led led-green led-pulse"></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <PostList posts={sortedPosts} />
+  </div>
+</BaseLayout>
+
+<style>
+  .research-page {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .header-panel {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-xl);
+    padding: var(--space-lg);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .header-content {
+    display: flex;
+    gap: var(--space-lg);
+    flex: 1;
+  }
+
+  .header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: var(--lab-bg-dark);
+    border: 2px solid var(--panel-frame);
+    border-radius: var(--radius-md);
+    color: var(--accent-cyan);
+    flex-shrink: 0;
+  }
+
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    line-height: 1.2;
+  }
+
+  .page-description {
+    font-size: 0.9375rem;
+    color: var(--lab-text-secondary);
+    line-height: 1.6;
+    max-width: 500px;
+  }
+
+  .header-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-shrink: 0;
+  }
+
+  .stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .led-green {
+    background: var(--led-green);
+    box-shadow: 0 0 6px var(--led-green);
+  }
+
+  .led-pulse {
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--led-green); }
+    50% { opacity: 0.6; box-shadow: 0 0 10px var(--led-green); }
+  }
+
+  @media (max-width: 768px) {
+    .header-panel {
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .header-stats {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,156 @@
+---
+import { NAV_ITEMS } from '../../lib/config';
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="mobile-nav" id="mobile-nav">
+  <div class="mobile-nav-header">
+    <span class="nav-marker">◈</span>
+    <span class="nav-title">JLMT LAB</span>
+  </div>
+  <ul class="mobile-nav-list">
+    {NAV_ITEMS.map((item) => (
+      <li>
+        <a
+          href={item.href}
+          class:list={['mobile-nav-link', { active: currentPath.startsWith(item.href) }]}
+        >
+          <span class="link-indicator"></span>
+          <span class="link-label">{item.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <div class="mobile-nav-footer">
+    <span class="status-online">
+      <span class="led led-green"></span>
+      Online
+    </span>
+  </div>
+</nav>
+
+<style>
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--lab-bg-panel);
+    border-top: 2px solid var(--panel-frame);
+    z-index: 300;
+    flex-direction: column;
+  }
+
+  .mobile-nav.open {
+    display: flex;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--lab-bg-dark);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .nav-marker {
+    font-size: 1.25rem;
+    color: var(--accent-cyan);
+  }
+
+  .nav-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+  }
+
+  .mobile-nav-list {
+    list-style: none;
+    padding: var(--space-md);
+    margin: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+    color: var(--lab-text-secondary);
+    text-decoration: none;
+    background: var(--lab-bg-elevated);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    transition: all 150ms ease;
+  }
+
+  .link-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--panel-border);
+    transition: all 150ms ease;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active {
+    color: var(--accent-cyan);
+    background: var(--lab-bg-dark);
+    border-color: var(--accent-cyan-dim);
+  }
+
+  .mobile-nav-link.active .link-indicator {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 6px var(--accent-cyan-glow);
+  }
+
+  .mobile-nav-footer {
+    padding: var(--space-md);
+    background: var(--lab-bg-dark);
+    border-top: 1px solid var(--panel-border);
+    text-align: center;
+  }
+
+  .status-online {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--led-green);
+  }
+</style>
+
+<script>
+  const menuBtn = document.querySelector('[data-menu-toggle]');
+  const mobileNav = document.getElementById('mobile-nav');
+
+  menuBtn?.addEventListener('click', () => {
+    mobileNav?.classList.toggle('open');
+    document.body.classList.toggle('nav-open');
+  });
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (mobileNav?.classList.contains('open') && !target.closest('.mobile-nav') && !target.closest('[data-menu-toggle]')) {
+      mobileNav.classList.remove('open');
+      document.body.classList.remove('nav-open');
+    }
+  });
+</script>
+
+<style is:global>
+  body.nav-open {
+    overflow: hidden;
+  }
+</style>

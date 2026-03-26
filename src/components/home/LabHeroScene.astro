@@ -1,0 +1,249 @@
+---
+import SectionTitle from '../ui/SectionTitle.astro';
+---
+
+<section class="lab-hero">
+  <div class="hero-grid">
+    <div class="hero-frame corner-tl"></div>
+    <div class="hero-frame corner-tr"></div>
+    <div class="hero-frame corner-bl"></div>
+    <div class="hero-frame corner-br"></div>
+  </div>
+  
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="pulse-dot"></span>
+      <span>Research Engineer</span>
+    </div>
+    
+    <h1 class="hero-title">
+      <span class="title-line">Building the</span>
+      <span class="title-line accent">future of</span>
+      <span class="title-line">robotic systems</span>
+    </h1>
+    
+    <p class="hero-description">
+      Full-stack developer focused on distributed control systems, 
+      FPGA development, and real-time robotics. Turning concepts 
+      into working prototypes.
+    </p>
+    
+    <div class="hero-actions">
+      <a href="/projects" class="hero-btn primary">View Projects</a>
+      <a href="/about" class="hero-btn secondary">About Me</a>
+    </div>
+  </div>
+
+  <div class="hero-decor">
+    <div class="decor-line decor-1"></div>
+    <div class="decor-line decor-2"></div>
+    <div class="decor-box box-1"></div>
+    <div class="decor-box box-2"></div>
+  </div>
+</section>
+
+<style>
+  .lab-hero {
+    position: relative;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    padding: var(--space-3xl) var(--space-lg);
+    background: var(--color-bg-secondary);
+    border: var(--border-default);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      linear-gradient(rgba(63, 185, 167, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(63, 185, 167, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+  }
+
+  .hero-frame {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-accent-primary);
+  }
+
+  .corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+  .corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+  .corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+  .corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-accent-subtle);
+    border: 1px solid var(--color-accent-muted);
+    border-radius: var(--radius-sm);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-xs);
+    color: var(--color-accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-lg);
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-accent-primary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero-title {
+    font-family: 'Space Mono', monospace;
+    font-size: var(--text-4xl);
+    line-height: 1.2;
+    margin-bottom: var(--space-lg);
+  }
+
+  .title-line {
+    display: block;
+  }
+
+  .title-line.accent {
+    color: var(--color-accent-primary);
+  }
+
+  .hero-description {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-xl);
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-sm) var(--space-lg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+  }
+
+  .hero-btn.primary {
+    background: var(--color-accent-primary);
+    color: var(--color-bg-deep);
+    border: 1px solid var(--color-accent-primary);
+  }
+
+  .hero-btn.primary:hover {
+    background: var(--color-accent-muted);
+    border-color: var(--color-accent-muted);
+  }
+
+  .hero-btn.secondary {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-steel-400);
+  }
+
+  .hero-btn.secondary:hover {
+    border-color: var(--color-accent-primary);
+    color: var(--color-accent-primary);
+  }
+
+  .hero-decor {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    pointer-events: none;
+  }
+
+  .decor-line {
+    position: absolute;
+    background: var(--color-accent-primary);
+    opacity: 0.3;
+  }
+
+  .decor-1 {
+    top: 30%;
+    right: 50px;
+    width: 100px;
+    height: 2px;
+  }
+
+  .decor-2 {
+    top: 60%;
+    right: 30px;
+    width: 150px;
+    height: 2px;
+  }
+
+  .decor-box {
+    position: absolute;
+    border: 1px solid var(--color-steel-500);
+    background: var(--color-bg-elevated);
+  }
+
+  .box-1 {
+    top: 20%;
+    right: 10%;
+    width: 60px;
+    height: 60px;
+  }
+
+  .box-2 {
+    top: 50%;
+    right: 20%;
+    width: 40px;
+    height: 40px;
+    border-color: var(--color-accent-primary);
+    opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    .lab-hero {
+      padding: var(--space-xl) var(--space-md);
+      min-height: auto;
+    }
+
+    .hero-title {
+      font-size: var(--text-2xl);
+    }
+
+    .hero-description {
+      font-size: var(--text-base);
+    }
+
+    .hero-decor {
+      display: none;
+    }
+  }
+</style>

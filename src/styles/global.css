@@ -1,0 +1,207 @@
+/* ============================================
+   JLMT LAB - Global Styles
+   Hardware Board / Research Station UI
+   ============================================ */
+
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--lab-text-primary);
+  background-color: var(--lab-bg-base);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--lab-text-primary);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.125rem; }
+h6 { font-size: 1rem; }
+
+p {
+  margin-bottom: var(--space-md);
+  color: var(--lab-text-secondary);
+  line-height: 1.7;
+}
+
+a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+a:hover {
+  color: var(--accent-cyan-dim);
+}
+
+ul, ol {
+  padding-left: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+li {
+  margin-bottom: var(--space-xs);
+  color: var(--lab-text-secondary);
+}
+
+strong, b {
+  font-weight: 600;
+  color: var(--lab-text-primary);
+}
+
+/* Code */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  padding: 2px 6px;
+  background: var(--lab-bg-dark);
+  border-radius: var(--radius-sm);
+  color: var(--accent-cyan);
+}
+
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  padding: var(--space-md);
+  background: var(--screen-bg);
+  border: 1px solid var(--screen-border);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  margin-bottom: var(--space-md);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--lab-text-on-dark);
+}
+
+blockquote {
+  border-left: 3px solid var(--accent-cyan);
+  padding-left: var(--space-md);
+  margin: var(--space-md) 0;
+  color: var(--lab-text-secondary);
+  font-style: italic;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--panel-border);
+  margin: var(--space-xl) 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-md);
+}
+
+th, td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+th {
+  background: var(--lab-bg-elevated);
+  font-weight: 600;
+  color: var(--lab-text-primary);
+}
+
+/* Forms */
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--lab-bg-elevated);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  color: var(--lab-text-primary);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--accent-cyan-glow);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+::selection {
+  background-color: var(--accent-cyan);
+  color: var(--lab-bg-base);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Utilities */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body {
+    font-size: 0.875rem;
+  }
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.125rem; }
+}

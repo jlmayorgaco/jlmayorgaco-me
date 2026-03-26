@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ProjectCard from '../projects/ProjectCard.astro';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+
+const { projects } = Astro.props;
+---
+
+<section class="featured-projects">
+  <header class="section-header">
+    <h2 class="section-title">Featured Projects</h2>
+    <a href="/projects" class="view-all">View all →</a>
+  </header>
+
+  <div class="projects-grid">
+    {projects.map((project) => (
+      <ProjectCard project={project} variant="featured" />
+    ))}
+  </div>
+</section>
+
+<style>
+  .featured-projects {
+    margin-top: var(--space-3xl);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-xl);
+  }
+
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .view-all {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-sm);
+    color: var(--color-accent-primary);
+    text-decoration: none;
+  }
+
+  .view-all:hover {
+    text-decoration: underline;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  @media (max-width: 640px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

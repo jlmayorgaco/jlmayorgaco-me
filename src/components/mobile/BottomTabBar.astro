@@ -1,0 +1,96 @@
+---
+import { NAV_ITEMS, SITE_TITLE } from '../../lib/config';
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="bottom-tab-bar">
+  <ul class="tab-list">
+    {NAV_ITEMS.slice(0, 5).map((item) => (
+      <li>
+        <a
+          href={item.href}
+          class:list={['tab-item', { active: currentPath.startsWith(item.href) }]}
+        >
+          <span class="tab-icon">{getIcon(item.href)}</span>
+          <span class="tab-label">{item.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<script>
+  function getIcon(href: string): string {
+    if (href === '/') return '⌂';
+    if (href === '/projects') return '⬡';
+    if (href === '/research') return '◈';
+    if (href === '/papers') return '◉';
+    if (href === '/about') return '◇';
+    if (href === '/contact') return '◆';
+    return '●';
+  }
+</script>
+
+<style>
+  .bottom-tab-bar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-bg-secondary);
+    border-top: var(--border-subtle);
+    padding: var(--space-sm);
+    z-index: var(--z-sticky);
+  }
+
+  @media (max-width: 640px) {
+    .bottom-tab-bar {
+      display: block;
+    }
+  }
+
+  .tab-list {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--space-xs);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .tab-item.active {
+    color: var(--color-accent-primary);
+  }
+
+  .tab-item:not(.active) {
+    color: var(--color-text-muted);
+  }
+
+  .tab-icon {
+    font-size: var(--text-lg);
+  }
+
+  .tab-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-xs);
+  }
+</style>
+
+<script define:vars={{ getIcon }}>
+  document.querySelectorAll('.tab-icon').forEach((el, i) => {
+    const items = ['⌂', '⬡', '◈', '◉', '◇'];
+    el.textContent = items[i] || '●';
+  });
+</script>

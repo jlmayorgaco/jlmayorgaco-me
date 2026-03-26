@@ -1,0 +1,66 @@
+---
+interface Props {
+  title?: string;
+  variant?: 'default' | 'accent' | 'warning';
+}
+
+const { title, Icon, variant = 'default' } = Astro.props;
+---
+
+<div class:list={['info-panel', `panel-${variant}`]}>
+  {title && <div class="panel-header">
+    <div class="header-left">{title}</div>
+    <div class="header-right"><Icon name="screw" size={10} /></div>
+  </div>}
+  <div class="panel-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .info-panel {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border-left: 3px solid var(--accent-cyan);
+  }
+
+  .panel-default {
+    border-left-color: var(--accent-cyan);
+  }
+
+  .panel-accent {
+    border-left-color: var(--accent-cyan);
+  }
+
+  .panel-warning {
+    border-left-color: var(--accent-amber);
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .header-right {
+    opacity: 0.6;
+  }
+
+  .panel-content {
+    padding: var(--space-md);
+  }
+</style>

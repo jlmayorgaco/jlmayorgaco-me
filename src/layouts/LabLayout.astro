@@ -1,0 +1,203 @@
+---
+import '../styles/global.css';
+import '../styles/pixel-ui.css';
+import '../styles/animations.css';
+import SiteHead from '../components/shell/SiteHead.astro';
+import TopNav from '../components/shell/TopNav.astro';
+import FooterDock from '../components/shell/FooterDock.astro';
+import MobileNav from '../components/shell/MobileNav.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  type?: 'website' | 'article';
+}
+
+const { title, description, canonical, image, type = 'website' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SiteHead
+      title={title}
+      description={description}
+      canonical={canonical}
+      image={image}
+      type={type}
+    />
+  </head>
+  <body class="lab-layout">
+    <!-- Background pattern with animated cables -->
+    <div class="lab-bg">
+      <div class="bg-grid"></div>
+      <div class="bg-lines">
+        <!-- Horizontal cables with flow animation -->
+        <svg class="cable-svg cable-h c1" viewBox="0 0 100 10" preserveAspectRatio="none">
+          <path class="cable-path" d="M0,5 C20,3 40,7 60,5 C80,3 100,5 100,5" />
+          <path class="cable-flow" d="M0,5 C20,3 40,7 60,5 C80,3 100,5 100,5" />
+        </svg>
+        <svg class="cable-svg cable-h c2" viewBox="0 0 100 10" preserveAspectRatio="none">
+          <path class="cable-path" d="M0,5 C25,8 50,2 75,5 C90,7 100,5 100,5" />
+          <path class="cable-flow" d="M0,5 C25,8 50,2 75,5 C90,7 100,5 100,5" />
+        </svg>
+        <svg class="cable-svg cable-h c3" viewBox="0 0 100 10" preserveAspectRatio="none">
+          <path class="cable-path" d="M0,5 C30,2 60,8 100,5" />
+          <path class="cable-flow" d="M0,5 C30,2 60,8 100,5" />
+        </svg>
+        
+        <!-- Vertical cable -->
+        <svg class="cable-svg cable-v c4" viewBox="0 0 10 100" preserveAspectRatio="none">
+          <path class="cable-path" d="M5,0 C8,30 2,60 5,100" />
+          <path class="cable-flow" d="M5,0 C8,30 2,60 5,100" />
+        </svg>
+      </div>
+      
+      <!-- Decorative circuit traces -->
+      <div class="circuit-traces">
+        <svg class="trace t1" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M0,20 L30,20 L30,50 L70,50 L70,80 L100,80" />
+        </svg>
+        <svg class="trace t2" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M100,20 L70,20 L70,40 L40,40 L40,70 L0,70" />
+        </svg>
+      </div>
+    </div>
+
+    <TopNav />
+    <MobileNav />
+    
+    <main class="lab-main">
+      <slot />
+    </main>
+    
+    <FooterDock />
+  </body>
+</html>
+
+<style>
+  .lab-layout {
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* Background */
+  .lab-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(63, 185, 167, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(63, 185, 167, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .bg-lines {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Cable SVG styles */
+  .cable-svg {
+    position: absolute;
+    width: 100%;
+    height: 12px;
+  }
+
+  .cable-path {
+    fill: none;
+    stroke: var(--accent-copper-dim);
+    stroke-width: 2;
+    opacity: 0.15;
+  }
+
+  .cable-flow {
+    fill: none;
+    stroke: var(--accent-copper);
+    stroke-width: 1.5;
+    stroke-dasharray: 4, 4;
+    animation: cable-signal 2s linear infinite;
+    opacity: 0.4;
+  }
+
+  @keyframes cable-signal {
+    0% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 16; }
+  }
+
+  .c1 { top: 15%; left: -5%; right: 50%; }
+  .c2 { top: 45%; left: 30%; right: 20%; }
+  .c3 { top: 75%; left: 10%; right: 5%; }
+  
+  .c4 {
+    left: 85%;
+    top: -10%;
+    height: 120%;
+    width: 12px;
+  }
+
+  /* Circuit traces */
+  .circuit-traces {
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+  }
+
+  .trace {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+  }
+
+  .trace path {
+    fill: none;
+    stroke: var(--accent-cyan);
+    stroke-width: 1;
+    stroke-dasharray: 2, 4;
+    animation: trace-pulse 4s ease-in-out infinite;
+  }
+
+  .trace.t1 {
+    top: 10%;
+    right: 5%;
+  }
+
+  .trace.t2 {
+    bottom: 15%;
+    left: 3%;
+  }
+
+  @keyframes trace-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Main content */
+  .lab-main {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  @media (max-width: 768px) {
+    .lab-main {
+      padding: var(--space-md) var(--space-sm);
+    }
+    
+    .cable-svg {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,67 @@
+---
+import { formatDate } from '../../lib/utils';
+import Badge from '../ui/Badge.astro';
+
+interface Props {
+  date: Date;
+  readingTime?: number;
+  tags?: string[];
+}
+
+const { date, readingTime, tags } = Astro.props;
+---
+
+<div class="post-meta">
+  <div class="meta-left">
+    <time datetime={date.toISOString()} class="meta-date">{formatDate(date)}</time>
+    {readingTime && <span class="meta-reading">{readingTime} min read</span>}
+  </div>
+
+  {tags && tags.length > 0 && (
+    <div class="meta-tags">
+      {tags.map((tag) => (
+        <Badge variant="muted">{tag}</Badge>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) 0;
+    border-bottom: var(--border-subtle);
+    margin-bottom: var(--space-lg);
+  }
+
+  .meta-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .meta-date {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--lab-text-muted);
+  }
+
+  .meta-reading {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--lab-text-muted);
+    padding: 2px 6px;
+    background: var(--lab-bg-dark);
+    border-radius: var(--radius-sm);
+  }
+
+  .meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+</style>

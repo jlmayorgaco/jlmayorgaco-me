@@ -1,0 +1,42 @@
+---
+interface Props {
+  title?: string;
+}
+
+const { title = 'No content found' } = Astro.props;
+---
+
+<div class="empty-state">
+  <div class="empty-icon">∅</div>
+  <p class="empty-title">{title}</p>
+  <div class="empty-description">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .empty-state {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-md);
+    color: var(--color-text-muted);
+  }
+
+  .empty-icon {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--space-md);
+    opacity: 0.5;
+  }
+
+  .empty-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .empty-description {
+    font-size: var(--text-sm);
+    max-width: 400px;
+    margin: 0 auto;
+  }
+</style>

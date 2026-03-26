@@ -1,0 +1,371 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionTitle from '../components/ui/SectionTitle.astro';
+import Button from '../components/ui/Button.astro';
+import { SOCIAL_LINKS } from '../lib/config';
+---
+
+<BaseLayout title="Contact" description="Get in touch with José Luis Mayorga">
+  <div class="contact-page">
+    <header class="contact-header">
+      <SectionTitle as="h1">Contact</SectionTitle>
+      <p class="contact-intro">
+        Interested in collaborating, discussing research, or just want to say hello? 
+        Here's how you can reach me.
+      </p>
+    </header>
+
+    <section class="contact-section">
+      <h2>Get in Touch</h2>
+      <div class="contact-options">
+        <div class="contact-module">
+          <div class="module-header">
+            <div class="header-label">COMM_CHANNEL</div>
+            <div class="header-icon">
+              <Icon name="mail" size={14} />
+            </div>
+          </div>
+          <div class="module-content">
+            <h3>Email</h3>
+            <p>For general inquiries and collaborations</p>
+            <a href="mailto:hello@jlmayorga.co" class="contact-link">hello@jlmayorga.co</a>
+          </div>
+          <div class="module-footer">
+            <div class="footer-screws">
+              <Icon name="screw" size={8} />
+              <Icon name="screw" size={8} />
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-module">
+          <div class="module-header">
+            <div class="header-label">CODE_REPO</div>
+            <div class="header-icon">
+              <Icon name="github" size={14} />
+            </div>
+          </div>
+          <div class="module-content">
+            <h3>GitHub</h3>
+            <p>Check out my projects and contributions</p>
+            <a href="https://github.com/jlmayorga" target="_blank" rel="noopener noreferrer" class="contact-link">
+              @jlmayorga ↗
+            </a>
+          </div>
+          <div class="module-footer">
+            <div class="footer-screws">
+              <Icon name="screw" size={8} />
+              <Icon name="screw" size={8} />
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-module">
+          <div class="module-header">
+            <div class="header-label">PROF_NETWORK</div>
+            <div class="header-icon">
+              <Icon name="linkedin" size={14} />
+            </div>
+          </div>
+          <div class="module-content">
+            <h3>LinkedIn</h3>
+            <p>Professional network and career history</p>
+            <a href="https://linkedin.com/in/jlmayorga" target="_blank" rel="noopener noreferrer" class="contact-link">
+              Connect ↗
+            </a>
+          </div>
+          <div class="module-footer">
+            <div class="footer-screws">
+              <Icon name="screw" size={8} />
+              <Icon name="screw" size={8} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section">
+      <h2>What I'm interested in</h2>
+      <ul class="interest-list">
+        <li>Research collaborations in robotics and control systems</li>
+        <li>Open source projects related to embedded systems</li>
+        <li>Technical consulting on distributed systems</li>
+        <li>Speaking opportunities at conferences and meetups</li>
+      </ul>
+    </section>
+
+    <section class="contact-section">
+      <h2>Send a Message</h2>
+      <form class="contact-form" action="mailto:hello@jlmayorga.co" method="post" enctype="text/plain">
+        <div class="form-panel">
+          <div class="panel-header">
+            <div class="panel-label">MESSAGE_SYSTEM</div>
+            <div class="panel-leds">
+              <span class="led"></span>
+            </div>
+          </div>
+          <div class="panel-content">
+            <div class="form-group">
+              <label for="name">Node Identifier</label>
+              <input type="text" id="name" name="name" required />
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Return Address</label>
+              <input type="email" id="email" name="email" required />
+            </div>
+            
+            <div class="form-group">
+              <label for="message">Data Payload</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <Button variant="primary" type="submit">Transmit</Button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact-page {
+    max-width: var(--container-lg);
+    margin: 0 auto;
+    padding: var(--space-lg) 0;
+  }
+
+  .contact-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .contact-intro {
+    font-size: var(--text-xl);
+    color: var(--lab-text-secondary);
+    max-width: 600px;
+    margin-top: var(--space-md);
+    line-height: 1.7;
+  }
+
+  .contact-section {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .contact-section h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    margin-bottom: var(--space-lg);
+  }
+
+  .contact-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .contact-module {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .header-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .header-icon {
+    color: var(--accent-cyan);
+    opacity: 0.8;
+  }
+
+  .module-content {
+    padding: var(--space-lg);
+    flex: 1;
+  }
+
+  .module-content h3 {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    color: var(--lab-text-primary);
+    margin-bottom: var(--space-sm);
+  }
+
+  .module-content p {
+    font-size: 0.875rem;
+    color: var(--lab-text-secondary);
+    margin-bottom: var(--space-md);
+    line-height: 1.6;
+  }
+
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--accent-cyan);
+    text-decoration: none;
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    background: var(--lab-bg-dark);
+    transition: all 0.2s ease;
+  }
+
+  .contact-link:hover {
+    background: var(--lab-bg-elevated);
+    border-color: var(--accent-cyan);
+  }
+
+  .module-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--lab-bg-dark);
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .footer-screws {
+    display: flex;
+    gap: var(--space-md);
+    color: var(--lab-text-muted);
+    opacity: 0.6;
+  }
+
+  .interest-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .interest-list li {
+    font-size: var(--text-base);
+    color: var(--lab-text-secondary);
+    padding: var(--space-sm) 0;
+    padding-left: var(--space-lg);
+    position: relative;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .interest-list li:last-child {
+    border-bottom: none;
+  }
+
+  .interest-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent-cyan);
+  }
+
+  .contact-form {
+    max-width: 500px;
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .form-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .panel-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .panel-leds {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .led {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .panel-content {
+    padding: var(--space-lg);
+  }
+
+  .form-group {
+    margin-bottom: var(--space-md);
+  }
+
+  .form-group label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--lab-text-secondary);
+    margin-bottom: var(--space-xs);
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    color: var(--lab-text-on-dark);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+  }
+
+  .panel-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-sm);
+    background: var(--lab-bg-dark);
+    border-top: 1px solid var(--panel-border);
+  }
+</style>

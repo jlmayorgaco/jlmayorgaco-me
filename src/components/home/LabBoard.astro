@@ -1,0 +1,1090 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+  posts: CollectionEntry<'research'>[];
+}
+
+const { projects, posts } = Astro.props;
+---
+
+<div class="lab-board stagger-in">
+  <!-- Row 1: Main Hero Area -->
+  <div class="board-row main-row">
+    <!-- Left Panel: Identity/Chip -->
+    <div class="panel identity-panel panel-reveal">
+      <div class="panel-header">
+        <div class="header-left">
+          <span class="label-tag">IDENTITY</span>
+          <span class="module-id">ID: JLMT-001</span>
+        </div>
+        <div class="panel-leds">
+          <span class="led led-green led-pulse"></span>
+        </div>
+      </div>
+      <div class="panel-content identity-content">
+        <!-- Chip/Badge with boot animation -->
+        <div class="chip-main">
+          <div class="chip-icon">
+            <Icon name="chip" size={20} />
+          </div>
+          <div class="chip-text">
+            <span class="chip-label">JLMT</span>
+            <span class="chip-sub">LAB</span>
+          </div>
+        </div>
+        
+        <!-- Screw decorations -->
+        <div class="screw-row">
+          <span class="screw brass"></span>
+          <span class="screw brass"></span>
+        </div>
+        
+        <div class="identity-info">
+          <p class="identity-title">Research Engineer</p>
+          <p class="identity-focus">Robotics &middot; Distributed Systems &middot; FPGA</p>
+        </div>
+        
+        <!-- Stats with LED indicators -->
+        <div class="identity-stats">
+          <div class="stat-item">
+            <span class="stat-led"></span>
+            <div class="stat-content">
+              <span class="stat-label">NODE</span>
+              <span class="stat-value">ACTIVE</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <span class="stat-led"></span>
+            <div class="stat-content">
+              <span class="stat-label">UPTIME</span>
+              <span class="stat-value">99.9%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <div class="port-row">
+          <span class="port"></span>
+          <span class="port port-active"></span>
+          <span class="port"></span>
+          <span class="port"></span>
+        </div>
+        <span class="port-label">I/O</span>
+      </div>
+    </div>
+
+    <!-- Center: Main Monitor/Hero -->
+    <div class="panel monitor-panel panel-reveal-delay-1">
+      <div class="panel-header">
+        <div class="header-left">
+          <span class="label-tag">MAIN DISPLAY</span>
+          <span class="screen-mode">LIVE</span>
+        </div>
+        <div class="panel-leds">
+          <span class="led led-green led-pulse"></span>
+          <span class="led led-amber" style="opacity: 0.3"></span>
+        </div>
+      </div>
+      <div class="panel-content monitor-content">
+        <div class="hero-monitor screen-scanline">
+          <div class="monitor-screen screen-flicker">
+            <div class="screen-header">
+              <span class="screen-title">// SYSTEM BOOT</span>
+              <span class="screen-status">
+                <span class="led led-green led-blink"></span>
+                RUNNING
+              </span>
+            </div>
+            <div class="screen-body">
+              <div class="hero-text">
+                <span class="type-label">
+                  <span class="prompt">$</span> whoami
+                </span>
+                <p class="type-output">Jose Luis Mayorga</p>
+                <p class="type-output-sub">Research Engineer - Robotics & Control Systems</p>
+              </div>
+              <div class="hero-terminal">
+                <div class="terminal-line">
+                  <span class="prompt">$</span>
+                  <span class="cmd">cat status.txt</span>
+                </div>
+                <div class="terminal-line output">
+                  <span class="prompt">></span>
+                  <span>Available for collaborations</span>
+                  <span class="cursor-blink"></span>
+                </div>
+              </div>
+              <div class="hero-cta">
+                <a href="/projects" class="cta-btn btn-press">
+                  <Icon name="projects" size={16} />
+                  Projects
+                </a>
+                <a href="/about" class="cta-btn secondary btn-press">
+                  <Icon name="node" size={16} />
+                  About
+                </a>
+              </div>
+            </div>
+            
+            <!-- Waveform decoration -->
+            <div class="waveform-footer">
+              <div class="waveform-bars">
+                <span class="waveform-bar"></span>
+                <span class="waveform-bar"></span>
+                <span class="waveform-bar"></span>
+                <span class="waveform-bar"></span>
+                <span class="waveform-bar"></span>
+              </div>
+              <span class="waveform-label">SYS.MONITOR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Quick Info -->
+    <div class="panel info-panel panel-reveal-delay-2">
+      <div class="panel-header">
+        <div class="header-left">
+          <span class="label-tag">SYSTEM INFO</span>
+        </div>
+        <div class="panel-leds">
+          <span class="led led-green led-pulse"></span>
+        </div>
+      </div>
+      <div class="panel-content">
+        <div class="info-section">
+          <span class="info-label">LOCATION</span>
+          <span class="info-value">Research Lab</span>
+        </div>
+        <div class="info-section">
+          <span class="info-label">FOCUS</span>
+          <span class="info-value">Robotics & Controls</span>
+        </div>
+        <div class="info-section">
+          <span class="info-label">STATUS</span>
+          <span class="info-value online">
+            <span class="led led-green led-pulse"></span>
+            Available
+          </span>
+        </div>
+        <div class="info-section">
+          <span class="info-label">CONTACT</span>
+          <a href="/contact" class="info-link">hello@jlmayorga.co</a>
+        </div>
+        
+        <!-- Decorative vent -->
+        <div class="info-vent">
+          <span class="vent-slot"></span>
+          <span class="vent-slot"></span>
+          <span class="vent-slot"></span>
+          <span class="vent-slot"></span>
+          <span class="vent-slot"></span>
+        </div>
+      </div>
+      <div class="panel-footer">
+        <div class="screws">
+          <span class="screw"></span>
+          <span class="screw"></span>
+        </div>
+        <span class="serial">SN: 2024-JLMT</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Modules -->
+  <div class="board-row modules-row">
+    <a href="/projects" class="panel module-card card-lift panel-reveal-delay-1">
+      <div class="panel-header compact">
+        <div class="header-left">
+          <span class="label-tag">PROJECTS</span>
+        </div>
+        <span class="module-arrow">
+          <Icon name="arrow" size={14} />
+        </span>
+      </div>
+      <div class="panel-content module-content">
+        <div class="module-icon">
+          <Icon name="projects" size={28} />
+        </div>
+        <span class="module-count">{projects.length}+</span>
+        <span class="module-desc">Technical Projects</span>
+      </div>
+    </a>
+
+    <a href="/research" class="panel module-card card-lift panel-reveal-delay-2">
+      <div class="panel-header compact">
+        <div class="header-left">
+          <span class="label-tag">RESEARCH</span>
+        </div>
+        <span class="module-arrow">
+          <Icon name="arrow" size={14} />
+        </span>
+      </div>
+      <div class="panel-content module-content">
+        <div class="module-icon">
+          <Icon name="research" size={28} />
+        </div>
+        <span class="module-count">{posts.length}+</span>
+        <span class="module-desc">Technical Notes</span>
+      </div>
+    </a>
+
+    <a href="/papers" class="panel module-card card-lift panel-reveal-delay-3">
+      <div class="panel-header compact">
+        <div class="header-left">
+          <span class="label-tag">PAPERS</span>
+        </div>
+        <span class="module-arrow">
+          <Icon name="arrow" size={14} />
+        </span>
+      </div>
+      <div class="panel-content module-content">
+        <div class="module-icon">
+          <Icon name="papers" size={28} />
+        </div>
+        <span class="module-count">1</span>
+        <span class="module-desc">Publications</span>
+      </div>
+    </a>
+
+    <a href="/contact" class="panel module-card card-lift panel-reveal-delay-4">
+      <div class="panel-header compact">
+        <div class="header-left">
+          <span class="label-tag">CONTACT</span>
+        </div>
+        <span class="module-arrow">
+          <Icon name="arrow" size={14} />
+        </span>
+      </div>
+      <div class="panel-content module-content">
+        <div class="module-icon">
+          <Icon name="contact" size={28} />
+        </div>
+        <span class="module-count">→</span>
+        <span class="module-desc">Get in Touch</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Row 3: Featured Content -->
+  <div class="board-row content-row">
+    <!-- Featured Projects -->
+    <div class="panel content-panel panel-reveal-delay-2">
+      <div class="panel-header">
+        <div class="header-left">
+          <span class="label-tag">FEATURED PROJECTS</span>
+        </div>
+        <a href="/projects" class="view-link">
+          View all <Icon name="arrow" size={12} />
+        </a>
+      </div>
+      <div class="panel-content content-grid">
+        {projects.map((project, i) => (
+          <a href={`/projects/${project.id}`} class="content-card card-lift">
+            <div class="card-header">
+              <div class="card-status">
+                <span class={`status-badge ${project.data.status}`}>{project.data.status}</span>
+                <span class="card-led"></span>
+              </div>
+              <span class="card-year">{project.data.year}</span>
+            </div>
+            <h4 class="card-title">{project.data.title}</h4>
+            <p class="card-summary">{project.data.summary}</p>
+            <div class="card-tags">
+              {project.data.stack?.slice(0, 3).map((tech) => (
+                <span class="chip">{tech}</span>
+              ))}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Recent Research -->
+    <div class="panel content-panel panel-reveal-delay-3">
+      <div class="panel-header">
+        <div class="header-left">
+          <span class="label-tag">LATEST RESEARCH</span>
+        </div>
+        <a href="/research" class="view-link">
+          View all <Icon name="arrow" size={12} />
+        </a>
+      </div>
+      <div class="panel-content content-list">
+        {posts.map((post) => (
+          <a href={`/research/${post.id}`} class="post-item">
+            <span class="post-led"></span>
+            <span class="post-date">{post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+            <h4 class="post-title">{post.data.title}</h4>
+            <span class="post-category">{post.data.category}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .lab-board {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .board-row {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .main-row {
+    grid-template-columns: 280px 1fr 260px;
+  }
+
+  .modules-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .content-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Panel base styles */
+  .panel {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-elevated);
+    border-bottom: 1px solid var(--panel-border);
+    position: relative;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .module-id, .screen-mode {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+    padding: 2px 4px;
+    background: var(--lab-bg-dark);
+    border-radius: 2px;
+  }
+
+  .panel-leds {
+    display: flex;
+    gap: 4px;
+  }
+
+  .panel-content {
+    padding: var(--space-md);
+    flex: 1;
+  }
+
+  .panel-footer {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--lab-bg-dark);
+    border-top: 1px solid var(--panel-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Screws */
+  .screw-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 var(--space-md);
+    margin: var(--space-sm) 0;
+  }
+
+  .screw {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #888 0%, #666 50%, #777 100%);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  .screw::before, .screw::after {
+    content: '';
+    position: absolute;
+    background: #444;
+    border-radius: 1px;
+  }
+
+  .screw::before {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 4px;
+    height: 1px;
+  }
+
+  .screw::after {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    width: 4px;
+    height: 1px;
+  }
+
+  .screw.brass {
+    background: linear-gradient(135deg, #c9a962 0%, #8a704a 50%, #a08050 100%);
+  }
+
+  .screw.brass::before, .screw.brass::after {
+    background: #6a503a;
+  }
+
+  /* Identity Panel */
+  .identity-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .chip-main {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--lab-bg-dark);
+    border: 2px solid var(--panel-frame);
+    border-radius: var(--radius-md);
+  }
+
+  .chip-icon {
+    color: var(--accent-cyan);
+  }
+
+  .chip-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chip-label {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    letter-spacing: 0.1em;
+  }
+
+  .chip-sub {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.2em;
+  }
+
+  .identity-info {
+    padding: 0 var(--space-xs);
+  }
+
+  .identity-title {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    margin-bottom: var(--space-xs);
+  }
+
+  .identity-focus {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--lab-text-secondary);
+    margin: 0;
+  }
+
+  .identity-stats {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-xs);
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .stat-led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+  }
+
+  .stat-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    font-weight: 600;
+  }
+
+  /* Ports */
+  .port-row {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .port {
+    width: 10px;
+    height: 8px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-frame);
+    border-radius: 2px;
+  }
+
+  .port-active {
+    background: var(--accent-cyan-dim);
+    border-color: var(--accent-cyan);
+  }
+
+  .port-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+  }
+
+  /* Monitor Panel */
+  .monitor-content {
+    padding: var(--space-sm);
+  }
+
+  .hero-monitor {
+    background: var(--screen-bg);
+    border: 2px solid var(--screen-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 
+      inset 0 2px 4px rgba(0,0,0,0.4),
+      0 0 20px var(--screen-glow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .screen-scanline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(180deg, transparent, rgba(63, 185, 167, 0.08), transparent);
+    animation: scanline 4s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(300px); }
+  }
+
+  .monitor-screen {
+    padding: var(--space-md);
+  }
+
+  .screen-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--screen-border);
+    margin-bottom: var(--space-md);
+  }
+
+  .screen-title {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.05em;
+  }
+
+  .screen-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--led-green);
+    letter-spacing: 0.1em;
+  }
+
+  .screen-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .type-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+  }
+
+  .type-label .prompt {
+    color: var(--accent-cyan);
+  }
+
+  .type-output {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--lab-text-on-dark);
+    margin: var(--space-xs) 0;
+  }
+
+  .type-output-sub {
+    font-size: 0.8125rem;
+    color: var(--lab-text-muted);
+    margin: 0;
+  }
+
+  .hero-terminal {
+    padding: var(--space-sm);
+    background: var(--screen-inner);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .terminal-line {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: 4px;
+  }
+
+  .terminal-line.output {
+    color: var(--lab-text-on-dark);
+    opacity: 0.7;
+  }
+
+  .prompt {
+    color: var(--accent-cyan);
+  }
+
+  .cursor-blink::after {
+    content: '█';
+    animation: cursor-blink 1s step-end infinite;
+    color: var(--accent-cyan);
+  }
+
+  @keyframes cursor-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all 150ms ease;
+  }
+
+  .cta-btn:first-child {
+    background: var(--accent-cyan);
+    color: var(--lab-bg-base);
+  }
+
+  .cta-btn:first-child:hover {
+    background: var(--accent-cyan-dim);
+  }
+
+  .cta-btn.secondary {
+    background: transparent;
+    color: var(--lab-text-on-dark);
+    border: 1px solid var(--screen-border);
+  }
+
+  .cta-btn.secondary:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+  }
+
+  .waveform-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-sm);
+    margin-top: var(--space-md);
+    border-top: 1px solid var(--screen-border);
+  }
+
+  .waveform-bars {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    height: 16px;
+  }
+
+  .waveform-bar {
+    width: 3px;
+    background: var(--accent-cyan);
+    border-radius: 1px;
+    animation: waveform 1s ease-in-out infinite;
+  }
+
+  .waveform-bar:nth-child(1) { animation-delay: 0s; height: 40%; }
+  .waveform-bar:nth-child(2) { animation-delay: 0.1s; height: 70%; }
+  .waveform-bar:nth-child(3) { animation-delay: 0.2s; height: 50%; }
+  .waveform-bar:nth-child(4) { animation-delay: 0.3s; height: 90%; }
+  .waveform-bar:nth-child(5) { animation-delay: 0.4s; height: 60%; }
+
+  @keyframes waveform {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .waveform-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* Info Panel */
+  .info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: var(--space-sm) 0;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .info-section:last-of-type {
+    border-bottom: none;
+  }
+
+  .info-label {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .info-value {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--lab-text-primary);
+  }
+
+  .info-value.online {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--led-green);
+  }
+
+  .info-link {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+  }
+
+  .info-vent {
+    display: flex;
+    gap: 3px;
+    padding: var(--space-sm);
+    margin-top: var(--space-sm);
+    background: var(--lab-bg-dark);
+    border-radius: var(--radius-sm);
+  }
+
+  .vent-slot {
+    flex: 1;
+    height: 16px;
+    background: #1a1f1d;
+    border-radius: 1px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+  }
+
+  .screws {
+    display: flex;
+    gap: var(--space-sm);
+  }
+
+  .serial {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+  }
+
+  /* Module Cards */
+  .module-card {
+    text-decoration: none;
+  }
+
+  .module-arrow {
+    color: var(--lab-text-muted);
+    display: flex;
+    transition: transform 150ms ease;
+  }
+
+  .module-card:hover .module-arrow {
+    transform: translateX(4px);
+    color: var(--accent-cyan);
+  }
+
+  .module-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-xs);
+    padding: var(--space-md);
+  }
+
+  .module-icon {
+    color: var(--accent-cyan);
+    margin-bottom: var(--space-xs);
+  }
+
+  .module-count {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+  }
+
+  .module-desc {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+  }
+
+  /* Content Panels */
+  .view-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+  }
+
+  .content-grid {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .content-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--lab-bg-elevated);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all 150ms ease;
+  }
+
+  .content-card:hover {
+    border-color: var(--accent-cyan-dim);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .status-badge {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-cyan-glow);
+    color: var(--accent-cyan);
+  }
+
+  .status-badge.wip {
+    background: rgba(210, 153, 34, 0.2);
+    color: var(--led-amber);
+  }
+
+  .card-led {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--led-green);
+  }
+
+  .card-year {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .card-summary {
+    font-size: 0.75rem;
+    color: var(--lab-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    padding: 2px 6px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    color: var(--lab-text-muted);
+  }
+
+  /* Content List */
+  .content-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .post-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: background 150ms ease;
+  }
+
+  .post-item:hover {
+    background: var(--lab-bg-elevated);
+  }
+
+  .post-led {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-cyan-dim);
+    flex-shrink: 0;
+  }
+
+  .post-item:hover .post-led {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 4px var(--accent-cyan-glow);
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+    min-width: 45px;
+  }
+
+  .post-title {
+    flex: 1;
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    margin: 0;
+  }
+
+  .post-category {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .main-row {
+      grid-template-columns: 1fr;
+    }
+
+    .modules-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .content-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .modules-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import PostCard from '../research/PostCard.astro';
+
+interface Props {
+  posts: CollectionEntry<'research'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+<section class="research-preview">
+  <header class="section-header">
+    <h2 class="section-title">Recent Research</h2>
+    <a href="/research" class="view-all">View all →</a>
+  </header>
+
+  <div class="posts-list">
+    {posts.map((post) => (
+      <PostCard post={post} variant="compact" />
+    ))}
+  </div>
+</section>
+
+<style>
+  .research-preview {
+    margin-top: var(--space-3xl);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-xl);
+  }
+
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .view-all {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-sm);
+    color: var(--color-accent-primary);
+    text-decoration: none;
+  }
+
+  .view-all:hover {
+    text-decoration: underline;
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+</style>

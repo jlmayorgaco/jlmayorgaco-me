@@ -1,0 +1,107 @@
+---
+interface Props {
+  lines?: string[];
+}
+
+const defaultLines = [
+  '$ whoami',
+  '> José Luis Mayorga',
+  '> Research Engineer @ Lab',
+  '> Focus: Robotics, Distributed Systems, FPGA',
+  '',
+  '$ cat status.txt',
+  '> Available for collaborations',
+];
+
+const lines = Astro.props.lines || defaultLines;
+---
+
+<div class="intro-console">
+  <div class="console-header">
+    <span class="console-title">terminal</span>
+    <div class="console-controls">
+      <span class="control"></span>
+      <span class="control"></span>
+      <span class="control"></span>
+    </div>
+  </div>
+  <div class="console-body">
+    {lines.map((line, i) => (
+      <div class="console-line">
+        {line.startsWith('$') && <span class="prompt">$</span>}
+        {line.startsWith('>') && <span class="prompt output">></span>}
+        <span class={`line-content ${line === '' ? 'empty' : ''}`}>{line.replace(/^[>$]\s*/, '')}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .intro-console {
+    background: var(--color-bg-deep);
+    border: var(--border-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: var(--text-sm);
+    max-width: 500px;
+  }
+
+  .console-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-bg-secondary);
+    border-bottom: var(--border-subtle);
+  }
+
+  .console-title {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .console-controls {
+    display: flex;
+    gap: 6px;
+  }
+
+  .control {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .control:nth-child(1) { background: #f85149; }
+  .control:nth-child(2) { background: #d29922; }
+  .control:nth-child(3) { background: #3fb950; }
+
+  .console-body {
+    padding: var(--space-md);
+  }
+
+  .console-line {
+    display: flex;
+    line-height: 1.6;
+  }
+
+  .prompt {
+    color: var(--color-accent-primary);
+    margin-right: var(--space-sm);
+    min-width: 20px;
+  }
+
+  .prompt.output {
+    color: var(--color-text-muted);
+  }
+
+  .line-content {
+    color: var(--color-text-primary);
+  }
+
+  .line-content.empty {
+    height: 1em;
+  }
+</style>

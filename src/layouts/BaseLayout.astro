@@ -1,0 +1,127 @@
+---
+import '../styles/global.css';
+import '../styles/animations.css';
+import SiteHead from '../components/shell/SiteHead.astro';
+import TopNav from '../components/shell/TopNav.astro';
+import FooterDock from '../components/shell/FooterDock.astro';
+import MobileNav from '../components/shell/MobileNav.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  image,
+  type = 'website',
+  publishedTime,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SiteHead
+      title={title}
+      description={description}
+      canonical={canonical}
+      image={image}
+      type={type}
+      publishedTime={publishedTime}
+    />
+  </head>
+  <body class="base-layout">
+    <div class="bg-pattern">
+      <div class="bg-grid"></div>
+      <svg class="bg-cable" viewBox="0 0 100 20" preserveAspectRatio="none">
+        <path class="cable-base" d="M0,10 Q25,5 50,10 T100,10" />
+        <path class="cable-flow" d="M0,10 Q25,5 50,10 T100,10" />
+      </svg>
+    </div>
+    <TopNav />
+    <MobileNav />
+    <main class="base-main">
+      <slot />
+    </main>
+    <FooterDock />
+  </body>
+</html>
+
+<style>
+  .base-layout {
+    position: relative;
+    min-height: 100vh;
+  }
+
+  .bg-pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(63, 185, 167, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(63, 185, 167, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .bg-cable {
+    position: absolute;
+    bottom: 10%;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    opacity: 0.15;
+  }
+
+  .cable-base {
+    fill: none;
+    stroke: var(--accent-copper-dim);
+    stroke-width: 2;
+  }
+
+  .cable-flow {
+    fill: none;
+    stroke: var(--accent-copper);
+    stroke-width: 1.5;
+    stroke-dasharray: 4, 4;
+    animation: cable-signal 2s linear infinite;
+    opacity: 0.5;
+  }
+
+  @keyframes cable-signal {
+    0% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 16; }
+  }
+
+  .base-main {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md);
+    min-height: calc(100vh - 140px);
+  }
+
+  @media (max-width: 768px) {
+    .base-main {
+      padding: var(--space-md) var(--space-sm);
+    }
+    .bg-cable {
+      display: none;
+    }
+  }
+</style>

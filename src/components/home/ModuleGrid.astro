@@ -1,0 +1,145 @@
+---
+interface Module {
+  title: string;
+  description: string;
+  href: string;
+  icon: string;
+  status?: 'online' | 'offline';
+}
+
+const modules: Module[] = [
+  {
+    title: 'Projects',
+    description: 'Robotics, embedded systems, and software projects',
+    href: '/projects',
+    icon: '⬡',
+    status: 'online',
+  },
+  {
+    title: 'Research',
+    description: 'Technical notes, experiments, and learnings',
+    href: '/research',
+    icon: '◈',
+    status: 'online',
+  },
+  {
+    title: 'Papers',
+    description: 'Publications and academic work',
+    href: '/papers',
+    icon: '◉',
+    status: 'online',
+  },
+  {
+    title: 'About',
+    description: 'Background, experience, and skills',
+    href: '/about',
+    icon: '◇',
+    status: 'online',
+  },
+  {
+    title: 'Contact',
+    description: 'Get in touch for collaborations',
+    href: '/contact',
+    icon: '◆',
+    status: 'online',
+  },
+];
+---
+
+<div class="module-grid">
+  {modules.map((module) => (
+    <a href={module.href} class="module-card">
+      <div class="module-icon">{module.icon}</div>
+      <div class="module-content">
+        <h3 class="module-title">{module.title}</h3>
+        <p class="module-description">{module.description}</p>
+      </div>
+      {module.status && (
+        <span class={`module-status ${module.status}`}></span>
+      )}
+    </a>
+  ))}
+</div>
+
+<style>
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .module-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: var(--color-bg-secondary);
+    border: var(--border-subtle);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    position: relative;
+  }
+
+  .module-card:hover {
+    border-color: var(--color-accent-primary);
+    background: var(--color-bg-hover);
+  }
+
+  .module-icon {
+    font-size: var(--text-2xl);
+    color: var(--color-accent-primary);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-accent-subtle);
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+  }
+
+  .module-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .module-title {
+    font-family: 'Space Mono', monospace;
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xs);
+  }
+
+  .module-description {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .module-status {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .module-status.online {
+    background: var(--color-success);
+    box-shadow: 0 0 6px var(--color-success);
+  }
+
+  .module-status.offline {
+    background: var(--color-error);
+  }
+
+  @media (max-width: 640px) {
+    .module-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

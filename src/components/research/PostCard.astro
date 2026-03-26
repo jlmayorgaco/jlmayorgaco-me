@@ -1,0 +1,193 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  post: CollectionEntry<'research'>;
+  variant?: 'default' | 'compact';
+}
+
+const { post, variant = 'default' } = Astro.props;
+const { data } = post;
+---
+
+<a href={`/research/${post.id}`} class:list={['post-card', `card-${variant}`]}>
+  <div class="card-header">
+    <div class="card-meta">
+      <span class="card-status-led"></span>
+      <time datetime={data.date.toISOString()}>
+        {data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+      </time>
+      {data.category && <span class="card-category">{data.category}</span>}
+    </div>
+    <span class="card-arrow">
+      <Icon name="arrow" size={12} />
+    </span>
+  </div>
+  
+  <h3 class="card-title">{data.title}</h3>
+  <p class="card-excerpt">{data.excerpt}</p>
+  
+  {variant !== 'compact' && data.tags && (
+    <div class="card-tags">
+      {data.tags.slice(0, 4).map((tag) => (
+        <span class="chip">{tag}</span>
+      ))}
+    </div>
+  )}
+  
+  <div class="card-footer">
+    {data.readingTime && (
+      <span class="card-reading-time">{data.readingTime} min read</span>
+    )}
+  </div>
+</a>
+
+<style>
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: all 200ms ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .post-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  }
+
+  .post-card:hover {
+    border-color: var(--accent-cyan-dim);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-sm);
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .card-status-led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-cyan-dim);
+    transition: all 200ms ease;
+  }
+
+  .post-card:hover .card-status-led {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 6px var(--accent-cyan-glow);
+  }
+
+  .card-meta time {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--lab-text-muted);
+  }
+
+  .card-category {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-cyan);
+    padding: 2px 6px;
+    background: var(--accent-cyan-glow);
+    border-radius: var(--radius-sm);
+  }
+
+  .card-arrow {
+    color: var(--lab-text-muted);
+    transition: all 200ms ease;
+    display: flex;
+  }
+
+  .post-card:hover .card-arrow {
+    color: var(--accent-cyan);
+    transform: translateX(4px);
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    margin-bottom: var(--space-sm);
+    line-height: 1.35;
+  }
+
+  .card-excerpt {
+    font-size: 0.875rem;
+    color: var(--lab-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+    flex: 1;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-sm);
+  }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    padding: 3px 8px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    color: var(--lab-text-muted);
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .card-reading-time {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+  }
+
+  /* Compact variant */
+  .card-compact {
+    padding: var(--space-md);
+  }
+
+  .card-compact .card-title {
+    font-size: 0.9375rem;
+  }
+
+  .card-compact .card-excerpt {
+    display: none;
+  }
+
+  .card-compact .card-tags {
+    display: none;
+  }
+</style>

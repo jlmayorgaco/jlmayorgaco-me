@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionTitle from '../components/ui/SectionTitle.astro';
+import InfoPanel from '../components/ui/InfoPanel.astro';
+---
+
+<BaseLayout title="About" description="About José Luis Mayorga - Research Engineer">
+  <div class="about-page">
+    <header class="about-header">
+      <SectionTitle as="h1">About</SectionTitle>
+      <p class="about-intro">
+        I'm a research engineer focused on robotics, distributed control systems, 
+        FPGA development, and full-stack software systems. I turn concepts into 
+        working prototypes.
+      </p>
+    </header>
+
+    <section class="about-section">
+      <h2>Background</h2>
+      <div class="about-content">
+        <p>
+          With a background in both software engineering and control systems, I work at the 
+          intersection of embedded systems, robotics, and distributed computing. My work 
+          involves designing and implementing real-time control algorithms, developing FPGA-based 
+          solutions, and building scalable software architectures.
+        </p>
+        <p>
+          I'm particularly interested in systems that require tight integration between 
+          hardware and software, from low-level firmware to cloud-based analytics platforms.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2>Focus Areas</h2>
+      <div class="focus-grid">
+        <InfoPanel title="Robotics">
+          <ul>
+            <li>Motion planning & control</li>
+            <li>Sensor fusion</li>
+            <li>Real-time systems</li>
+          </ul>
+        </InfoPanel>
+        
+        <InfoPanel title="FPGA">
+          <ul>
+            <li>HDL development (Verilog/VHDL)</li>
+            <li>High-speed interfaces</li>
+            <li>Custom accelerators</li>
+          </ul>
+        </InfoPanel>
+        
+        <InfoPanel title="Distributed Systems">
+          <ul>
+            <li>Network protocols</li>
+            <li>Edge computing</li>
+            <li>Fault tolerance</li>
+          </ul>
+        </InfoPanel>
+        
+        <InfoPanel title="Full-Stack">
+          <ul>
+            <li>Backend architecture</li>
+            <li>Data pipelines</li>
+            <li>Visualization tools</li>
+          </ul>
+        </InfoPanel>
+      </div>
+    </section>
+
+    <section class="about-section">
+      <h2>Contact</h2>
+      <p>
+        Interested in collaborating or discussing research? Feel free to reach out 
+        through any of the channels on the <a href="/contact">contact page</a>.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-page {
+    max-width: var(--container-lg);
+    margin: 0 auto;
+    padding: var(--space-lg) 0;
+  }
+
+  .about-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .about-intro {
+    font-size: var(--text-xl);
+    color: var(--lab-text-secondary);
+    max-width: 600px;
+    margin-top: var(--space-md);
+    line-height: 1.7;
+  }
+
+  .about-section {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .about-section h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    margin-bottom: var(--space-lg);
+  }
+
+  .about-content p {
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--lab-text-secondary);
+    margin-bottom: var(--space-md);
+  }
+
+  .focus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .focus-grid ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .focus-grid li {
+    font-size: var(--text-sm);
+    color: var(--lab-text-secondary);
+    padding: var(--space-xs) 0;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .focus-grid li:last-child {
+    border-bottom: none;
+  }
+</style>

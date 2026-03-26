@@ -1,0 +1,428 @@
+---
+import { NAV_ITEMS } from '../../lib/config';
+import Icon from '../ui/Icon.astro';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="lab-header">
+  <!-- Decorative top line with gradient -->
+  <div class="header-line"></div>
+  
+  <nav class="header-container">
+    <!-- Left: Logo/Branding Panel -->
+    <a href="/" class="brand-panel">
+      <div class="chip-badge">
+        <span class="chip-icon">
+          <Icon name="chip" size={14} />
+        </span>
+        <span class="chip-text">JLMT</span>
+      </div>
+      <div class="brand-divider"></div>
+      <div class="brand-info">
+        <span class="brand-name">LAB</span>
+        <span class="brand-subtitle">Research Station</span>
+      </div>
+      <div class="brand-leds">
+        <span class="led led-green led-pulse"></span>
+        <span class="led led-amber" style="opacity: 0.3"></span>
+      </div>
+    </a>
+
+    <!-- Center: Nav Links - Hardware Tab Style -->
+    <ul class="nav-links">
+      {NAV_ITEMS.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class:list={['nav-link', { active: currentPath.startsWith(item.href) }]}
+          >
+            <span class="nav-indicator">
+              <span class="indicator-dot"></span>
+            </span>
+            <span class="nav-label">{item.label}</span>
+            <span class="nav-screw"></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Right: Status Panel -->
+    <div class="status-panel">
+      <div class="status-item">
+        <span class="status-led"></span>
+        <div class="status-content">
+          <span class="status-label">STATUS</span>
+          <span class="status-value">ONLINE</span>
+        </div>
+      </div>
+      <button class="mobile-menu-btn" aria-label="Toggle menu" data-menu-toggle>
+        <span class="menu-bar"></span>
+        <span class="menu-bar"></span>
+        <span class="menu-bar"></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<style>
+  .lab-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: var(--lab-bg-elevated);
+    border-bottom: 2px solid var(--panel-frame);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .header-line {
+    height: 3px;
+    background: linear-gradient(90deg, 
+      var(--accent-cyan) 0%, 
+      var(--accent-cyan-dim) 30%,
+      var(--accent-copper) 70%,
+      var(--accent-cyan-dim) 100%
+    );
+  }
+
+  .header-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+
+  /* Brand Panel - Hardware style */
+  .brand-panel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 6px var(--space-md) 6px 6px;
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all 150ms ease;
+    position: relative;
+  }
+
+  .brand-panel::before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 3px;
+    background: var(--panel-frame);
+    border-radius: 1px;
+  }
+
+  .brand-panel:hover {
+    border-color: var(--accent-cyan-dim);
+    box-shadow: 0 0 8px var(--accent-cyan-glow);
+  }
+
+  .chip-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .chip-icon {
+    color: var(--accent-cyan);
+    display: flex;
+  }
+
+  .chip-text {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent-cyan);
+  }
+
+  .brand-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--panel-border);
+  }
+
+  .brand-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    line-height: 1;
+  }
+
+  .brand-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .brand-leds {
+    display: flex;
+    gap: 4px;
+    margin-left: var(--space-sm);
+  }
+
+  /* LED styles */
+  .led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .led-green {
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+  }
+
+  .led-amber {
+    background: var(--led-amber);
+    box-shadow: 0 0 4px var(--led-amber);
+  }
+
+  .led-pulse {
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--led-green); }
+    50% { opacity: 0.6; box-shadow: 0 0 8px var(--led-green); }
+  }
+
+  /* Navigation - Hardware Tabs */
+  .nav-links {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 2px;
+  }
+
+  @media (min-width: 768px) {
+    .nav-links {
+      display: flex;
+    }
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--lab-text-secondary);
+    text-decoration: none;
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-bottom: none;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    transition: all 150ms ease;
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--lab-bg-panel);
+  }
+
+  .nav-indicator {
+    width: 8px;
+    height: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--lab-bg-dark);
+    border-radius: 50%;
+    border: 1px solid var(--panel-border);
+  }
+
+  .indicator-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--lab-text-muted);
+    transition: all 150ms ease;
+  }
+
+  .nav-link:hover {
+    color: var(--lab-text-primary);
+    background: var(--lab-bg-elevated);
+  }
+
+  .nav-link:hover .indicator-dot {
+    background: var(--accent-cyan);
+  }
+
+  .nav-link.active {
+    color: var(--accent-cyan);
+    background: var(--lab-bg-elevated);
+    border-color: var(--accent-cyan-dim);
+    z-index: 1;
+  }
+
+  .nav-link.active .indicator-dot {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 4px var(--accent-cyan);
+  }
+
+  .nav-link.active::after {
+    background: var(--lab-bg-elevated);
+  }
+
+  .nav-screw {
+    display: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #888 0%, #666 100%);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+    margin-left: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .nav-screw {
+      display: block;
+    }
+  }
+
+  /* Status Panel */
+  .status-panel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .status-item {
+    display: none;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 4px 8px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+  }
+
+  @media (min-width: 640px) {
+    .status-item {
+      display: flex;
+    }
+  }
+
+  .status-led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  .status-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .status-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .status-value {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--led-green);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  @media (min-width: 768px) {
+    .mobile-menu-btn {
+      display: none;
+    }
+  }
+
+  .menu-bar {
+    width: 16px;
+    height: 2px;
+    background: var(--lab-text-secondary);
+    border-radius: 1px;
+    transition: all 150ms ease;
+  }
+
+  .mobile-menu-btn:hover .menu-bar {
+    background: var(--accent-cyan);
+  }
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .header-container {
+      padding: var(--space-xs) var(--space-sm);
+    }
+
+    .brand-panel {
+      padding: 6px 10px 6px 6px;
+    }
+
+    .brand-info,
+    .brand-leds {
+      display: none;
+    }
+
+    .brand-divider {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const menuBtn = document.querySelector('[data-menu-toggle]');
+  const header = document.querySelector('.lab-header');
+  
+  menuBtn?.addEventListener('click', () => {
+    header?.classList.toggle('menu-open');
+  });
+</script>

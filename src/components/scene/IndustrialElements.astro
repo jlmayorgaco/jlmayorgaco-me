@@ -1,0 +1,387 @@
+---
+// Industrial Hardware Visual Components
+// Screws, vents, cable routes, panel decorations
+---
+
+{/* === SCREW / RIVET === */}
+<span class="screw" data-variant="default" />
+<span class="screw silver" />
+<span class="screw brass" />
+
+<style>
+  .screw {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #666 0%, #444 50%, #555 100%);
+    box-shadow: 
+      inset 0 1px 2px rgba(0,0,0,0.5),
+      0 1px 1px rgba(255,255,255,0.1);
+    position: relative;
+  }
+
+  .screw::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 5px;
+    height: 1px;
+    background: #333;
+  }
+
+  .screw::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    width: 5px;
+    height: 1px;
+    background: #333;
+  }
+
+  .screw.silver {
+    background: linear-gradient(135deg, #999 0%, #777 50%, #888 100%);
+  }
+
+  .screw.silver::before,
+  .screw.silver::after {
+    background: #555;
+  }
+
+  .screw.brass {
+    background: linear-gradient(135deg, #c9a962 0%, #8a704a 50%, #a08050 100%);
+  }
+
+  .screw.brass::before,
+  .screw.brass::after {
+    background: #6a503a;
+  }
+</style>
+
+---
+
+{/* === VENT / GRILL === */}
+<div class="vent">
+  {Array(8).fill(0).map(() => <span class="vent-slot" />)}
+</div>
+
+<style>
+  .vent {
+    display: flex;
+    gap: 3px;
+    padding: 4px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 2px;
+  }
+
+  .vent-slot {
+    width: 4px;
+    height: 20px;
+    background: #1a1f1d;
+    border-radius: 1px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+  }
+</style>
+
+---
+
+{/* === CABLE ROUTE === */}
+<div class="cable-route">
+  <svg class="cable-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+    <path class="cable-path" d="M0,10 Q25,5 50,10 T100,10" fill="none" stroke-width="2" />
+    <path class="cable-path-light" d="M0,10 Q25,5 50,10 T100,10" fill="none" stroke-width="1" />
+  </svg>
+  <div class="cable-nodes">
+    <span class="cable-node"></span>
+    <span class="cable-node"></span>
+    <span class="cable-node"></span>
+  </div>
+</div>
+
+<style>
+  .cable-route {
+    position: relative;
+    height: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .cable-svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+  }
+
+  .cable-path {
+    stroke: var(--accent-copper-dim);
+  }
+
+  .cable-path-light {
+    stroke: var(--accent-copper);
+    animation: cable-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes cable-pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+  }
+
+  .cable-nodes {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 4px;
+  }
+
+  .cable-node {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-copper);
+    border: 1px solid var(--accent-copper-dim);
+  }
+</style>
+
+---
+
+{/* === LED INDICATOR === */}
+<div class="led-indicator" data-status="green">
+  <span class="led-light"></span>
+  <span class="led-label">STATUS</span>
+</div>
+
+<style>
+  .led-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+  }
+
+  .led-light {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+  }
+
+  .led-indicator[data-status="green"] .led-light {
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  .led-indicator[data-status="amber"] .led-light {
+    background: var(--led-amber);
+    box-shadow: 0 0 4px var(--led-amber);
+    animation: led-pulse-amber 1.5s ease-in-out infinite;
+  }
+
+  .led-indicator[data-status="red"] .led-light {
+    background: var(--led-red);
+    box-shadow: 0 0 4px var(--led-red);
+  }
+
+  .led-indicator[data-status="off"] .led-light {
+    background: var(--lab-text-muted);
+    box-shadow: none;
+    opacity: 0.4;
+  }
+
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--led-green); }
+    50% { opacity: 0.6; box-shadow: 0 0 8px var(--led-green); }
+  }
+
+  @keyframes led-pulse-amber {
+    0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--led-amber); }
+    50% { opacity: 0.5; box-shadow: 0 0 6px var(--led-amber); }
+  }
+</style>
+
+---
+
+{/* === PORT / CONNECTOR === */}
+<div class="port-connector" data-type="usb">
+  <span class="port-housing">
+    <span class="port-pin"></span>
+    <span class="port-pin"></span>
+    <span class="port-pin"></span>
+    <span class="port-pin"></span>
+  </span>
+</div>
+
+<style>
+  .port-connector {
+    display: inline-flex;
+    padding: 4px;
+    background: var(--lab-bg-dark);
+    border: 2px solid var(--panel-frame);
+    border-radius: 4px;
+  }
+
+  .port-housing {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    background: #1a1f1d;
+    border-radius: 2px;
+  }
+
+  .port-pin {
+    width: 3px;
+    height: 10px;
+    background: var(--accent-copper-dim);
+    border-radius: 1px;
+  }
+
+  .port-connector[data-type="usb"] .port-housing {
+    gap: 4px;
+  }
+
+  .port-connector[data-type="usb"] .port-pin:nth-child(1),
+  .port-connector[data-type="usb"] .port-pin:nth-child(4) {
+    height: 8px;
+    background: var(--accent-copper);
+  }
+
+  .port-connector[data-type="ethernet"] .port-housing {
+    gap: 6px;
+  }
+
+  .port-connector[data-type="ethernet"] .port-pin {
+    width: 4px;
+  }
+</style>
+
+---
+
+{/* === LABEL TAG === */}
+<div class="label-plate">
+  <span class="plate-text">MODULE-01</span>
+  <span class="plate-screw"></span>
+  <span class="plate-screw"></span>
+</div>
+
+<style>
+  .label-plate {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 12px;
+    background: linear-gradient(180deg, #f0f0e8 0%, #d8d8d0 100%);
+    border: 1px solid #b0b0a8;
+    border-radius: 2px;
+    box-shadow: 
+      inset 0 1px 0 rgba(255,255,255,0.5),
+      0 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .plate-text {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 0.1em;
+  }
+
+  .plate-screw {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #888 0%, #666 100%);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+  }
+</style>
+
+---
+
+{/* === WAVEFORM DISPLAY === */}
+<div class="waveform-display">
+  <div class="waveform-screen">
+    <svg class="waveform-svg" viewBox="0 0 200 40" preserveAspectRatio="none">
+      <path class="wave-line" d="M0,20 L10,20 L15,10 L20,30 L25,15 L30,25 L35,18 L40,22 L45,20 L200,20" fill="none" stroke-width="1.5" />
+    </svg>
+    <div class="waveform-overlay">
+      <span class="wave-marker">50Hz</span>
+    </div>
+  </div>
+  <div class="waveform-controls">
+    <span class="knob"></span>
+    <span class="knob"></span>
+    <span class="knob"></span>
+  </div>
+</div>
+
+<style>
+  .waveform-display {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: var(--screen-bg);
+    border: 2px solid var(--screen-border);
+    border-radius: 4px;
+  }
+
+  .waveform-screen {
+    flex: 1;
+    height: 40px;
+    background: #0a0f12;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .wave-line {
+    stroke: var(--accent-cyan);
+    filter: drop-shadow(0 0 2px var(--accent-cyan));
+    animation: oscilloscope 0.5s linear infinite;
+  }
+
+  @keyframes oscilloscope {
+    from { stroke-dashoffset: 0; }
+    to { stroke-dashoffset: -20; }
+  }
+
+  .wave-marker {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+  }
+
+  .waveform-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 4px;
+    background: var(--lab-bg-dark);
+    border-radius: 2px;
+  }
+
+  .knob {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #666 0%, #444 100%);
+    border: 1px solid #555;
+    box-shadow: 
+      inset 0 1px 2px rgba(255,255,255,0.1),
+      0 1px 2px rgba(0,0,0,0.3);
+  }
+</style>

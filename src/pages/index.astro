@@ -1,0 +1,21 @@
+---
+import LabLayout from '../layouts/LabLayout.astro';
+import LabBoard from '../components/home/LabBoard.astro';
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection('projects');
+const featuredProjects = projects
+  .filter(p => p.data.featured)
+  .sort((a, b) => b.data.order - a.data.order)
+  .slice(0, 2);
+
+const posts = await getCollection('research');
+const recentPosts = posts
+  .filter(p => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+---
+
+<LabLayout>
+  <LabBoard projects={featuredProjects} posts={recentPosts} />
+</LabLayout>

@@ -1,0 +1,62 @@
+---
+interface Props {
+  variant?: 'default' | 'compact';
+}
+
+const { variant = 'default' } = Astro.props;
+---
+
+<div class:list={['lab-canvas', `canvas-${variant}`]}>
+  <div class="canvas-grid"></div>
+  <div class="canvas-scanline"></div>
+  <slot />
+</div>
+
+<style>
+  .lab-canvas {
+    position: relative;
+    min-height: 300px;
+    background: var(--color-bg-deep);
+    border: var(--border-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .canvas-compact {
+    min-height: 150px;
+  }
+
+  .canvas-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      linear-gradient(rgba(63, 185, 167, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(63, 185, 167, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+  }
+
+  .canvas-scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-accent-primary),
+      transparent
+    );
+    opacity: 0.3;
+    animation: scanline 4s linear infinite;
+  }
+
+  @keyframes scanline {
+    0% { top: 0; }
+    100% { top: 100%; }
+  }
+</style>

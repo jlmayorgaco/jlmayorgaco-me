@@ -1,0 +1,83 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import PostCard from './PostCard.astro';
+
+interface Props {
+  posts: CollectionEntry<'research'>[];
+}
+
+const { posts } = Astro.props;
+---
+
+<div class="post-list panel">
+  <div class="list-header">
+    <span class="list-label">ENTRIES: {posts.length}</span>
+    <div class="list-leds">
+      <span class="led led-green led-pulse"></span>
+    </div>
+  </div>
+  <div class="list-content">
+    {posts.map((post) => (
+      <PostCard post={post} />
+    ))}
+  </div>
+</div>
+
+<style>
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-elevated);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .list-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .list-leds {
+    display: flex;
+    gap: 4px;
+  }
+
+  .list-content {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .led-green {
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+  }
+
+  .led-pulse {
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--led-green); }
+    50% { opacity: 0.6; box-shadow: 0 0 8px var(--led-green); }
+  }
+</style>

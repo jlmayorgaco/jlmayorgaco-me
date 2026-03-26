@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PaperList from '../../components/papers/PaperList.astro';
+import SectionTitle from '../../components/ui/SectionTitle.astro';
+import { getCollection } from 'astro:content';
+
+const papers = await getCollection('papers');
+const sortedPapers = papers
+  .sort((a, b) => b.data.year - a.data.year);
+---
+
+<BaseLayout title="Papers" description="Publications and academic work">
+  <div class="page-header">
+    <SectionTitle as="h1">Papers</SectionTitle>
+    <p class="page-description">
+      Academic publications, conference papers, and research contributions 
+      in robotics, control systems, and distributed systems.
+    </p>
+  </div>
+
+  <PaperList papers={sortedPapers} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .page-description {
+    font-size: var(--text-lg);
+    color: var(--lab-text-secondary);
+    max-width: 600px;
+    margin-top: var(--space-md);
+  }
+</style>
