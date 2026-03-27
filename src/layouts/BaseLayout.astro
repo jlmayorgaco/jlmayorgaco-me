@@ -5,6 +5,7 @@ import SiteHead from '../components/shell/SiteHead.astro';
 import TopNav from '../components/shell/TopNav.astro';
 import FooterDock from '../components/shell/FooterDock.astro';
 import MobileNav from '../components/shell/MobileNav.astro';
+import BottomTabBar from '../components/mobile/BottomTabBar.astro';
 
 interface Props {
   title?: string;
@@ -51,6 +52,7 @@ const {
       <slot />
     </main>
     <FooterDock />
+    <BottomTabBar />
   </body>
 </html>
 
@@ -118,7 +120,7 @@ const {
 
   @media (max-width: 768px) {
     .base-main {
-      padding: var(--space-md) var(--space-sm);
+      padding: var(--space-lg) var(--space-md);
       min-height: calc(100vh - 120px);
     }
 
@@ -128,6 +130,13 @@ const {
 
     .bg-grid {
       background-size: 15px 15px;
+    }
+  }
+
+  /* Extra bottom clearance for BottomTabBar on small mobile */
+  @media (max-width: 640px) {
+    .base-main {
+      padding-bottom: 5rem;
     }
   }
 </style>

@@ -68,42 +68,46 @@
   --shadow-raised: 0 4px 8px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.06);
   --shadow-inset: inset 0 1px 2px rgba(0,0,0,0.1);
   
+  /* Typography scale */
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+  --text-5xl:  3rem;
+
+  /* Extended radius */
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
+
+  /* Z-index scale */
+  --z-base:    0;
+  --z-raised:  10;
+  --z-sticky:  100;
+  --z-nav:     200;
+  --z-overlay: 300;
+  --z-modal:   400;
+
   /* Layout */
   --container-max: 1400px;
   --nav-height: 64px;
 }
 
-/* === MOBILE: Dark Teal - Industrial Dark === */
+/* === MOBILE: Same design system as desktop, adapted for small screens === */
+/*
+  Mobile inherits the full desktop token palette — same light neutral surfaces,
+  same panel aesthetics, same brand colors. Only layout/spacing adapts.
+  Dark screen areas (--screen-bg etc.) stay dark because they represent
+  physical monitor displays, consistent with the desktop workstation.
+*/
 @media (max-width: 768px) {
   :root {
-    /* Same palette as desktop but adjusted for dark mode */
-    --lab-bg-base: #1a1f23;
-    --lab-bg-panel: #22282d;
-    --lab-bg-elevated: #2d333a;
-    --lab-bg-dark: #171c21;
-    
-    --panel-frame: #3a424a;
-    --panel-border: #333b44;
-    --panel-inner: #2a3138;
-    
-    --screen-bg: #0f1419;
-    --screen-border: #2d3a44;
-    --screen-inner: #080c10;
-    --screen-glow: rgba(63, 185, 167, 0.15);
-    
-    --lab-text-primary: #e8ece9;
-    --lab-text-secondary: #9aa5a1;
-    --lab-text-muted: #6b7673;
-    --lab-text-on-dark: #a8b0ac;
-    
-    --accent-cyan: #4dc9b8;
-    --accent-cyan-dim: #3a8a7d;
-    --accent-cyan-glow: rgba(63, 185, 167, 0.25);
-    --accent-copper: #b8956a;
-    --accent-copper-dim: #8a704a;
-    
-    --shadow-panel: 0 2px 4px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2);
-    --shadow-raised: 0 4px 8px rgba(0,0,0,0.4), 0 8px 16px rgba(0,0,0,0.3);
+    /* Tighten spacing scale slightly for smaller screens */
+    --space-2xl: 2rem;
+    --space-3xl: 3rem;
   }
 }
 

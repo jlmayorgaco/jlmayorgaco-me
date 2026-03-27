@@ -1,8 +1,18 @@
 ---
-import { NAV_ITEMS, SITE_TITLE } from '../../lib/config';
+import { NAV_ITEMS } from '../../lib/config';
 import Icon from '../ui/Icon.astro';
 
 const currentPath = Astro.url.pathname;
+
+function getIcon(href: string) {
+  if (href === '/') return 'chip';
+  if (href === '/projects') return 'projects';
+  if (href === '/research') return 'research';
+  if (href === '/papers') return 'papers';
+  if (href === '/about') return 'chip';
+  if (href === '/contact') return 'link';
+  return 'chip';
+}
 ---
 
 <nav class="tab-bar">
@@ -11,7 +21,7 @@ const currentPath = Astro.url.pathname;
       <li>
         <a
           href={item.href}
-          class:list={['tab-item', { active: currentPath.startsWith(item.href) }]}
+          class:list={['tab-item', { active: currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) }]}
         >
           <span class="tab-icon">
             <Icon name={getIcon(item.href)} size={16} />
@@ -23,18 +33,6 @@ const currentPath = Astro.url.pathname;
   </ul>
 </nav>
 
-<script>
-  function getIcon(href: string): keyof typeof import('../ui/Icon.astro')['icons'] {
-    if (href === '/') return 'chip';
-    if (href === '/projects') return 'projects';
-    if (href === '/research') return 'research';
-    if (href === '/papers') return 'papers';
-    if (href === '/about') return 'about';
-    if (href === '/contact') return 'contact';
-    return 'chip';
-  }
-</script>
-
 <style>
   .tab-bar {
     display: none;
@@ -42,10 +40,11 @@ const currentPath = Astro.url.pathname;
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--lab-bg-panel);
-    border-top: 1px solid var(--panel-border);
-    padding: var(--space-sm);
-    z-index: var(--z-sticky);
+    background: var(--lab-bg-elevated);
+    border-top: 2px solid var(--panel-frame);
+    padding: var(--space-xs) var(--space-sm);
+    z-index: 100;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
   }
 
   @media (max-width: 640px) {
@@ -66,25 +65,28 @@ const currentPath = Astro.url.pathname;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-xs);
+    gap: 2px;
+    padding: var(--space-xs) var(--space-sm);
+    min-width: 44px;
+    min-height: 44px;
     text-decoration: none;
-    border-radius: var(--radius-sm);
-    transition: all 0.2s ease;
+    border-radius: var(--radius-md);
+    transition: all 0.15s ease;
     position: relative;
-    overflow: hidden;
+    justify-content: center;
   }
 
   .tab-item::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
+    left: 25%;
+    right: 25%;
     height: 2px;
     background: var(--accent-cyan);
+    border-radius: 0 0 2px 2px;
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.15s ease;
   }
 
   .tab-item.active::before {
@@ -93,26 +95,31 @@ const currentPath = Astro.url.pathname;
 
   .tab-item.active {
     color: var(--accent-cyan);
+    background: var(--lab-bg-panel);
   }
 
   .tab-item:not(.active) {
     color: var(--lab-text-muted);
   }
 
+  .tab-item:not(.active):active {
+    background: var(--lab-bg-panel);
+    color: var(--lab-text-secondary);
+  }
+
   .tab-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
-  }
-
-  .tab-icon Icon {
-    color: currentColor;
+    width: 20px;
+    height: 20px;
   }
 
   .tab-label {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1;
   }
 </style>
