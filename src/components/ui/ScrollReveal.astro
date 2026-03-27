@@ -1,0 +1,55 @@
+---
+interface Props {
+  threshold?: number;
+  delay?: number;
+}
+
+const { threshold = 0.1, delay = 0 } = Astro.props;
+---
+
+<div 
+  class="scroll-reveal" 
+  data-threshold={threshold}
+  data-delay={delay}
+>
+  <slot />
+</div>
+
+<style>
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const elements = document.querySelectorAll('.scroll-reveal');
+
+  elements.forEach((el) => {
+    const delay = parseFloat(el.getAttribute('data-delay') || '0') * 0.1;
+    
+    gsap.to(el, {
+      scrollTrigger: {
+        trigger: el,
+        start: `top ${100 - (parseFloat(el.getAttribute('data-threshold') || '10') * 100)}%`,
+        toggleActions: 'play none none reverse'
+      },
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      delay: delay,
+      ease: 'power2.out'
+    });
+  });
+</script>

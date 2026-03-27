@@ -8,6 +8,7 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   publishedTime?: string;
+  author?: string;
 }
 
 const {
@@ -17,11 +18,34 @@ const {
   image,
   type = 'website',
   publishedTime,
+  author,
 } = Astro.props;
 
 const pageTitle = title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
 const canonicalUrl = canonical ? canonical : Astro.url.href;
 const ogImage = image ? new URL(image, SITE_URL).href : undefined;
+
+const schemaOrg = type === 'article' ? {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "url": canonicalUrl,
+  "datePublished": publishedTime,
+  "author": author ? { "@type": "Person", "name": author } : undefined,
+} : {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Jorge Luis Mayorga Taborda",
+  "url": SITE_URL,
+  "jobTitle": "Research Engineer",
+  "description": SITE_DESCRIPTION,
+  "sameAs": [
+    "https://github.com/jlmayorga",
+    "https://linkedin.com/in/jlmayorga",
+    "https://twitter.com/jlmayorga"
+  ]
+};
 ---
 
 <title>{pageTitle}</title>
@@ -35,6 +59,7 @@ const ogImage = image ? new URL(image, SITE_URL).href : undefined;
 {ogImage && <meta property="og:image" content={ogImage} />}
 
 {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{author && <meta property="article:author" content={author} />}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={pageTitle} />
@@ -43,3 +68,5 @@ const ogImage = image ? new URL(image, SITE_URL).href : undefined;
 
 <meta name="theme-color" content="#0d1319" />
 <meta name="generator" content={Astro.generator} />
+
+<script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />

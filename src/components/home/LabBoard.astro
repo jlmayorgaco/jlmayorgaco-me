@@ -5,9 +5,11 @@ import Icon from '../ui/Icon.astro';
 interface Props {
   projects: CollectionEntry<'projects'>[];
   posts: CollectionEntry<'research'>[];
+  papersCount?: number;
+  portfolioCount?: number;
 }
 
-const { projects, posts } = Astro.props;
+const { projects, posts, papersCount = 0, portfolioCount = 0 } = Astro.props;
 ---
 
 <div class="lab-board stagger-in">
@@ -246,7 +248,7 @@ const { projects, posts } = Astro.props;
         <div class="module-icon">
           <Icon name="papers" size={28} />
         </div>
-        <span class="module-count">1</span>
+        <span class="module-count">{papersCount}</span>
         <span class="module-desc">Publications</span>
       </div>
     </a>

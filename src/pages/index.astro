@@ -14,8 +14,16 @@ const recentPosts = posts
   .filter(p => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
+
+const papers = await getCollection('papers');
+const portfolio = await getCollection('portfolio');
 ---
 
 <LabLayout>
-  <LabBoard projects={featuredProjects} posts={recentPosts} />
+  <LabBoard 
+    projects={featuredProjects} 
+    posts={recentPosts}
+    papersCount={papers.length}
+    portfolioCount={portfolio.length}
+  />
 </LabLayout>

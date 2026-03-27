@@ -1,0 +1,142 @@
+---
+interface Props {
+  size?: number;
+  speed?: number;
+  points?: number;
+}
+
+const { size = 200, speed = 4, points = 5 } = Astro.props;
+---
+
+<div 
+  class="radar-sweep" 
+  style={`--size: ${size}px; --speed: ${speed}s;`}
+>
+  <svg viewBox="0 0 100 100" class="radar-svg">
+    <!-- Background circles -->
+    <circle cx="50" cy="50" r="45" class="radar-ring" />
+    <circle cx="50" cy="50" r="35" class="radar-ring" />
+    <circle cx="50" cy="50" r="25" class="radar-ring" />
+    <circle cx="50" cy="50" r="15" class="radar-ring" />
+    
+    <!-- Cross lines -->
+    <line x1="50" y1="5" x2="50" y2="95" class="radar-line" />
+    <line x1="5" y1="50" x2="95" y2="50" class="radar-line" />
+    
+    <!-- Diagonal lines -->
+    <line x1="18" y1="18" x2="82" y2="82" class="radar-line" />
+    <line x1="82" y1="18" x2="18" y2="82" class="radar-line" />
+    
+    <!-- Sweep line -->
+    <line 
+      x1="50" 
+      y1="50" 
+      x2="50" 
+      y2="5" 
+      class="radar-sweep-line"
+    />
+    
+    <!-- Sweep gradient -->
+    <defs>
+      <linearGradient id="sweep-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="var(--accent-cyan)" stop-opacity="0" />
+        <stop offset="100%" stop-color="var(--accent-cyan)" stop-opacity="0.3" />
+      </linearGradient>
+    </defs>
+    <path d="M50 50 L95 5 A45 45 0 0 1 95 95 Z" class="radar-sweep-area" />
+    
+    <!-- Random blips -->
+    {Array.from({ length: points }).map((_, i) => (
+      <circle 
+        cx={30 + Math.random() * 40} 
+        cy={30 + Math.random() * 40} 
+        r="2" 
+        class="radar-blip"
+        style={`--delay: ${Math.random() * 4}s`}
+      />
+    ))}
+  </svg>
+  
+  <div class="radar-label">
+    <span class="led led-green led-pulse"></span>
+    SCANNING
+  </div>
+</div>
+
+<style>
+  .radar-sweep {
+    width: var(--size);
+    height: var(--size);
+    position: relative;
+  }
+
+  .radar-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .radar-ring {
+    fill: none;
+    stroke: var(--panel-border);
+    stroke-width: 0.5;
+    opacity: 0.5;
+  }
+
+  .radar-line {
+    stroke: var(--panel-border);
+    stroke-width: 0.3;
+    opacity: 0.3;
+  }
+
+  .radar-sweep-line {
+    stroke: var(--accent-cyan);
+    stroke-width: 1;
+    transform-origin: 50px 50px;
+    animation: radar-rotate var(--speed) linear infinite;
+  }
+
+  .radar-sweep-area {
+    fill: url(#sweep-gradient);
+    opacity: 0.3;
+    transform-origin: 50px 50px;
+    animation: radar-rotate var(--speed) linear infinite;
+  }
+
+  @keyframes radar-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .radar-blip {
+    fill: var(--led-green);
+    opacity: 0;
+    animation: blip-appear 2s ease-in-out infinite;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes blip-appear {
+    0%, 10% { opacity: 0; }
+    20%, 80% { opacity: 1; }
+    90%, 100% { opacity: 0; }
+  }
+
+  .radar-label {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .led {
+    width: 4px;
+    height: 4px;
+  }
+</style>

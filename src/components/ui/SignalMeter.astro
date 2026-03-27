@@ -1,0 +1,144 @@
+---
+interface Props {
+  level?: number;
+  segments?: number;
+  label?: string;
+  variant?: 'default' | 'inverted';
+}
+
+const { level = 75, segments = 10, label, variant = 'default' } = Astro.props;
+---
+
+<div class:list={['signal-meter', `variant-${variant}`]}>
+  {label && <span class="meter-label">{label}</span>}
+  <div class="meter-bars" data-level={level} data-segments={segments}>
+    {Array.from({ length: segments }).map((_, i) => (
+      <span 
+        class="meter-bar" 
+        data-index={i}
+        style={`--delay: ${i * 0.05}s`}
+      ></span>
+    ))}
+  </div>
+  <span class="meter-value">{level}%</span>
+</div>
+
+<style>
+  .signal-meter {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .meter-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 60px;
+  }
+
+  .meter-bars {
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+    height: 16px;
+  }
+
+  .meter-bar {
+    width: 4px;
+    background: var(--lab-bg-dark);
+    border-radius: 1px;
+    transition: background 0.2s ease;
+  }
+
+  .meter-bar[data-index="0"],
+  .meter-bar[data-index="1"] {
+    height: 20%;
+    background: var(--led-green);
+  }
+
+  .meter-bar[data-index="2"],
+  .meter-bar[data-index="3"] {
+    height: 40%;
+  }
+
+  .meter-bar[data-index="4"],
+  .meter-bar[data-index="5"],
+  .meter-bar[data-index="6"] {
+    height: 60%;
+  }
+
+  .meter-bar[data-index="7"],
+  .meter-bar[data-index="8"] {
+    height: 80%;
+  }
+
+  .meter-bar[data-index="9"] {
+    height: 100%;
+  }
+
+  /* Inactive bars */
+  .meter-bars:not([data-level="100"]) .meter-bar[data-index]:not(.active) {
+    background: var(--lab-bg-dark);
+    opacity: 0.5;
+  }
+
+  .meter-value {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    min-width: 40px;
+    text-align: right;
+  }
+
+  /* Animated level */
+  .meter-bar.active {
+    animation: meter-pulse 1s ease-in-out infinite;
+    animation-delay: var(--delay);
+  }
+
+  .meter-bar.above-level {
+    background: var(--led-amber) !important;
+    opacity: 0.3;
+  }
+
+  .meter-bar.critical {
+    background: var(--led-red) !important;
+  }
+
+  @keyframes meter-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Inverted variant */
+  .variant-inverted .meter-bar {
+    background: var(--led-red);
+  }
+</style>
+
+<script>
+  const meters = document.querySelectorAll('.meter-bars');
+  
+  meters.forEach((meter) => {
+    const level = parseInt(meter.getAttribute('data-level') || '0');
+    const segments = parseInt(meter.getAttribute('data-segments') || '10');
+    const activeCount = Math.round((level / 100) * segments);
+    
+    const bars = meter.querySelectorAll('.meter-bar');
+    bars.forEach((bar, i) => {
+      if (i < activeCount) {
+        bar.classList.add('active');
+      } else {
+        bar.classList.add('above-level');
+      }
+      
+      // Last bars turn amber/red at high levels
+      if (level > 80 && i >= segments - 2) {
+        bar.classList.add('critical');
+      }
+    });
+  });
+</script>

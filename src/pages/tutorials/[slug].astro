@@ -1,0 +1,439 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+import Icon from '../../components/ui/Icon.astro';
+
+export async function getStaticPaths() {
+  const tutorials = await getCollection('tutorials');
+  const published = tutorials.filter(t => !t.data.draft);
+  return published.map((item) => ({
+    params: { slug: item.id },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { data } = item;
+const { Content } = await render(item);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { 
+    month: 'long', 
+    day: 'numeric', 
+    year: 'numeric' 
+  });
+}
+---
+
+<BaseLayout title={data.title} description={data.description}>
+  <article class="tutorial-detail">
+    <div class="panel-header-bar">
+      <div class="bar-screws">
+        <Icon name="screw" size={10} />
+        <Icon name="screw" size={10} />
+      </div>
+      <div class="bar-label">TUTORIAL_NODE_{data.category.toUpperCase()}</div>
+      <div class="bar-leds">
+        <span class="led"></span>
+      </div>
+    </div>
+    
+    <div class="panel-content">
+      <header class="tutorial-header">
+        <div class="tutorial-meta">
+          <span class={`level-badge ${data.level}`}>{data.level}</span>
+          <span class="meta-category">{data.category}</span>
+          {data.duration && (
+            <span class="meta-duration">
+              <Icon name="clock" size={12} />
+              {data.duration}
+            </span>
+          )}
+        </div>
+        
+        <h1 class="tutorial-title">{data.title}</h1>
+        <p class="tutorial-description">{data.description}</p>
+        
+        <div class="tutorial-tags">
+          {data.tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+
+        <div class="tutorial-date">
+          <Icon name="calendar" size={14} />
+          <span>{formatDate(data.date)}</span>
+        </div>
+      </header>
+
+      <div class="tutorial-toc">
+        <div class="toc-header">
+          <Icon name="list" size={14} />
+          <span>Contents</span>
+        </div>
+        <nav class="toc-nav">
+          <slot name="toc" />
+        </nav>
+      </div>
+
+      <div class="tutorial-body prose">
+        <Content />
+      </div>
+    </div>
+    
+    <div class="panel-footer">
+      <div class="footer-screws">
+        <Icon name="screw" size={8} />
+        <Icon name="screw" size={8} />
+      </div>
+      <div class="footer-label">END_TUTORIAL</div>
+      <div class="footer-stripe"></div>
+    </div>
+  </article>
+
+  <nav class="tutorial-nav">
+    <a href="/tutorials" class="nav-back">
+      <Icon name="arrow_back" size={16} />
+      <span>All Tutorials</span>
+    </a>
+  </nav>
+</BaseLayout>
+
+<style>
+  .tutorial-detail {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .panel-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .bar-screws {
+    display: flex;
+    gap: var(--space-md);
+    color: var(--lab-text-muted);
+  }
+
+  .bar-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .bar-leds {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .led {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .panel-content {
+    padding: var(--space-xl);
+  }
+
+  .tutorial-header {
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .tutorial-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .level-badge {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .level-badge.beginner {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--led-green);
+  }
+
+  .level-badge.intermediate {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--led-amber);
+  }
+
+  .level-badge.advanced {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--led-red);
+  }
+
+  .meta-category {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .meta-duration {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--lab-text-muted);
+  }
+
+  .tutorial-title {
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    margin-bottom: var(--space-md);
+    color: var(--lab-text-primary);
+    line-height: 1.2;
+  }
+
+  .tutorial-description {
+    font-size: 1.125rem;
+    color: var(--lab-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+  }
+
+  .tutorial-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    padding: 4px 8px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    color: var(--lab-text-secondary);
+  }
+
+  .tutorial-date {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--lab-text-muted);
+  }
+
+  .tutorial-toc {
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .toc-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-md);
+  }
+
+  .toc-nav {
+    font-size: 0.875rem;
+  }
+
+  .tutorial-body {
+    max-width: 70ch;
+  }
+
+  .tutorial-body :global(h1),
+  .tutorial-body :global(h2),
+  .tutorial-body :global(h3),
+  .tutorial-body :global(h4) {
+    font-family: var(--font-display);
+    color: var(--lab-text-primary);
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-md);
+  }
+
+  .tutorial-body :global(h1) { font-size: 1.75rem; }
+  .tutorial-body :global(h2) { font-size: 1.5rem; }
+  .tutorial-body :global(h3) { font-size: 1.25rem; }
+  .tutorial-body :global(h4) { font-size: 1.125rem; }
+
+  .tutorial-body :global(p) {
+    color: var(--lab-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+  }
+
+  .tutorial-body :global(ul),
+  .tutorial-body :global(ol) {
+    color: var(--lab-text-secondary);
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+  }
+
+  .tutorial-body :global(li) {
+    margin-bottom: var(--space-xs);
+    line-height: 1.6;
+  }
+
+  .tutorial-body :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    padding: 2px 6px;
+    background: var(--lab-bg-dark);
+    border-radius: var(--radius-sm);
+    color: var(--accent-cyan);
+  }
+
+  .tutorial-body :global(pre) {
+    background: var(--screen-bg);
+    border: 1px solid var(--screen-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    overflow-x: auto;
+    margin: var(--space-lg) 0;
+  }
+
+  .tutorial-body :global(pre code) {
+    background: none;
+    padding: 0;
+    color: var(--lab-text-on-dark);
+  }
+
+  .tutorial-body :global(blockquote) {
+    border-left: 3px solid var(--accent-cyan);
+    padding-left: var(--space-md);
+    margin: var(--space-lg) 0;
+    color: var(--lab-text-secondary);
+    font-style: italic;
+  }
+
+  .tutorial-body :global(a) {
+    color: var(--accent-cyan);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .tutorial-body :global(a:hover) {
+    color: var(--lab-text-primary);
+  }
+
+  .tutorial-body :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin: var(--space-lg) 0;
+    border: 1px solid var(--panel-border);
+  }
+
+  .tutorial-body :global(strong) {
+    color: var(--lab-text-primary);
+    font-weight: 600;
+  }
+
+  .panel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-xs) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .footer-screws {
+    display: flex;
+    gap: var(--space-lg);
+    color: var(--lab-text-muted);
+    opacity: 0.6;
+  }
+
+  .footer-label {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.15em;
+  }
+
+  .footer-stripe {
+    width: 40px;
+    height: 3px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--panel-border) 0px,
+      var(--panel-border) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
+
+  .tutorial-nav {
+    max-width: var(--container-lg);
+    margin: var(--space-lg) auto 0;
+  }
+
+  .nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--lab-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .nav-back:hover {
+    color: var(--accent-cyan);
+  }
+
+  @media (max-width: 768px) {
+    .panel-content {
+      padding: var(--space-md);
+    }
+
+    .tutorial-title {
+      font-size: 1.5rem;
+    }
+
+    .tutorial-description {
+      font-size: 1rem;
+    }
+
+    .tutorial-meta {
+      gap: var(--space-sm);
+    }
+  }
+</style>

@@ -9,7 +9,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "pipeline": "node src/lib/pipeline/run-pipeline.ts",
+    "pipeline:scan": "node src/lib/pipeline/run-pipeline.ts scan",
+    "pipeline:summarize": "node src/lib/pipeline/run-pipeline.ts summarize",
+    "pipeline:notify": "node src/lib/pipeline/run-pipeline.ts notify"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
@@ -19,6 +23,7 @@
     "@types/three": "^0.183.1",
     "astro": "^6.1.0",
     "astro-icon": "^1.1.5",
+    "gsap": "^3.14.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "sharp": "^0.34.3",

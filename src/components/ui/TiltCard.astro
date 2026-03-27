@@ -1,0 +1,84 @@
+---
+interface Props {
+  intensity?: number;
+}
+
+const { intensity = 10 } = Astro.props;
+---
+
+<div 
+  class="tilt-card" 
+  data-intensity={intensity}
+>
+  <div class="tilt-card-inner">
+    <slot />
+  </div>
+  <div class="tilt-card-glare"></div>
+</div>
+
+<style>
+  .tilt-card {
+    position: relative;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+
+  .tilt-card-inner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease-out;
+  }
+
+  .tilt-card-glare {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .tilt-card:hover .tilt-card-glare {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.tilt-card').forEach((card) => {
+    const intensity = parseFloat(card.getAttribute('data-intensity') || '10');
+    const inner = card.querySelector('.tilt-card-inner') as HTMLElement;
+    const glare = card.querySelector('.tilt-card-glare') as HTMLElement;
+    
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e as MouseEvent).clientX - rect.left;
+      const y = (e as MouseEvent).clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = ((y - centerY) / centerY) * -intensity;
+      const rotateY = ((x - centerX) / centerX) * intensity;
+      
+      if (inner) {
+        inner.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      }
+      
+      if (glare) {
+        glare.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+        glare.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+      }
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      if (inner) {
+        inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      }
+    });
+  });
+</script>

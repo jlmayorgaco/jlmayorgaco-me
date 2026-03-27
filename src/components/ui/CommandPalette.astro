@@ -1,0 +1,303 @@
+---
+interface Props {
+  placeholder?: string;
+}
+
+const { placeholder = "Search..." } = Astro.props;
+---
+
+<div class="command-palette" id="command-palette">
+  <div class="palette-backdrop"></div>
+  <div class="palette-panel">
+    <div class="palette-header">
+      <div class="palette-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </div>
+      <input 
+        type="text" 
+        class="palette-input" 
+        placeholder={placeholder}
+        id="palette-input"
+      />
+      <kbd class="palette-kbd">ESC</kbd>
+    </div>
+    <div class="palette-results" id="palette-results">
+      <div class="palette-section">
+        <span class="palette-section-title">Pages</span>
+        <a href="/projects" class="palette-item" data-key="p">
+          <span class="item-icon">📁</span>
+          <span class="item-text">Projects</span>
+          <kbd>p</kbd>
+        </a>
+        <a href="/research" class="palette-item" data-key="r">
+          <span class="item-icon">📝</span>
+          <span class="item-text">Research</span>
+          <kbd>r</kbd>
+        </a>
+        <a href="/papers" class="palette-item" data-key="a">
+          <span class="item-icon">📄</span>
+          <span class="item-text">Papers</span>
+          <kbd>a</kbd>
+        </a>
+        <a href="/tutorials" class="palette-item" data-key="t">
+          <span class="item-icon">📚</span>
+          <span class="item-text">Tutorials</span>
+          <kbd>t</kbd>
+        </a>
+        <a href="/about" class="palette-item">
+          <span class="item-icon">👤</span>
+          <span class="item-text">About</span>
+        </a>
+        <a href="/contact" class="palette-item">
+          <span class="item-icon">✉️</span>
+          <span class="item-text">Contact</span>
+        </a>
+      </div>
+    </div>
+    <div class="palette-footer">
+      <span class="hint">
+        <kbd>↑↓</kbd> Navigate
+      </span>
+      <span class="hint">
+        <kbd>↵</kbd> Select
+      </span>
+      <span class="hint">
+        <kbd>ESC</kbd> Close
+      </span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .command-palette {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+  }
+
+  .command-palette.open {
+    display: block;
+  }
+
+  .palette-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  .palette-panel {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 560px;
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+  }
+
+  .palette-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .palette-icon {
+    color: var(--lab-text-muted);
+  }
+
+  .palette-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--lab-text-primary);
+  }
+
+  .palette-input::placeholder {
+    color: var(--lab-text-muted);
+  }
+
+  .palette-kbd {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    padding: 2px 6px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    color: var(--lab-text-muted);
+  }
+
+  .palette-results {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: var(--space-sm);
+  }
+
+  .palette-section {
+    margin-bottom: var(--space-sm);
+  }
+
+  .palette-section-title {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .palette-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--lab-text-secondary);
+    transition: all 0.15s ease;
+  }
+
+  .palette-item:hover,
+  .palette-item.selected {
+    background: var(--lab-bg-elevated);
+    color: var(--lab-text-primary);
+  }
+
+  .item-icon {
+    font-size: 1rem;
+    opacity: 0.7;
+  }
+
+  .item-text {
+    flex: 1;
+    font-size: 0.875rem;
+  }
+
+  .palette-item kbd {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    padding: 2px 6px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    color: var(--lab-text-muted);
+  }
+
+  .palette-footer {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    border-top: 1px solid var(--panel-border);
+    background: var(--lab-bg-dark);
+  }
+
+  .hint {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+  }
+
+  .hint kbd {
+    font-size: 0.5rem;
+    padding: 1px 4px;
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 2px;
+  }
+</style>
+
+<script>
+  const palette = document.getElementById('command-palette');
+  const input = document.getElementById('palette-input') as HTMLInputElement;
+  const items = document.querySelectorAll('.palette-item');
+  let selectedIndex = 0;
+
+  function openPalette() {
+    palette?.classList.add('open');
+    input?.focus();
+    selectedIndex = 0;
+    updateSelection();
+  }
+
+  function closePalette() {
+    palette?.classList.remove('open');
+    if (input) input.value = '';
+  }
+
+  function updateSelection() {
+    items.forEach((item, i) => {
+      item.classList.toggle('selected', i === selectedIndex);
+    });
+  }
+
+  function selectItem() {
+    const selected = items[selectedIndex] as HTMLAnchorElement;
+    if (selected?.href) {
+      window.location.href = selected.href;
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      openPalette();
+    }
+
+    if (!palette?.classList.contains('open')) return;
+
+    if (e.key === 'Escape') {
+      closePalette();
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+      updateSelection();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedIndex = Math.max(selectedIndex - 1, 0);
+      updateSelection();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      selectItem();
+    }
+  });
+
+  // Keyboard shortcuts
+  const shortcuts: Record<string, string> = {
+    'p': '/projects',
+    'r': '/research',
+    'a': '/papers',
+    't': '/tutorials'
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') return;
+    
+    // Don't trigger shortcuts when typing in inputs
+    if (document.activeElement?.tagName === 'INPUT') return;
+
+    const href = shortcuts[e.key.toLowerCase()];
+    if (href && (e.metaKey || e.ctrlKey) === false) {
+      // Only trigger for single keys without modifiers
+      window.location.href = href;
+    }
+  });
+
+  document.querySelector('.palette-backdrop')?.addEventListener('click', closePalette);
+</script>
