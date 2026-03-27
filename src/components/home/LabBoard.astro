@@ -1082,9 +1082,281 @@ const { projects, posts } = Astro.props;
     }
   }
 
+  @media (max-width: 768px) {
+    .lab-board {
+      gap: var(--space-sm);
+      padding: var(--space-sm);
+    }
+
+    .board-row {
+      gap: var(--space-sm);
+    }
+
+    .panel {
+      border-radius: var(--radius-md);
+    }
+
+    .panel-header {
+      padding: var(--space-xs) var(--space-sm);
+    }
+
+    .panel-content {
+      padding: var(--space-sm);
+    }
+
+    .label-tag {
+      font-size: 0.5rem;
+      padding: 2px 4px;
+    }
+
+    .module-id, .screen-mode {
+      font-size: 0.4rem;
+      padding: 1px 3px;
+    }
+
+    .identity-panel .chip-main {
+      padding: var(--space-sm);
+    }
+
+    .chip-label {
+      font-size: 1rem;
+    }
+
+    .chip-sub {
+      font-size: 0.5rem;
+    }
+
+    .identity-info {
+      padding: 0;
+    }
+
+    .identity-title {
+      font-size: 0.8125rem;
+    }
+
+    .identity-focus {
+      font-size: 0.5625rem;
+    }
+
+    .identity-stats {
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+
+    .stat-item {
+      gap: var(--space-xs);
+    }
+
+    .stat-led {
+      width: 4px;
+      height: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.4rem;
+    }
+
+    .stat-value {
+      font-size: 0.5625rem;
+    }
+
+    .hero-monitor {
+      border-radius: var(--radius-md);
+    }
+
+    .screen-header {
+      margin-bottom: var(--space-xs);
+      padding-bottom: var(--space-xs);
+    }
+
+    .screen-title {
+      font-size: 0.5625rem;
+    }
+
+    .screen-status {
+      font-size: 0.4375rem;
+    }
+
+    .screen-body {
+      gap: var(--space-sm);
+    }
+
+    .type-label {
+      font-size: 0.625rem;
+    }
+
+    .type-output {
+      font-size: 0.875rem;
+    }
+
+    .type-output-sub {
+      font-size: 0.6875rem;
+    }
+
+    .hero-terminal {
+      padding: var(--space-xs);
+      font-size: 0.625rem;
+    }
+
+    .hero-cta {
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .cta-btn {
+      width: 100%;
+      justify-content: center;
+      padding: var(--space-xs) var(--space-sm);
+      font-size: 0.6875rem;
+    }
+
+    .waveform-footer {
+      margin-top: var(--space-xs);
+      padding-top: var(--space-xs);
+    }
+
+    .waveform-bars {
+      height: 12px;
+    }
+
+    .waveform-bar {
+      width: 2px;
+    }
+
+    .waveform-label {
+      font-size: 0.375rem;
+    }
+
+    .info-section {
+      padding: var(--space-xs) 0;
+    }
+
+    .info-label {
+      font-size: 0.5rem;
+    }
+
+    .info-value {
+      font-size: 0.75rem;
+    }
+
+    .info-link {
+      font-size: 0.5625rem;
+    }
+
+    .info-vent {
+      padding: var(--space-xs);
+    }
+
+    .vent-slot {
+      height: 12px;
+    }
+
+    .serial {
+      font-size: 0.375rem;
+    }
+
+    .screw-row {
+      margin: var(--space-xs) 0;
+    }
+
+    .screw {
+      width: 6px;
+      height: 6px;
+    }
+
+    .screw::before {
+      width: 3px;
+    }
+
+    .screw::after {
+      width: 3px;
+    }
+
+    .port-row {
+      gap: 4px;
+    }
+
+    .port {
+      width: 8px;
+      height: 6px;
+    }
+
+    .port-label {
+      font-size: 0.375rem;
+    }
+
+    .content-row {
+      gap: var(--space-sm);
+    }
+
+    .content-panel {
+      margin-bottom: var(--space-sm);
+    }
+
+    .content-grid {
+      gap: var(--space-sm);
+    }
+
+    .content-card {
+      padding: var(--space-sm);
+    }
+
+    .card-title {
+      font-size: 0.8125rem;
+    }
+
+    .card-summary {
+      font-size: 0.6875rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .content-list {
+      gap: var(--space-xs);
+    }
+
+    .post-item {
+      padding: var(--space-xs);
+    }
+
+    .post-date {
+      font-size: 0.5rem;
+      min-width: 35px;
+    }
+
+    .post-title {
+      font-size: 0.75rem;
+    }
+
+    .post-category {
+      font-size: 0.4375rem;
+    }
+  }
+
   @media (max-width: 640px) {
     .modules-row {
       grid-template-columns: 1fr;
+    }
+
+    .module-card .module-content {
+      flex-direction: row;
+      justify-content: flex-start;
+      text-align: left;
+      gap: var(--space-md);
+    }
+
+    .module-icon {
+      margin-bottom: 0;
+    }
+
+    .module-count {
+      font-size: 1rem;
+    }
+
+    .module-desc {
+      font-size: 0.5625rem;
     }
   }
 </style>

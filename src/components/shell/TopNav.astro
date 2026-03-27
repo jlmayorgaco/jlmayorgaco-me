@@ -399,12 +399,31 @@ const currentPath = Astro.url.pathname;
 
   /* Mobile styles */
   @media (max-width: 768px) {
+    .lab-header {
+      border-bottom-width: 1px;
+    }
+
     .header-container {
       padding: var(--space-xs) var(--space-sm);
+      gap: var(--space-xs);
     }
 
     .brand-panel {
       padding: 6px 10px 6px 6px;
+      gap: var(--space-xs);
+    }
+
+    .chip-badge {
+      padding: 4px;
+    }
+
+    .chip-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .chip-text {
+      font-size: 0.875rem;
     }
 
     .brand-info,
@@ -413,6 +432,49 @@ const currentPath = Astro.url.pathname;
     }
 
     .brand-divider {
+      display: none;
+    }
+
+    .nav-links {
+      display: none;
+    }
+
+    .status-panel {
+      gap: var(--space-xs);
+    }
+
+    .status-item {
+      display: none;
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+      padding: 8px;
+      background: var(--lab-bg-dark);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-sm);
+    }
+
+    .lab-header.menu-open .nav-links {
+      display: flex;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      background: var(--lab-bg-panel);
+      border-bottom: 2px solid var(--panel-frame);
+      padding: var(--space-sm);
+      gap: var(--space-xs);
+    }
+
+    .lab-header.menu-open .nav-link {
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-sm);
+      justify-content: flex-start;
+    }
+
+    .nav-screw {
       display: none;
     }
   }

@@ -1,0 +1,306 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import Icon from '../../components/ui/Icon.astro';
+
+export async function getStaticPaths() {
+  const portfolio = await getCollection('portfolio');
+  return portfolio.map((item) => ({
+    params: { slug: item.id },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { data, render } = item;
+---
+
+<BaseLayout title={data.title} description={data.description}>
+  <article class="portfolio-detail">
+    <div class="panel-header-bar">
+      <div class="bar-screws">
+        <Icon name="screw" size={10} />
+        <Icon name="screw" size={10} />
+      </div>
+      <div class="bar-label">PORTFOLIO_LOG_{data.year}</div>
+      <div class="bar-leds">
+        <span class="led"></span>
+      </div>
+    </div>
+    
+    <div class="panel-content">
+      <header class="portfolio-header">
+        <div class="portfolio-meta">
+          <span class="meta-category">{data.category}</span>
+          <span class="meta-year">{data.year}</span>
+          <span class={`meta-status status-${data.status}`}>{data.status}</span>
+        </div>
+        
+        <h1 class="portfolio-title">{data.title}</h1>
+        <p class="portfolio-description">{data.description}</p>
+        
+        {data.tags && (
+          <div class="portfolio-tags">
+            {data.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      <div class="portfolio-body prose">
+        <slot />
+      </div>
+    </div>
+    
+    <div class="panel-footer">
+      <div class="footer-screws">
+        <Icon name="screw" size={8} />
+        <Icon name="screw" size={8} />
+      </div>
+      <div class="footer-label">END_LOG</div>
+      <div class="footer-stripe"></div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .portfolio-detail {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .panel-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .bar-screws {
+    display: flex;
+    gap: var(--space-md);
+    color: var(--lab-text-muted);
+  }
+
+  .bar-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .bar-leds {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .led {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .panel-content {
+    padding: var(--space-lg);
+  }
+
+  .portfolio-header {
+    margin-bottom: var(--space-2xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .portfolio-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+
+  .meta-category {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .meta-year {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--lab-text-muted);
+  }
+
+  .meta-status {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+  }
+
+  .status-published {
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--accent-cyan);
+  }
+
+  .status-wip {
+    background: rgba(210, 153, 34, 0.2);
+    color: var(--led-amber);
+  }
+
+  .status-archived {
+    background: var(--lab-bg-elevated);
+    color: var(--lab-text-muted);
+  }
+
+  .portfolio-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin-bottom: var(--space-md);
+    color: var(--lab-text-primary);
+  }
+
+  .portfolio-description {
+    font-size: 1.125rem;
+    color: var(--lab-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+  }
+
+  .portfolio-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    padding: 4px 8px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    color: var(--lab-text-secondary);
+  }
+
+  .portfolio-body {
+    max-width: 70ch;
+  }
+
+  .portfolio-body h1,
+  .portfolio-body h2,
+  .portfolio-body h3 {
+    font-family: var(--font-display);
+    color: var(--lab-text-primary);
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-md);
+  }
+
+  .portfolio-body h1 { font-size: 1.75rem; }
+  .portfolio-body h2 { font-size: 1.5rem; }
+  .portfolio-body h3 { font-size: 1.25rem; }
+
+  .portfolio-body p {
+    color: var(--lab-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+  }
+
+  .portfolio-body ul,
+  .portfolio-body ol {
+    color: var(--lab-text-secondary);
+    margin-bottom: var(--space-md);
+    padding-left: var(--space-lg);
+  }
+
+  .portfolio-body li {
+    margin-bottom: var(--space-xs);
+  }
+
+  .portfolio-body code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    padding: 2px 6px;
+    background: var(--lab-bg-dark);
+    border-radius: var(--radius-sm);
+    color: var(--accent-cyan);
+  }
+
+  .portfolio-body pre {
+    background: var(--screen-bg);
+    border: 1px solid var(--screen-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    overflow-x: auto;
+    margin: var(--space-lg) 0;
+  }
+
+  .portfolio-body pre code {
+    background: none;
+    padding: 0;
+    color: var(--lab-text-on-dark);
+  }
+
+  .panel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-xs) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .footer-screws {
+    display: flex;
+    gap: var(--space-lg);
+    color: var(--lab-text-muted);
+    opacity: 0.6;
+  }
+
+  .footer-label {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.15em;
+  }
+
+  .footer-stripe {
+    width: 40px;
+    height: 3px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--panel-border) 0px,
+      var(--panel-border) 4px,
+      transparent 4px,
+      transparent 8px
+    );
+  }
+
+  @media (max-width: 768px) {
+    .panel-content {
+      padding: var(--space-md);
+    }
+
+    .portfolio-title {
+      font-size: 1.5rem;
+    }
+
+    .portfolio-description {
+      font-size: 1rem;
+    }
+  }
+</style>

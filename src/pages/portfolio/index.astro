@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PortfolioCard from '../../components/portfolio/PortfolioCard.astro';
+import SectionTitle from '../../components/ui/SectionTitle.astro';
+import Icon from '../../components/ui/Icon.astro';
+import { getCollection } from 'astro:content';
+
+const portfolioItems = await getCollection('portfolio');
+const sortedItems = portfolioItems.sort((a, b) => b.data.year - a.data.year);
+---
+
+<BaseLayout title="Portfolio" description="Technical portfolio and work history">
+  <div class="portfolio-page">
+    <header class="page-header">
+      <div class="header-bar">
+        <div class="bar-screws">
+          <Icon name="screw" size={10} />
+          <Icon name="screw" size={10} />
+        </div>
+        <div class="bar-label">PORTFOLIO_NODE</div>
+        <div class="bar-leds">
+          <span class="led"></span>
+        </div>
+      </div>
+      
+      <div class="header-content">
+        <SectionTitle as="h1">Portfolio</SectionTitle>
+        <p class="page-description">
+          A collection of technical work, projects, and accomplishments spanning 
+          robotics, embedded systems, and software development.
+        </p>
+      </div>
+    </header>
+
+    <div class="portfolio-stats">
+      <div class="stat-panel">
+        <div class="stat-icon">
+          <Icon name="chip" size={20} />
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{portfolioItems.length}</span>
+          <span class="stat-label">Total Items</span>
+        </div>
+      </div>
+      <div class="stat-panel">
+        <div class="stat-icon">
+          <Icon name="calendar" size={20} />
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{new Date().getFullYear() - Math.min(...portfolioItems.map(i => i.data.year))}+</span>
+          <span class="stat-label">Years Active</span>
+        </div>
+      </div>
+      <div class="stat-panel">
+        <div class="stat-icon">
+          <Icon name="network" size={20} />
+        </div>
+        <div class="stat-info">
+          <span class="stat-value">{new Set(portfolioItems.map(i => i.data.category)).size}</span>
+          <span class="stat-label">Categories</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="portfolio-grid">
+      {sortedItems.map((item) => (
+        <PortfolioCard item={item} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .portfolio-page {
+    max-width: var(--container-lg);
+    margin: 0 auto;
+    padding: var(--space-lg) 0;
+  }
+
+  .page-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin-bottom: -1px;
+  }
+
+  .bar-screws {
+    display: flex;
+    gap: var(--space-md);
+    color: var(--lab-text-muted);
+  }
+
+  .bar-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .bar-leds {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .led {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .header-content {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    padding: var(--space-lg);
+  }
+
+  .page-description {
+    font-size: var(--text-lg);
+    color: var(--lab-text-secondary);
+    max-width: 600px;
+    margin-top: var(--space-md);
+    line-height: 1.7;
+  }
+
+  .portfolio-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .stat-panel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--lab-bg-dark);
+    border-radius: var(--radius-md);
+    color: var(--accent-cyan);
+  }
+
+  .stat-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  @media (max-width: 768px) {
+    .portfolio-stats {
+      grid-template-columns: 1fr;
+    }
+
+    .portfolio-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

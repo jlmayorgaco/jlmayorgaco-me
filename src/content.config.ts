@@ -2,6 +2,20 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
+const portfolio = defineCollection({
+  loader: glob({ base: './src/content/portfolio', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    year: z.number(),
+    category: z.string(),
+    tags: z.array(z.string()).optional(),
+    featured: z.boolean().default(false),
+    status: z.enum(['published', 'wip', 'archived']).default('published'),
+    order: z.number().default(0),
+  }),
+});
+
 const projects = defineCollection({
   loader: glob({ base: './src/content/projects', pattern: '**/*.{md,mdx}' }),
   schema: ({ image }) =>
@@ -59,4 +73,4 @@ const papers = defineCollection({
   }),
 });
 
-export const collections = { projects, research, papers };
+export const collections = { portfolio, projects, research, papers };

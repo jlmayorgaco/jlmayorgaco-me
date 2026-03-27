@@ -1,4 +1,6 @@
 ---
+import Icon from '../ui/Icon.astro';
+
 interface Props {
   title?: string;
 }
@@ -9,7 +11,7 @@ const { title = 'No content found' } = Astro.props;
 <div class="empty-panel">
   <div class="panel-header">
     <div class="header-left">
-      <Icon name="alert-circle" size={16} />
+      <Icon name="alert_circle" size={16} />
       <span>SYSTEM_ALERT</span>
     </div>
     <div class="header-right">

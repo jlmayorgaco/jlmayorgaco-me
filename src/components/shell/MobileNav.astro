@@ -1,12 +1,15 @@
 ---
 import { NAV_ITEMS } from '../../lib/config';
+import Icon from '../ui/Icon.astro';
 
 const currentPath = Astro.url.pathname;
 ---
 
 <nav class="mobile-nav" id="mobile-nav">
   <div class="mobile-nav-header">
-    <span class="nav-marker">◈</span>
+    <span class="nav-marker">
+      <Icon name="chip" size={18} />
+    </span>
     <span class="nav-title">JLMT LAB</span>
   </div>
   <ul class="mobile-nav-list">

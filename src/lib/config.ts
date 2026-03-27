@@ -4,6 +4,7 @@ export const SITE_URL = 'https://jlmayorga.co';
 
 export const NAV_ITEMS = [
   { href: '/projects', label: 'Projects' },
+  { href: '/portfolio', label: 'Portfolio' },
   { href: '/research', label: 'Research' },
   { href: '/papers', label: 'Papers' },
   { href: '/about', label: 'About' },

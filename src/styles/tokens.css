@@ -73,33 +73,34 @@
   --nav-height: 64px;
 }
 
-/* === MOBILE: Dark Teal === */
+/* === MOBILE: Dark Teal - Industrial Dark === */
 @media (max-width: 768px) {
   :root {
-    --lab-bg-base: #0d1319;
-    --lab-bg-panel: #141c24;
-    --lab-bg-elevated: #1a242f;
-    --lab-bg-dark: #0a0f14;
+    /* Same palette as desktop but adjusted for dark mode */
+    --lab-bg-base: #1a1f23;
+    --lab-bg-panel: #22282d;
+    --lab-bg-elevated: #2d333a;
+    --lab-bg-dark: #171c21;
     
-    --panel-frame: #1f2a34;
-    --panel-border: #2d3a44;
-    --panel-inner: #1a242f;
+    --panel-frame: #3a424a;
+    --panel-border: #333b44;
+    --panel-inner: #2a3138;
     
-    --screen-bg: #0d1319;
-    --screen-border: #1f2a34;
+    --screen-bg: #0f1419;
+    --screen-border: #2d3a44;
     --screen-inner: #080c10;
-    --screen-glow: rgba(63, 185, 167, 0.1);
+    --screen-glow: rgba(63, 185, 167, 0.15);
     
-    --lab-text-primary: #e6edf3;
-    --lab-text-secondary: #8b949e;
-    --lab-text-muted: #6e7681;
-    --lab-text-on-dark: #8b949e;
+    --lab-text-primary: #e8ece9;
+    --lab-text-secondary: #9aa5a1;
+    --lab-text-muted: #6b7673;
+    --lab-text-on-dark: #a8b0ac;
     
-    --accent-cyan: #3fb9a7;
-    --accent-cyan-dim: #2d6e63;
-    --accent-cyan-glow: rgba(63, 185, 167, 0.2);
-    --accent-copper: #9a7a5a;
-    --accent-copper-dim: #6a503a;
+    --accent-cyan: #4dc9b8;
+    --accent-cyan-dim: #3a8a7d;
+    --accent-cyan-glow: rgba(63, 185, 167, 0.25);
+    --accent-copper: #b8956a;
+    --accent-copper-dim: #8a704a;
     
     --shadow-panel: 0 2px 4px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2);
     --shadow-raised: 0 4px 8px rgba(0,0,0,0.4), 0 8px 16px rgba(0,0,0,0.3);
