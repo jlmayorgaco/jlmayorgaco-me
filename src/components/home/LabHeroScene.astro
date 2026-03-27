@@ -1,19 +1,44 @@
 ---
 import SectionTitle from '../ui/SectionTitle.astro';
+import Icon from '../ui/Icon.astro';
 ---
 
-<section class="lab-hero">
-  <div class="hero-grid">
-    <div class="hero-frame corner-tl"></div>
-    <div class="hero-frame corner-tr"></div>
-    <div class="hero-frame corner-bl"></div>
-    <div class="hero-frame corner-br"></div>
+<section class="hero-panel">
+  <div class="frame-overlay">
+    <div class="corner-tl">
+      <Icon name="screw" size={12} />
+      <Icon name="screw" size={12} />
+    </div>
+    <div class="corner-tr">
+      <Icon name="screw" size={12} />
+      <Icon name="screw" size={12} />
+    </div>
+    <div class="corner-bl">
+      <Icon name="screw" size={12} />
+      <Icon name="screw" size={12} />
+    </div>
+    <div class="corner-br">
+      <Icon name="screw" size={12} />
+      <Icon name="screw" size={12} />
+    </div>
   </div>
   
   <div class="hero-content">
+    <div class="module-header">
+      <div class="header-label">SYSTEM_STATUS</div>
+      <div class="header-icon">
+        <Icon name="robot" size={16} />
+      </div>
+      <div class="header-leds">
+        <span class="led led-green"></span>
+        <span class="led led-amber"></span>
+        <span class="led led-red"></span>
+      </div>
+    </div>
+    
     <div class="hero-badge">
       <span class="pulse-dot"></span>
-      <span>Research Engineer</span>
+      <span>RESEARCH_ENGINEER</span>
     </div>
     
     <h1 class="hero-title">
@@ -29,221 +54,271 @@ import SectionTitle from '../ui/SectionTitle.astro';
     </p>
     
     <div class="hero-actions">
-      <a href="/projects" class="hero-btn primary">View Projects</a>
-      <a href="/about" class="hero-btn secondary">About Me</a>
+      <a href="/projects" class="hero-btn primary">
+        <Icon name="projects" size={14} />
+        View Projects
+      </a>
+      <a href="/about" class="hero-btn secondary">
+        <Icon name="chip" size={14} />
+        About Me
+      </a>
     </div>
   </div>
-
-  <div class="hero-decor">
-    <div class="decor-line decor-1"></div>
-    <div class="decor-line decor-2"></div>
-    <div class="decor-box box-1"></div>
-    <div class="decor-box box-2"></div>
+  
+  <div class="cable-channel">
+    <div class="cable-line horizontal"></div>
+    <div class="cable-line vertical"></div>
+    <div class="cable-connector"></div>
   </div>
 </section>
 
 <style>
-  .lab-hero {
+  .hero-panel {
     position: relative;
     min-height: 500px;
     display: flex;
     align-items: center;
     padding: var(--space-3xl) var(--space-lg);
-    background: var(--color-bg-secondary);
-    border: var(--border-default);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
     border-radius: var(--radius-xl);
     overflow: hidden;
   }
-
-  .hero-grid {
+  
+  .frame-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: 
-      linear-gradient(rgba(63, 185, 167, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(63, 185, 167, 0.05) 1px, transparent 1px);
-    background-size: 30px 30px;
     pointer-events: none;
   }
-
-  .hero-frame {
+  
+  .corner-tl, .corner-tr, .corner-bl, .corner-br {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--color-accent-primary);
+    display: flex;
+    gap: 4px;
   }
-
-  .corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
-  .corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
-  .corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
-  .corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
-
+  
+  .corner-tl { top: var(--space-sm); left: var(--space-sm); }
+  .corner-tr { top: var(--space-sm); right: var(--space-sm); }
+  .corner-bl { bottom: var(--space-sm); left: var(--space-sm); }
+  .corner-br { bottom: var(--space-sm); right: var(--space-sm); }
+  
   .hero-content {
     position: relative;
     z-index: 1;
     max-width: 600px;
+    width: 100%;
   }
-
+  
+  .module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-bottom: 1px solid var(--panel-border);
+    margin-bottom: var(--space-lg);
+  }
+  
+  .header-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  .header-icon {
+    color: var(--accent-cyan);
+    opacity: 0.8;
+  }
+  
+  .header-leds {
+    display: flex;
+    gap: var(--space-xs);
+  }
+  
+  .led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  
+  .led-green {
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+  }
+  
+  .led-amber {
+    background: var(--led-amber);
+    box-shadow: 0 0 4px var(--led-amber);
+  }
+  
+  .led-red {
+    background: var(--led-red);
+    box-shadow: 0 0 4px var(--led-red);
+  }
+  
   .hero-badge {
     display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-xs) var(--space-md);
-    background: var(--color-accent-subtle);
-    border: 1px solid var(--color-accent-muted);
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
     border-radius: var(--radius-sm);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: var(--text-xs);
-    color: var(--color-accent-primary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-bottom: var(--space-lg);
   }
-
+  
   .pulse-dot {
     width: 6px;
     height: 6px;
-    background: var(--color-accent-primary);
+    background: var(--accent-cyan);
     border-radius: 50%;
     animation: pulse 2s infinite;
   }
-
+  
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.4; }
   }
-
+  
   .hero-title {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-display);
     font-size: var(--text-4xl);
     line-height: 1.2;
     margin-bottom: var(--space-lg);
+    color: var(--lab-text-primary);
   }
-
+  
   .title-line {
     display: block;
   }
-
+  
   .title-line.accent {
-    color: var(--color-accent-primary);
+    color: var(--accent-cyan);
   }
-
+  
   .hero-description {
     font-size: var(--text-lg);
-    color: var(--color-text-secondary);
+    color: var(--lab-text-secondary);
     line-height: 1.6;
     margin-bottom: var(--space-xl);
   }
-
+  
   .hero-actions {
     display: flex;
     gap: var(--space-md);
     flex-wrap: wrap;
+    margin-top: var(--space-lg);
   }
-
+  
   .hero-btn {
     display: inline-flex;
     align-items: center;
+    gap: 6px;
     padding: var(--space-sm) var(--space-lg);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
     font-weight: 500;
     text-decoration: none;
     border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
+    transition: all 0.2s ease;
+    border: 1px solid var(--panel-border);
+    cursor: pointer;
   }
-
+  
   .hero-btn.primary {
-    background: var(--color-accent-primary);
-    color: var(--color-bg-deep);
-    border: 1px solid var(--color-accent-primary);
+    background: var(--lab-bg-dark);
+    color: var(--accent-cyan);
   }
-
+  
   .hero-btn.primary:hover {
-    background: var(--color-accent-muted);
-    border-color: var(--color-accent-muted);
+    background: var(--accent-cyan);
+    color: var(--lab-bg-dark);
   }
-
+  
   .hero-btn.secondary {
     background: transparent;
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-steel-400);
+    color: var(--lab-text-primary);
   }
-
+  
   .hero-btn.secondary:hover {
-    border-color: var(--color-accent-primary);
-    color: var(--color-accent-primary);
+    background: var(--lab-bg-elevated);
+    color: var(--lab-text-primary);
   }
-
-  .hero-decor {
+  
+  .cable-channel {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
-    width: 300px;
+    width: 200px;
     pointer-events: none;
   }
-
-  .decor-line {
+  
+  .cable-line {
     position: absolute;
-    background: var(--color-accent-primary);
-    opacity: 0.3;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--accent-copper-dim),
+      var(--accent-copper-dim) 1px,
+      var(--accent-copper) 1px,
+      var(--accent-copper) 2px
+    );
   }
-
-  .decor-1 {
-    top: 30%;
-    right: 50px;
-    width: 100px;
+  
+  .cable-line.horizontal {
     height: 2px;
-  }
-
-  .decor-2 {
-    top: 60%;
-    right: 30px;
-    width: 150px;
-    height: 2px;
-  }
-
-  .decor-box {
-    position: absolute;
-    border: 1px solid var(--color-steel-500);
-    background: var(--color-bg-elevated);
-  }
-
-  .box-1 {
-    top: 20%;
-    right: 10%;
-    width: 60px;
-    height: 60px;
-  }
-
-  .box-2 {
     top: 50%;
-    right: 20%;
-    width: 40px;
-    height: 40px;
-    border-color: var(--color-accent-primary);
-    opacity: 0.5;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
   }
-
+  
+  .cable-line.vertical {
+    width: 2px;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-50%);
+  }
+  
+  .cable-connector {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid var(--panel-border);
+    border-radius: 2px;
+    background: var(--lab-bg-dark);
+  }
+  
   @media (max-width: 768px) {
-    .lab-hero {
+    .hero-panel {
       padding: var(--space-xl) var(--space-md);
       min-height: auto;
     }
-
+    
     .hero-title {
       font-size: var(--text-2xl);
     }
-
+    
     .hero-description {
       font-size: var(--text-base);
     }
-
-    .hero-decor {
-      display: none;
+    
+    .cable-channel {
+      width: 150px;
     }
   }
 </style>

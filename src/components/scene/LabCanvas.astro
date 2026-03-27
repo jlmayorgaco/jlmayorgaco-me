@@ -16,8 +16,8 @@ const { variant = 'default' } = Astro.props;
   .lab-canvas {
     position: relative;
     min-height: 300px;
-    background: var(--color-bg-deep);
-    border: var(--border-default);
+    background: var(--screen-bg);
+    border: 1px solid var(--screen-border);
     border-radius: var(--radius-lg);
     overflow: hidden;
   }
@@ -48,7 +48,7 @@ const { variant = 'default' } = Astro.props;
     background: linear-gradient(
       90deg,
       transparent,
-      var(--color-accent-primary),
+      var(--accent-cyan),
       transparent
     );
     opacity: 0.3;

@@ -1,17 +1,22 @@
 ---
+import { Icon } from "astro-icon/components";
+
 interface Props {
   title?: string;
   variant?: 'default' | 'accent' | 'warning';
 }
 
-const { title, Icon, variant = 'default' } = Astro.props;
+const { title, variant = 'default' } = Astro.props;
 ---
 
 <div class:list={['info-panel', `panel-${variant}`]}>
-  {title && <div class="panel-header">
-    <div class="header-left">{title}</div>
-    <div class="header-right"><Icon name="screw" size={10} /></div>
-  </div>}
+  {title && (
+    <div class="panel-header">
+      <div class="header-left">{title}</div>
+      <div class="header-right">
+      </div>
+    </div>
+  )}
   <div class="panel-content">
     <slot />
   </div>

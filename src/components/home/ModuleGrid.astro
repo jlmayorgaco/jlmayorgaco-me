@@ -3,7 +3,7 @@ interface Module {
   title: string;
   description: string;
   href: string;
-  icon: string;
+  icon: keyof typeof import('../ui/Icon.astro')['icons'];
   status?: 'online' | 'offline';
 }
 
@@ -12,35 +12,35 @@ const modules: Module[] = [
     title: 'Projects',
     description: 'Robotics, embedded systems, and software projects',
     href: '/projects',
-    icon: '⬡',
+    icon: 'projects',
     status: 'online',
   },
   {
     title: 'Research',
     description: 'Technical notes, experiments, and learnings',
     href: '/research',
-    icon: '◈',
+    icon: 'research',
     status: 'online',
   },
   {
     title: 'Papers',
     description: 'Publications and academic work',
     href: '/papers',
-    icon: '◉',
+    icon: 'papers',
     status: 'online',
   },
   {
     title: 'About',
     description: 'Background, experience, and skills',
     href: '/about',
-    icon: '◇',
+    icon: 'chip',
     status: 'online',
   },
   {
     title: 'Contact',
     description: 'Get in touch for collaborations',
     href: '/contact',
-    icon: '◆',
+    icon: 'link',
     status: 'online',
   },
 ];
@@ -49,13 +49,17 @@ const modules: Module[] = [
 <div class="module-grid">
   {modules.map((module) => (
     <a href={module.href} class="module-card">
-      <div class="module-icon">{module.icon}</div>
+      <div class="module-icon">
+        <Icon name={module.icon} size={20} />
+      </div>
       <div class="module-content">
         <h3 class="module-title">{module.title}</h3>
         <p class="module-description">{module.description}</p>
       </div>
       {module.status && (
-        <span class={`module-status ${module.status}`}></span>
+        <span class={`module-status ${module.status}`}>
+          <Icon name="circle" size={8} class="status-indicator" />
+        </span>
       )}
     </a>
   ))}
@@ -73,28 +77,47 @@ const modules: Module[] = [
     align-items: center;
     gap: var(--space-md);
     padding: var(--space-lg);
-    background: var(--color-bg-secondary);
-    border: var(--border-subtle);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
     border-radius: var(--radius-lg);
     text-decoration: none;
-    transition: all var(--transition-fast);
+    transition: all 0.2s ease;
     position: relative;
+    overflow: hidden;
+    border-left: 3px solid var(--accent-cyan);
   }
 
   .module-card:hover {
-    border-color: var(--color-accent-primary);
-    background: var(--color-bg-hover);
+    border-color: var(--accent-cyan);
+    background: var(--lab-bg-elevated);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.15);
+  }
+
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      var(--panel-border) 1px,
+      var(--panel-border) 2px
+    );
   }
 
   .module-icon {
-    font-size: var(--text-2xl);
-    color: var(--color-accent-primary);
-    width: 48px;
-    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-accent-subtle);
+    width: 40px;
+    height: 40px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
     border-radius: var(--radius-md);
     flex-shrink: 0;
   }
@@ -105,36 +128,45 @@ const modules: Module[] = [
   }
 
   .module-title {
-    font-family: 'Space Mono', monospace;
-    font-size: var(--text-lg);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
     font-weight: 700;
-    color: var(--color-text-primary);
+    color: var(--lab-text-primary);
     margin-bottom: var(--space-xs);
   }
 
   .module-description {
-    font-size: var(--text-sm);
-    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    color: var(--lab-text-secondary);
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.6;
   }
 
   .module-status {
     position: absolute;
     top: var(--space-sm);
     right: var(--space-sm);
-    width: 8px;
-    height: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+  }
+
+  .status-indicator {
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
   }
 
-  .module-status.online {
-    background: var(--color-success);
-    box-shadow: 0 0 6px var(--color-success);
+  .module-status.online .status-indicator {
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
   }
 
-  .module-status.offline {
-    background: var(--color-error);
+  .module-status.offline .status-indicator {
+    background: var(--led-red);
+    box-shadow: 0 0 4px var(--led-red);
   }
 
   @media (max-width: 640px) {

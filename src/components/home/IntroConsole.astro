@@ -16,92 +16,179 @@ const defaultLines = [
 const lines = Astro.props.lines || defaultLines;
 ---
 
-<div class="intro-console">
-  <div class="console-header">
-    <span class="console-title">terminal</span>
-    <div class="console-controls">
-      <span class="control"></span>
-      <span class="control"></span>
-      <span class="control"></span>
+<div class="console-panel">
+  <div class="panel-header">
+    <div class="header-left">
+      <Icon name="terminal" size={14} />
+      <span>TERMINAL_LOG</span>
+    </div>
+    <div class="header-right">
+      <div class="leds">
+        <span class="led led-green"></span>
+        <span class="led led-amber"></span>
+        <span class="led led-red"></span>
+      </div>
     </div>
   </div>
-  <div class="console-body">
-    {lines.map((line, i) => (
-      <div class="console-line">
-        {line.startsWith('$') && <span class="prompt">$</span>}
-        {line.startsWith('>') && <span class="prompt output">></span>}
-        <span class={`line-content ${line === '' ? 'empty' : ''}`}>{line.replace(/^[>$]\s*/, '')}</span>
-      </div>
-    ))}
+  
+  <div class="panel-content">
+    <div class="console-body">
+      {lines.map((line, i) => (
+        <div class="console-line">
+          {line.startsWith('$') && <span class="prompt">$</span>}
+          {line.startsWith('>') && <span class="prompt output">></span>}
+          <span class={`line-content ${line === '' ? 'empty' : ''}`}>{line.replace(/^[>$]\s*/, '')}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+  
+  <div class="panel-footer">
+    <div class="footer-screws">
+      <Icon name="screw" size={8} />
+      <Icon name="screw" size={8} />
+    </div>
+    <div class="footer-label">END_SESSION</div>
+    <div class="footer-stripe"></div>
   </div>
 </div>
 
 <style>
-  .intro-console {
-    background: var(--color-bg-deep);
-    border: var(--border-default);
+  .console-panel {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
     max-width: 500px;
   }
 
-  .console-header {
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .header-left {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: var(--space-sm) var(--space-md);
-    background: var(--color-bg-secondary);
-    border-bottom: var(--border-subtle);
+    gap: var(--space-sm);
   }
 
-  .console-title {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
+  .header-left Icon {
+    color: var(--accent-cyan);
+  }
+
+  .header-left span {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 
-  .console-controls {
+  .header-right {
     display: flex;
-    gap: 6px;
+    align-items: center;
+    gap: var(--space-sm);
   }
 
-  .control {
-    width: 10px;
-    height: 10px;
+  .leds {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .led {
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
   }
 
-  .control:nth-child(1) { background: #f85149; }
-  .control:nth-child(2) { background: #d29922; }
-  .control:nth-child(3) { background: #3fb950; }
+  .led-green {
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+  }
+
+  .led-amber {
+    background: var(--led-amber);
+    box-shadow: 0 0 4px var(--led-amber);
+  }
+
+  .led-red {
+    background: var(--led-red);
+    box-shadow: 0 0 4px var(--led-red);
+  }
+
+  .panel-content {
+    padding: var(--space-lg);
+  }
 
   .console-body {
-    padding: var(--space-md);
+    padding: 0;
   }
 
   .console-line {
     display: flex;
     line-height: 1.6;
+    padding: var(--space-xs) 0;
   }
 
   .prompt {
-    color: var(--color-accent-primary);
+    color: var(--accent-cyan);
     margin-right: var(--space-sm);
     min-width: 20px;
+    font-family: var(--font-mono);
   }
 
   .prompt.output {
-    color: var(--color-text-muted);
+    color: var(--lab-text-muted);
   }
 
   .line-content {
-    color: var(--color-text-primary);
+    color: var(--lab-text-secondary);
+    font-family: var(--font-mono);
   }
 
   .line-content.empty {
     height: 1em;
+  }
+
+  .panel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-xs) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .footer-screws {
+    display: flex;
+    gap: var(--space-lg);
+    color: var(--lab-text-muted);
+    opacity: 0.6;
+  }
+
+  .footer-label {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.15em;
+  }
+
+  .footer-stripe {
+    width: 40px;
+    height: 3px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--panel-border) 0px,
+      var(--panel-border) 4px,
+      transparent 4px,
+      transparent 8px
+    );
   }
 </style>

@@ -19,25 +19,30 @@ const { label, value, variant = 'default' } = Astro.props;
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-xs) var(--space-sm);
-    background: var(--color-bg-secondary);
-    border: var(--border-subtle);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
     border-radius: var(--radius-sm);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: var(--text-xs);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
   }
 
   .chip-label {
-    color: var(--color-text-muted);
+    color: var(--lab-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
   .chip-value {
-    color: var(--color-text-primary);
+    color: var(--lab-text-primary);
     font-weight: 500;
   }
 
+  .chip-accent {
+    border-color: var(--accent-cyan);
+    background: var(--lab-bg-dark);
+  }
+
   .chip-accent .chip-value {
-    color: var(--color-accent-primary);
+    color: var(--accent-cyan);
   }
 </style>

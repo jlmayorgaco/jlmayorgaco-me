@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import Icon from '../../components/ui/Icon.astro';
 
 export async function getStaticPaths() {
   const papers = await getCollection('papers');
@@ -167,10 +168,10 @@ const { data } = paper;
     border-radius: var(--radius-sm);
   }
 
-  .status-under-review {
-    background: rgba(210, 153, 34, 0.2);
-    color: var(--color-warning);
-  }
+   .status-under-review {
+     background: rgba(210, 153, 34, 0.2);
+     color: var(--led-amber);
+   }
 
   .status-preprint {
     background: var(--lab-bg-elevated);

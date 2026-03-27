@@ -1,0 +1,127 @@
+---
+import Badge from '../ui/Badge.astro';
+
+interface Props {
+  tags?: string[];
+  stack?: string[];
+  links?: {
+    demo?: string;
+    repo?: string;
+    pdf?: string;
+  };
+}
+
+const { tags, stack, links } = Astro.props;
+---
+
+<div class="project-meta-panel">
+  {stack && stack.length > 0 && (
+    <div class="meta-section">
+      <h4 class="meta-title">Stack</h4>
+      <div class="meta-tags">
+        {stack.map((tech) => (
+          <Badge variant="accent">{tech}</Badge>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {tags && tags.length > 0 && (
+    <div class="meta-section">
+      <h4 class="meta-title">Tags</h4>
+      <div class="meta-tags">
+        {tags.map((tag) => (
+          <Badge variant="default">{tag}</Badge>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {links && (links.demo || links.repo || links.pdf) && (
+    <div class="meta-section">
+      <h4 class="meta-title">Links</h4>
+      <div class="meta-links">
+        {links.demo && (
+          <a href={links.demo} target="_blank" rel="noopener noreferrer" class="meta-link">
+            Demo ↗
+          </a>
+        )}
+        {links.repo && (
+          <a href={links.repo} target="_blank" rel="noopener noreferrer" class="meta-link">
+            Code ↗
+          </a>
+        )}
+        {links.pdf && (
+          <a href={links.pdf} target="_blank" rel="noopener noreferrer" class="meta-link">
+            PDF ↗
+          </a>
+        )}
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .project-meta-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xl);
+    padding: var(--space-lg);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .meta-section {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .meta-title {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-sm);
+  }
+
+  .meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .meta-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  .meta-link {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    text-decoration: none;
+    padding: 2px 6px;
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    background: var(--lab-bg-dark);
+    transition: all 0.2s ease;
+  }
+
+  .meta-link:hover {
+    background: var(--lab-bg-elevated);
+    border-color: var(--accent-cyan);
+  }
+
+  @media (max-width: 640px) {
+    .project-meta-panel {
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+  }
+</style>
