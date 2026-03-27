@@ -1,0 +1,31 @@
+# JLMT LAB - Robots.txt
+# https://jlmayorga.co
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://jlmayorga.co/sitemap-index.xml
+
+# Disallow admin/private
+Disallow: /api/
+Disallow: /_/
+
+# Crawl-delay (optional)
+Crawl-delay: 1
+
+# Specific crawlers
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+
+User-agent: Bytespider
+Disallow: /

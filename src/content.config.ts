@@ -67,10 +67,25 @@ const papers = defineCollection({
     abstract: z.string(),
     pdf: z.string().url().optional(),
     slides: z.string().url().optional(),
-    doi: z.string().url().optional(),
+    doi: z.string().optional(),
     status: z.enum(['published', 'under-review', 'preprint']).default('published'),
     featured: z.boolean().default(false),
   }),
 });
 
-export const collections = { portfolio, projects, research, papers };
+const tutorials = defineCollection({
+  loader: glob({ base: './src/content/tutorials', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    level: z.enum(['beginner', 'intermediate', 'advanced']).default('intermediate'),
+    duration: z.string().optional(),
+    date: z.coerce.date(),
+    tags: z.array(z.string()),
+    category: z.string(),
+    draft: z.boolean().default(false),
+    featured: z.boolean().default(false),
+  }),
+});
+
+export const collections = { portfolio, projects, research, papers, tutorials };

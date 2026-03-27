@@ -1,0 +1,23 @@
+# JLMT LAB - Security.txt
+# https://jlmayorga.co
+
+# Contact
+Contact: security@jlmayorga.co
+
+# Encryption
+Encryption: https://jlmayorga.co/pgp-key.txt
+
+# Policy
+Policy: https://jlmayorga.co/security-policy
+
+# Vulnerabilities
+Vulnerabilities: https://github.com/jlmayorga/jlmayorgaco-me/security/advisories
+
+# Preferred Languages
+Preferred-Languages: en, es
+
+# Canonical
+Canonical: https://jlmayorga.co
+
+# Hire Me
+Hiring: https://jlmayorga.co/about
