@@ -2,6 +2,7 @@
 import LabLayout from '../layouts/LabLayout.astro';
 import LabBoard from '../components/home/LabBoard.astro';
 import { getCollection } from 'astro:content';
+import { getTerminalData } from '../lib/terminal/getTerminalData';
 
 const projects = await getCollection('projects');
 const featuredProjects = projects
@@ -17,6 +18,7 @@ const recentPosts = posts
 
 const papers = await getCollection('papers');
 const portfolio = await getCollection('portfolio');
+const terminalData = await getTerminalData();
 ---
 
 <LabLayout>
@@ -25,5 +27,6 @@ const portfolio = await getCollection('portfolio');
     posts={recentPosts}
     papersCount={papers.length}
     portfolioCount={portfolio.length}
+    terminalData={terminalData}
   />
 </LabLayout>

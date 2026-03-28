@@ -1,0 +1,81 @@
+:root {
+  /* === LAB DESIGN TOKENS === */
+  
+  /* Background colors */
+  --lab-bg: #0a0e12;
+  --lab-bg-panel: #0f1419;
+  --lab-bg-elevated: #141b22;
+  --lab-bg-dark: #080b0e;
+  --lab-bg-grid: rgba(63, 185, 167, 0.03);
+  
+  /* Border colors */
+  --lab-border: #1e2832;
+  --lab-border-subtle: #151c24;
+  --lab-border-frame: #2a3540;
+  
+  /* Text colors */
+  --lab-text: #e8eaed;
+  --lab-text-secondary: #9aa0a8;
+  --lab-text-muted: #5c6570;
+  --lab-text-dim: #3d464d;
+  
+  /* Accent colors - Teal/Cyan */
+  --lab-signal: #3fb5a7;
+  --lab-signal-dim: #2a8a80;
+  --lab-signal-glow: rgba(63, 181, 167, 0.3);
+  
+  /* Wire/Copper accent */
+  --lab-wire: #c9a66b;
+  --lab-wire-dim: #8a704a;
+  
+  /* Monitor/Screen colors */
+  --lab-monitor-bg: #0d1117;
+  --lab-monitor-border: #21262d;
+  --lab-monitor-glow: rgba(63, 185, 167, 0.15);
+  
+  /* LED colors */
+  --lab-led-green: #22c55e;
+  --lab-led-amber: #d97706;
+  --lab-led-red: #ef4444;
+  --lab-led-blue: #3b82f6;
+  
+  /* Shadows */
+  --lab-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --lab-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --lab-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --lab-shadow-glow: 0 0 20px var(--lab-signal-glow);
+  --lab-shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  
+  /* Border radius */
+  --lab-radius-sm: 4px;
+  --lab-radius-md: 6px;
+  --lab-radius-lg: 8px;
+  --lab-radius-panel: 6px;
+  --lab-radius-monitor: 8px;
+  
+  /* Spacing */
+  --lab-space-xs: 4px;
+  --lab-space-sm: 8px;
+  --lab-space-md: 12px;
+  --lab-space-lg: 16px;
+  --lab-space-xl: 24px;
+  --lab-space-2xl: 32px;
+  
+  /* Typography - Technical */
+  --lab-font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  --lab-font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --lab-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  /* Font sizes - Desktop optimized */
+  --lab-text-xs: 0.6875rem;
+  --lab-text-sm: 0.75rem;
+  --lab-text-md: 0.875rem;
+  --lab-text-lg: 1rem;
+  --lab-text-xl: 1.125rem;
+  --lab-text-2xl: 1.375rem;
+  
+  /* Line heights */
+  --lab-leading-tight: 1.25;
+  --lab-leading-normal: 1.5;
+  --lab-leading-relaxed: 1.75;
+}

@@ -1,0 +1,115 @@
+.top-control-bar {
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--lab-border);
+  border-radius: var(--lab-radius-panel);
+  padding: var(--lab-space-sm) var(--lab-space-md);
+  height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.control-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--lab-space-lg);
+}
+
+.bar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--lab-space-sm);
+}
+
+.brand-icon {
+  color: var(--lab-signal);
+  font-size: 1rem;
+}
+
+.brand-text {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-md);
+  font-weight: 700;
+  color: var(--lab-text);
+  letter-spacing: 0.15em;
+}
+
+.brand-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-muted);
+  letter-spacing: 0.1em;
+  padding: 2px 6px;
+  background: var(--lab-bg-dark);
+  border-radius: var(--lab-radius-sm);
+}
+
+.led-indicator {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--lab-led-green);
+  box-shadow: 0 0 4px var(--lab-led-green);
+  animation: led-pulse 2s ease-in-out infinite;
+}
+
+@keyframes led-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.control-nav {
+  display: flex;
+  gap: var(--lab-space-xs);
+}
+
+.control-btn {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-secondary);
+  text-decoration: none;
+  padding: var(--lab-space-xs) var(--lab-space-sm);
+  border: 1px solid transparent;
+  border-radius: var(--lab-radius-sm);
+  transition: all 0.15s ease;
+  letter-spacing: 0.05em;
+  outline: none;
+}
+
+.control-btn:hover {
+  color: var(--lab-text);
+  background: var(--lab-bg-elevated);
+  border-color: var(--lab-border);
+}
+
+.control-btn:focus-visible {
+  border-color: var(--lab-signal);
+  box-shadow: 0 0 0 2px var(--lab-signal-glow);
+}
+
+.control-btn:active {
+  background: var(--lab-bg-dark);
+  border-color: var(--lab-signal);
+}
+
+.bar-extra {
+  display: flex;
+  align-items: center;
+}
+
+.system-time {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-muted);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 768px) {
+  .control-nav {
+    display: none;
+  }
+}

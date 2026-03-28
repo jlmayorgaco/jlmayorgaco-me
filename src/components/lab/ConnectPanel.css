@@ -1,0 +1,62 @@
+.connect-panel {
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--lab-border);
+  border-radius: var(--lab-radius-panel);
+  overflow: hidden;
+}
+
+.connect-header {
+  padding: var(--lab-space-xs) var(--lab-space-sm);
+  background: var(--lab-bg-dark);
+  border-bottom: 1px solid var(--lab-border);
+}
+
+.connect-label {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-muted);
+  letter-spacing: 0.1em;
+}
+
+.connect-links {
+  padding: var(--lab-space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--lab-space-xs);
+}
+
+.connect-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--lab-space-sm);
+  padding: var(--lab-space-xs) var(--lab-space-sm);
+  background: var(--lab-bg-dark);
+  border: 1px solid var(--lab-border-subtle);
+  border-radius: var(--lab-radius-sm);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.connect-btn:hover {
+  border-color: var(--lab-signal);
+  background: var(--lab-bg-elevated);
+}
+
+.btn-icon {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-signal);
+  font-weight: 700;
+  min-width: 16px;
+}
+
+.btn-label {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.connect-btn:hover .btn-label {
+  color: var(--lab-text);
+}

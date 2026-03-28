@@ -1,15 +1,18 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import type { TerminalData } from '../../lib/terminal/terminalTypes';
 import Icon from '../ui/Icon.astro';
+import HomeTerminal from './HomeTerminal';
 
 interface Props {
   projects: CollectionEntry<'projects'>[];
   posts: CollectionEntry<'research'>[];
   papersCount?: number;
   portfolioCount?: number;
+  terminalData?: TerminalData;
 }
 
-const { projects, posts, papersCount = 0, portfolioCount = 0 } = Astro.props;
+const { projects, posts, papersCount = 0, portfolioCount = 0, terminalData } = Astro.props;
 ---
 
 <div class="lab-board stagger-in">
@@ -91,58 +94,10 @@ const { projects, posts, papersCount = 0, portfolioCount = 0 } = Astro.props;
         </div>
       </div>
       <div class="panel-content monitor-content">
-        <div class="hero-monitor screen-scanline">
-          <div class="monitor-screen screen-flicker">
-            <div class="screen-header">
-              <span class="screen-title">// SYSTEM BOOT</span>
-              <span class="screen-status">
-                <span class="led led-green led-blink"></span>
-                RUNNING
-              </span>
-            </div>
-            <div class="screen-body">
-              <div class="hero-text">
-                <span class="type-label">
-                  <span class="prompt">$</span> whoami
-                </span>
-                <p class="type-output">Jose Luis Mayorga</p>
-                <p class="type-output-sub">Research Engineer - Robotics & Control Systems</p>
-              </div>
-              <div class="hero-terminal">
-                <div class="terminal-line">
-                  <span class="prompt">$</span>
-                  <span class="cmd">cat status.txt</span>
-                </div>
-                <div class="terminal-line output">
-                  <span class="prompt">></span>
-                  <span>Available for collaborations</span>
-                  <span class="cursor-blink"></span>
-                </div>
-              </div>
-              <div class="hero-cta">
-                <a href="/projects" class="cta-btn btn-press">
-                  <Icon name="projects" size={16} />
-                  Projects
-                </a>
-                <a href="/about" class="cta-btn secondary btn-press">
-                  <Icon name="node" size={16} />
-                  About
-                </a>
-              </div>
-            </div>
-            
-            <!-- Waveform decoration -->
-            <div class="waveform-footer">
-              <div class="waveform-bars">
-                <span class="waveform-bar"></span>
-                <span class="waveform-bar"></span>
-                <span class="waveform-bar"></span>
-                <span class="waveform-bar"></span>
-                <span class="waveform-bar"></span>
-              </div>
-              <span class="waveform-label">SYS.MONITOR</span>
-            </div>
-          </div>
+        <div class="hero-monitor">
+          {terminalData && (
+            <HomeTerminal client:load data={terminalData} />
+          )}
         </div>
       </div>
     </div>
@@ -199,7 +154,7 @@ const { projects, posts, papersCount = 0, portfolioCount = 0 } = Astro.props;
 
   <!-- Row 2: Modules -->
   <div class="board-row modules-row">
-    <a href="/projects" class="panel module-card card-lift panel-reveal-delay-1">
+    <a href="/projects" id="projects" class="panel module-card card-lift panel-reveal-delay-1">
       <div class="panel-header compact">
         <div class="header-left">
           <span class="label-tag">PROJECTS</span>
@@ -217,7 +172,7 @@ const { projects, posts, papersCount = 0, portfolioCount = 0 } = Astro.props;
       </div>
     </a>
 
-    <a href="/research" class="panel module-card card-lift panel-reveal-delay-2">
+    <a href="/research" id="research" class="panel module-card card-lift panel-reveal-delay-2">
       <div class="panel-header compact">
         <div class="header-left">
           <span class="label-tag">RESEARCH</span>
@@ -235,7 +190,7 @@ const { projects, posts, papersCount = 0, portfolioCount = 0 } = Astro.props;
       </div>
     </a>
 
-    <a href="/papers" class="panel module-card card-lift panel-reveal-delay-3">
+    <a href="/papers" id="papers" class="panel module-card card-lift panel-reveal-delay-3">
       <div class="panel-header compact">
         <div class="header-left">
           <span class="label-tag">PAPERS</span>
@@ -253,7 +208,7 @@ const { projects, posts, papersCount = 0, portfolioCount = 0 } = Astro.props;
       </div>
     </a>
 
-    <a href="/contact" class="panel module-card card-lift panel-reveal-delay-4">
+    <a href="/contact" id="contact" class="panel module-card card-lift panel-reveal-delay-4">
       <div class="panel-header compact">
         <div class="header-left">
           <span class="label-tag">CONTACT</span>
@@ -598,205 +553,9 @@ const { projects, posts, papersCount = 0, portfolioCount = 0 } = Astro.props;
   }
 
   .hero-monitor {
-    background: var(--screen-bg);
-    border: 2px solid var(--screen-border);
-    border-radius: var(--radius-lg);
-    box-shadow: 
-      inset 0 2px 4px rgba(0,0,0,0.4),
-      0 0 20px var(--screen-glow);
     position: relative;
     overflow: hidden;
-  }
-
-  .screen-scanline::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(180deg, transparent, rgba(63, 185, 167, 0.08), transparent);
-    animation: scanline 4s linear infinite;
-    pointer-events: none;
-  }
-
-  @keyframes scanline {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(300px); }
-  }
-
-  .monitor-screen {
-    padding: var(--space-md);
-  }
-
-  .screen-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: var(--space-sm);
-    border-bottom: 1px solid var(--screen-border);
-    margin-bottom: var(--space-md);
-  }
-
-  .screen-title {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    color: var(--accent-cyan);
-    letter-spacing: 0.05em;
-  }
-
-  .screen-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.5625rem;
-    color: var(--led-green);
-    letter-spacing: 0.1em;
-  }
-
-  .screen-body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-  }
-
-  .type-label {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--accent-cyan);
-  }
-
-  .type-label .prompt {
-    color: var(--accent-cyan);
-  }
-
-  .type-output {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--lab-text-on-dark);
-    margin: var(--space-xs) 0;
-  }
-
-  .type-output-sub {
-    font-size: 0.8125rem;
-    color: var(--lab-text-muted);
-    margin: 0;
-  }
-
-  .hero-terminal {
-    padding: var(--space-sm);
-    background: var(--screen-inner);
-    border-radius: var(--radius-md);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-  }
-
-  .terminal-line {
-    display: flex;
-    gap: var(--space-sm);
-    margin-bottom: 4px;
-  }
-
-  .terminal-line.output {
-    color: var(--lab-text-on-dark);
-    opacity: 0.7;
-  }
-
-  .prompt {
-    color: var(--accent-cyan);
-  }
-
-  .cursor-blink::after {
-    content: '█';
-    animation: cursor-blink 1s step-end infinite;
-    color: var(--accent-cyan);
-  }
-
-  @keyframes cursor-blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-  }
-
-  .hero-cta {
-    display: flex;
-    gap: var(--space-sm);
-    margin-top: var(--space-sm);
-  }
-
-  .cta-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-xs);
-    padding: var(--space-sm) var(--space-md);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: var(--radius-md);
-    transition: all 150ms ease;
-  }
-
-  .cta-btn:first-child {
-    background: var(--accent-cyan);
-    color: var(--lab-bg-base);
-  }
-
-  .cta-btn:first-child:hover {
-    background: var(--accent-cyan-dim);
-  }
-
-  .cta-btn.secondary {
-    background: transparent;
-    color: var(--lab-text-on-dark);
-    border: 1px solid var(--screen-border);
-  }
-
-  .cta-btn.secondary:hover {
-    border-color: var(--accent-cyan);
-    color: var(--accent-cyan);
-  }
-
-  .waveform-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: var(--space-sm);
-    margin-top: var(--space-md);
-    border-top: 1px solid var(--screen-border);
-  }
-
-  .waveform-bars {
-    display: flex;
-    gap: 3px;
-    align-items: flex-end;
-    height: 16px;
-  }
-
-  .waveform-bar {
-    width: 3px;
-    background: var(--accent-cyan);
-    border-radius: 1px;
-    animation: waveform 1s ease-in-out infinite;
-  }
-
-  .waveform-bar:nth-child(1) { animation-delay: 0s; height: 40%; }
-  .waveform-bar:nth-child(2) { animation-delay: 0.1s; height: 70%; }
-  .waveform-bar:nth-child(3) { animation-delay: 0.2s; height: 50%; }
-  .waveform-bar:nth-child(4) { animation-delay: 0.3s; height: 90%; }
-  .waveform-bar:nth-child(5) { animation-delay: 0.4s; height: 60%; }
-
-  @keyframes waveform {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
-
-  .waveform-label {
-    font-family: var(--font-mono);
-    font-size: 0.5rem;
-    color: var(--lab-text-muted);
-    letter-spacing: 0.1em;
+    height: 100%;
   }
 
   /* Info Panel */

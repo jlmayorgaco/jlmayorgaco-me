@@ -1,0 +1,108 @@
+.research-output-panel {
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--lab-border);
+  border-radius: var(--lab-radius-panel);
+  overflow: hidden;
+}
+
+.output-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--lab-space-xs) var(--lab-space-sm);
+  background: var(--lab-bg-dark);
+  border-bottom: 1px solid var(--lab-border);
+}
+
+.output-label {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-muted);
+  letter-spacing: 0.1em;
+}
+
+.output-count {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-signal);
+  padding: 2px 6px;
+  background: var(--lab-bg-panel);
+  border-radius: var(--lab-radius-sm);
+}
+
+.output-list {
+  padding: var(--lab-space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--lab-space-xs);
+}
+
+.output-item {
+  display: flex;
+  align-items: center;
+  gap: var(--lab-space-sm);
+  padding: var(--lab-space-sm);
+  background: var(--lab-bg-dark);
+  border: 1px solid var(--lab-border-subtle);
+  border-radius: var(--lab-radius-sm);
+  transition: all 0.15s ease;
+}
+
+.output-item:hover {
+  border-color: var(--lab-border);
+  background: var(--lab-bg-elevated);
+}
+
+.item-index {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-muted);
+  min-width: 20px;
+}
+
+.item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-title {
+  display: block;
+  font-family: var(--lab-font-display);
+  font-size: var(--lab-text-sm);
+  font-weight: 600;
+  color: var(--lab-text);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-meta {
+  display: flex;
+  gap: var(--lab-space-sm);
+}
+
+.item-category {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-signal);
+}
+
+.item-year {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-muted);
+}
+
+.item-indicator {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--lab-signal-dim);
+  flex-shrink: 0;
+}
+
+.output-item:hover .item-indicator {
+  background: var(--lab-signal);
+  box-shadow: 0 0 4px var(--lab-signal-glow);
+}

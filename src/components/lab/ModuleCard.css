@@ -1,0 +1,109 @@
+.module-card {
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--lab-border);
+  border-radius: var(--lab-radius-panel);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.module-card:hover {
+  border-color: var(--lab-signal-dim);
+  transform: translateY(-2px);
+  box-shadow: var(--lab-shadow-md);
+}
+
+.module-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--lab-space-xs) var(--lab-space-sm);
+  background: var(--lab-bg-dark);
+  border-bottom: 1px solid var(--lab-border);
+}
+
+.module-label {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-signal);
+  letter-spacing: 0.1em;
+}
+
+.module-id {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-muted);
+}
+
+.module-body {
+  padding: var(--lab-space-md);
+  display: flex;
+  gap: var(--lab-space-md);
+  align-items: center;
+}
+
+.module-visual {
+  flex-shrink: 0;
+}
+
+.module-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.module-title {
+  font-family: var(--lab-font-display);
+  font-size: var(--lab-text-md);
+  font-weight: 600;
+  color: var(--lab-text);
+  margin: 0 0 4px 0;
+}
+
+.module-subtitle {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-secondary);
+  margin: 0;
+}
+
+.module-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--lab-space-sm);
+  border-top: 1px solid var(--lab-border);
+}
+
+.module-tags {
+  display: flex;
+  gap: var(--lab-space-xs);
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  padding: 2px 6px;
+  background: var(--lab-bg-dark);
+  border: 1px solid var(--lab-border);
+  border-radius: var(--lab-radius-sm);
+  color: var(--lab-text-muted);
+}
+
+.module-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-text {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-muted);
+  letter-spacing: 0.05em;
+}

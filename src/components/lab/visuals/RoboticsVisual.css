@@ -1,0 +1,47 @@
+.robotics-visual {
+  width: 60px;
+  height: 45px;
+  opacity: 0.8;
+}
+
+.robotics-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.node {
+  fill: var(--lab-bg-dark);
+  stroke: var(--lab-led-blue);
+  stroke-width: 1.5;
+}
+
+.node-center {
+  fill: var(--lab-led-blue);
+  fill-opacity: 0.2;
+  stroke-width: 2;
+}
+
+.node-outer {
+  stroke-width: 1;
+}
+
+.connection {
+  stroke: var(--lab-led-blue);
+  stroke-width: 0.75;
+  stroke-opacity: 0.5;
+}
+
+.connection-cross {
+  stroke-opacity: 0.3;
+  stroke-dasharray: 2, 2;
+}
+
+.data-packet {
+  fill: var(--lab-led-blue);
+  animation: packet-pulse 2s ease-in-out infinite;
+}
+
+@keyframes packet-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}

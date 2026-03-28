@@ -1,0 +1,76 @@
+.tech-rack {
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--lab-border);
+  border-radius: var(--lab-radius-panel);
+  overflow: hidden;
+}
+
+.rack-header {
+  padding: var(--lab-space-xs) var(--lab-space-sm);
+  background: var(--lab-bg-dark);
+  border-bottom: 1px solid var(--lab-border);
+}
+
+.rack-label {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-muted);
+  letter-spacing: 0.1em;
+}
+
+.rack-units {
+  padding: var(--lab-space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--lab-space-xs);
+}
+
+.rack-unit {
+  display: flex;
+  align-items: center;
+  gap: var(--lab-space-sm);
+  padding: var(--lab-space-xs) var(--lab-space-sm);
+  background: var(--lab-bg-dark);
+  border: 1px solid var(--lab-border-subtle);
+  border-radius: var(--lab-radius-sm);
+  transition: all 0.15s ease;
+}
+
+.rack-unit:hover {
+  border-color: var(--lab-border);
+  background: var(--lab-bg-elevated);
+}
+
+.unit-indicator {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
+.rack-unit.type-hardware .unit-indicator {
+  background: var(--lab-signal);
+  box-shadow: 0 0 4px var(--lab-signal);
+}
+
+.rack-unit.type-software .unit-indicator {
+  background: var(--lab-led-blue);
+}
+
+.rack-unit.type-domain .unit-indicator {
+  background: var(--lab-wire);
+}
+
+.rack-unit.type-infra .unit-indicator {
+  background: var(--lab-led-amber);
+}
+
+.unit-label {
+  font-family: var(--lab-font-mono);
+  font-size: var(--lab-text-xs);
+  color: var(--lab-text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.rack-unit:hover .unit-label {
+  color: var(--lab-text);
+}

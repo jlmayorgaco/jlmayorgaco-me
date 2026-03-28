@@ -1,0 +1,49 @@
+.fpga-visual {
+  width: 60px;
+  height: 45px;
+  opacity: 0.8;
+}
+
+.fpga-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.chip-body {
+  fill: none;
+  stroke: var(--lab-signal);
+  stroke-width: 1.5;
+}
+
+.chip-inner {
+  fill: var(--lab-bg-dark);
+  stroke: var(--lab-signal-dim);
+  stroke-width: 0.5;
+}
+
+.chip-label {
+  fill: var(--lab-signal);
+  font-family: var(--lab-font-mono);
+  font-size: 6px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.pin {
+  stroke: var(--lab-signal-dim);
+  stroke-width: 1;
+}
+
+.waveform-line {
+  fill: none;
+  stroke: var(--lab-signal);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trace {
+  stroke: var(--lab-wire-dim);
+  stroke-width: 0.5;
+  stroke-dasharray: 2, 1;
+}
