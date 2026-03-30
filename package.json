@@ -21,7 +21,12 @@
     "test:bot": "vitest run scripts/bot/__tests__",
     "test:bot:watch": "vitest scripts/bot/__tests__",
     "test:bot:coverage": "vitest run scripts/bot/__tests__ --coverage",
-    "bot:health": "npx tsx scripts/bot/health-check.ts"
+    "bot:health": "npx tsx scripts/bot/health-check.ts",
+    "coffee": "npx tsx scripts/terminal/coffee.ts",
+    "sudo": "npx tsx scripts/terminal/sudo.ts",
+    "matrix": "npx tsx scripts/terminal/matrix.ts",
+    "zen": "npx tsx scripts/terminal/zen.ts",
+    "roll": "npx tsx scripts/terminal/dice.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
@@ -46,6 +51,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.2",
+    "readline-sync": "^1.4.10",
     "sass": "^1.98.0",
     "tsx": "^4.21.0",
     "vitest": "^4.1.2"
