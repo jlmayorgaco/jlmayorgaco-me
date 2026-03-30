@@ -48,9 +48,21 @@ const schemaOrg = type === 'article' ? {
 };
 ---
 
+<!-- Resource hints for performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+<!-- Security headers (meta equivalent for static sites) -->
+<meta http-equiv="X-Frame-Options" content="DENY" />
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl} />
+
+<!-- Robots -->
+<meta name="robots" content="index, follow" />
 
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
@@ -68,5 +80,12 @@ const schemaOrg = type === 'article' ? {
 
 <meta name="theme-color" content="#0d1319" />
 <meta name="generator" content={Astro.generator} />
+
+<!-- Language -->
+<link rel="alternate" hreflang="en" href={canonicalUrl} />
+<link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+
+<!-- Keywords for SEO -->
+<meta name="keywords" content="control systems, robotics, FPGA, embedded systems, distributed control, research engineer, power electronics, signal processing" />
 
 <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />

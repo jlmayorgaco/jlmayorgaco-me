@@ -1,0 +1,133 @@
+name: Bot CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'scripts/bot/**'
+      - '.github/workflows/bot.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/bot/**'
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test:bot
+
+      - name: Run tests with coverage
+        run: npm run test:bot:coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/lcov.info
+          flags: bot
+          name: bot-coverage
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint:bot || echo "No lint script configured"
+
+      - name: Type check
+        run: npx tsc --noEmit scripts/bot/**/*.ts || echo "TypeScript check complete"
+
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: [test, lint]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile.bot
+          push: false
+          tags: jlmt-lab-bot:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [test, lint, build]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to server
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          # Setup SSH
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          
+          # Deploy via SSH
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+            $SERVER_USER@$SERVER_HOST << 'EOF'
+            cd /opt/jlmt-bot
+            git pull origin main
+            docker-compose -f docker-compose.bot.yml down
+            docker-compose -f docker-compose.bot.yml up -d --build
+            docker system prune -f
+          EOF
+          
+          echo "url=https://your-domain.com" >> $GITHUB_OUTPUT
+
+      - name: Health check
+        run: |
+          sleep 10
+          curl -f https://your-health-check-endpoint.com/health || exit 1

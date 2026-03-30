@@ -59,10 +59,28 @@ export interface HistoryEntry {
 export type ScrollAction = 'scroll-projects' | 'scroll-papers' | 'scroll-research' | 'scroll-contact';
 export type TerminalAction = ScrollAction | 'navigate' | 'none';
 
+export type UIAction =
+  | { type: 'theme'; name: string }
+  | { type: 'accent'; name: string }
+  | { type: 'layout'; name: string }
+  | { type: 'shuffle' }
+  | { type: 'reset' }
+  | { type: 'focus'; id: string }
+  | { type: 'scroll'; id: string }
+  | { type: 'navigate'; path: string }
+  | { type: 'open-hmi' }
+  | { type: 'close-hmi' }
+  | { type: 'chaos' }
+  | { type: 'stabilize' }
+  | { type: 'construction' }
+  | { type: 'flip-panel' }
+  | { type: 'none' };
+
 export interface CommandResult {
   output: string;
   action?: TerminalAction;
   navigateTo?: string;
+  uiAction?: UIAction;
 }
 
 export const TERMINAL_DIVIDER = '═'.repeat(40);

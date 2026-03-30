@@ -1,0 +1,259 @@
+/**
+ * Enhanced Scan Papers Use Case
+ * Supports: paper history, tiered classification, batch review mode
+ */
+
+import { Result } from '../../shared/Result';
+import { Session } from '../../domain/entities/Session';
+import { 
+  ISessionRepository, 
+  IGeminiService, 
+  IMessagePort,
+  IPaperHistoryRepository,
+  TieredClassification,
+  RelevanceTier,
+  TierEmojis,
+} from '../ports';
+import { IResearchContextRepository } from '../ports/ResearchContextPort';
+import { logDebug, logError, logInfo } from '../../logger';
+import { MarkdownFormatter } from '../../infrastructure/formatting/MarkdownFormatter';
+import { BatchReviewItem } from '../../domain/value-objects/BatchReview';
+
+// Import from existing scanner
+import { runScanner } from '../../../src/lib/pipeline/arxiv-scanner.js';
+
+export interface ScanPapersInput {
+  chatId: number;
+  userId: string;
+  maxPapers?: number;
+  useBatchMode?: boolean;
+  excludeSeen?: boolean;
+}
+
+export class EnhancedScanPapersUseCase {
+  constructor(
+    private geminiService: IGeminiService,
+    private sessionRepo: ISessionRepository,
+    private messagePort: IMessagePort,
+    private historyRepo: IPaperHistoryRepository,
+    private contextRepo: IResearchContextRepository,
+  ) {}
+
+  async execute(input: ScanPapersInput): Promise<Result<void, Error>> {
+    try {
+      logDebug('Executing EnhancedScanPapersUseCase', { 
+        chatId: input.chatId,
+        useBatchMode: input.useBatchMode 
+      });
+
+      await this.messagePort.sendMessage('_Scanning ArXiv for papers..._');
+
+      // Scan papers
+      const papers = await runScanner();
+      
+      // Deduplicate against history
+      let uniquePapers = papers;
+      if (input.excludeSeen !== false) {
+        uniquePapers = await this.historyRepo.deduplicate(papers);
+        const duplicates = papers.length - uniquePapers.length;
+        if (duplicates > 0) {
+          await this.messagePort.sendMessage(`_Filtered ${duplicates} previously seen papers_`);
+        }
+      }
+
+      if (uniquePapers.length === 0) {
+        await this.messagePort.sendMessage('📭 No new papers found today.');
+        return Result.ok(undefined);
+      }
+
+      const maxPapers = input.maxPapers || 10;
+      const selectedPapers = uniquePapers.slice(0, maxPapers);
+
+      // Set personalized context for classification
+      const contextPrompt = await this.contextRepo.getClassificationPrompt(input.userId);
+      this.geminiService.setContextPrompt(contextPrompt);
+
+      // Classify papers with tiered system
+      await this.messagePort.sendMessage('_Classifying papers with AI..._');
+
+      const classificationResult = await this.geminiService.classifyPapers(
+        selectedPapers.map(p => ({
+          id: p.id,
+          title: p.title,
+          summary: p.summary,
+          categories: p.categories,
+          authors: p.authors,
+          published: p.published,
+        }))
+      );
+
+      if (!classificationResult.success) {
+        throw classificationResult.error;
+      }
+
+      const classified = classificationResult.data;
+
+      // Record papers in history
+      for (const paper of selectedPapers) {
+        await this.historyRepo.recordSeen({
+          id: paper.id,
+          title: paper.title,
+          firstSeen: new Date(),
+          lastSeen: new Date(),
+          seenCount: 1,
+          userActions: [],
+        });
+      }
+
+      // Record context learning
+      for (const c of classified) {
+        if (c.tier === RelevanceTier.MUST_READ || c.tier === RelevanceTier.WORTH_SCANNING) {
+          await this.contextRepo.recordInteraction(input.userId, {
+            paperId: c.paperId,
+            action: 'opened',
+            timestamp: new Date(),
+            notes: `${c.tier}: ${c.reasoning}`,
+          });
+        }
+      }
+
+      // Get session and determine mode
+      const session = await this.sessionRepo.get(input.chatId);
+      
+      if (input.useBatchMode) {
+        await this.sendBatchReview(session, classified, selectedPapers);
+      } else {
+        await this.sendTieredResults(classified, selectedPapers);
+      }
+
+      // Save session
+      await this.sessionRepo.save(input.chatId, session);
+
+      logInfo('Papers scanned and classified with tiers', { 
+        chatId: input.chatId, 
+        count: selectedPapers.length,
+        mustRead: classified.filter(c => c.tier === RelevanceTier.MUST_READ).length,
+        worthScanning: classified.filter(c => c.tier === RelevanceTier.WORTH_SCANNING).length,
+      });
+
+      return Result.ok(undefined);
+    } catch (error) {
+      logError('EnhancedScanPapersUseCase failed', error as Error);
+      
+      await this.messagePort.sendMessage(
+        `❌ Failed to scan papers: ${(error as Error).message}`
+      );
+
+      return Result.err(error as Error);
+    }
+  }
+
+  private async sendBatchReview(
+    session: Session,
+    classified: TieredClassification[],
+    papers: any[]
+  ): Promise<void> {
+    // Create batch review items (top 5-7 papers)
+    const batchItems: BatchReviewItem[] = classified
+      .filter(c => c.tier !== RelevanceTier.SKIP)
+      .slice(0, 7)
+      .map(c => {
+        const paper = papers.find(p => p.id === c.paperId);
+        return {
+          paperId: c.paperId,
+          title: paper?.title || 'Unknown',
+          summary: c.summary,
+          tier: c.tier,
+          relevanceScore: c.relevanceScore,
+          url: paper?.absUrl || paper?.url || '',
+        };
+      });
+
+    if (batchItems.length === 0) {
+      await this.messagePort.sendMessage('📭 No relevant papers found for review.');
+      return;
+    }
+
+    // Start batch review session
+    session.startBatchReview({
+      items: batchItems,
+      currentIndex: 0,
+      reactions: new Map(),
+      submitted: false,
+    });
+
+    // Send batch review message
+    let msg = `*📚 Batch Review: ${batchItems.length} Papers*\n\n`;
+    msg += 'React to each paper:\n';
+    msg += '⭐ Must Read | 👍 Interesting | ✓ Ack | 🔖 Save | ⏭️ Skip\n\n';
+
+    for (let i = 0; i < batchItems.length; i++) {
+      const item = batchItems[i];
+      const emoji = TierEmojis[item.tier];
+      const title = MarkdownFormatter.truncate(item.title, 70);
+      
+      msg += `${i + 1}. ${emoji} *${MarkdownFormatter.escape(title)}*\n`;
+      msg += `   Score: ${item.relevanceScore}/100 | ${item.tier.replace('_', ' ')}\n`;
+      msg += `   ${MarkdownFormatter.truncate(item.summary, 120)}\n\n`;
+    }
+
+    msg += 'Reply with numbers (e.g., "1⭐ 2👍 3⏭️") or react individually.';
+
+    await this.messagePort.sendMessage(msg);
+  }
+
+  private async sendTieredResults(
+    classified: TieredClassification[],
+    papers: any[]
+  ): Promise<void> {
+    // Group by tier
+    const byTier: Record<RelevanceTier, TieredClassification[]> = {
+      [RelevanceTier.MUST_READ]: [],
+      [RelevanceTier.WORTH_SCANNING]: [],
+      [RelevanceTier.BACKGROUND]: [],
+      [RelevanceTier.SKIP]: [],
+    };
+
+    for (const c of classified) {
+      byTier[c.tier].push(c);
+    }
+
+    let msg = '*📊 Today\'s Papers by Relevance*\n\n';
+
+    // Must Read
+    if (byTier[RelevanceTier.MUST_READ].length > 0) {
+      msg += `*🔴 Must Read (${byTier[RelevanceTier.MUST_READ].length})*\n`;
+      for (const c of byTier[RelevanceTier.MUST_READ].slice(0, 3)) {
+        const paper = papers.find(p => p.id === c.paperId);
+        msg += this.formatPaperLine(c, paper);
+      }
+      msg += '\n';
+    }
+
+    // Worth Scanning
+    if (byTier[RelevanceTier.WORTH_SCANNING].length > 0) {
+      msg += `*🟡 Worth Scanning (${byTier[RelevanceTier.WORTH_SCANNING].length})*\n`;
+      for (const c of byTier[RelevanceTier.WORTH_SCANNING].slice(0, 3)) {
+        const paper = papers.find(p => p.id === c.paperId);
+        msg += this.formatPaperLine(c, paper);
+      }
+      msg += '\n';
+    }
+
+    // Background
+    if (byTier[RelevanceTier.BACKGROUND].length > 0) {
+      msg += `*🟢 Background (${byTier[RelevanceTier.BACKGROUND].length})*\n`;
+      for (const c of byTier[RelevanceTier.BACKGROUND].slice(0, 2)) {
+        const paper = papers.find(p => p.id === c.paperId);
+        msg += this.formatPaperLine(c, paper);
+      }
+    }
+
+    await this.messagePort.sendMessage(msg);
+  }
+
+  private formatPaperLine(classification: TieredClassification, paper: any): string {
+    const title = MarkdownFormatter.truncate(paper?.title || 'Unknown', 60);
+    return `• *${MarkdownFormatter.escape(title)}*\n  _${classification.suggestedAction}_\n  [ArXiv](${paper?.absUrl || paper?.url || ''})\n\n`;
+  }
+}

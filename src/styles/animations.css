@@ -409,3 +409,53 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+
+/* Will-change hints for animated elements */
+.led-pulse,
+.led-pulse-amber,
+.led-blink {
+  will-change: opacity, box-shadow;
+}
+
+.cable-flow,
+.cable-signal {
+  will-change: stroke-dashoffset;
+}
+
+.panel-reveal,
+.scale-in,
+.stagger-in > * {
+  will-change: transform, opacity;
+}
+
+/* Contain layout for complex components */
+.lab-board,
+.panel,
+.terminal-wrapper {
+  contain: layout style;
+}
+
+/* Promote animated elements to their own layer */
+.card-lift:hover,
+.module-card:hover,
+.tutorial-card:hover {
+  will-change: transform;
+}
+
+/* Optimize scrolling performance */
+.terminal-output,
+.panel-content {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* GPU acceleration for transforms */
+.flip-card,
+.flip-card-inner,
+.chaos-mode .lab-board {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

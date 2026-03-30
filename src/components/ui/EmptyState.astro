@@ -11,7 +11,9 @@ const { title = 'No content found' } = Astro.props;
 <div class="empty-panel">
   <div class="panel-header">
     <div class="header-left">
-      <Icon name="alert_circle" size={16} />
+      <span class="header-icon">
+        <Icon name="alert_circle" size={16} />
+      </span>
       <span>SYSTEM_ALERT</span>
     </div>
     <div class="header-right">
@@ -62,8 +64,10 @@ const { title = 'No content found' } = Astro.props;
     gap: var(--space-sm);
   }
 
-  .header-left Icon {
-    color: var(--accent-amber);
+  .header-icon {
+    color: var(--led-amber);
+    display: flex;
+    align-items: center;
   }
 
   .header-left span {
@@ -97,11 +101,10 @@ const { title = 'No content found' } = Astro.props;
 
   .empty-icon {
     margin-bottom: var(--space-md);
-  }
-
-  .empty-icon Icon {
     color: var(--lab-text-muted);
     opacity: 0.6;
+    display: flex;
+    justify-content: center;
   }
 
   .empty-title {

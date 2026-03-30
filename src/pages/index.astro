@@ -1,6 +1,8 @@
 ---
 import LabLayout from '../layouts/LabLayout.astro';
 import LabBoard from '../components/home/LabBoard.astro';
+import BlogPreview from '../components/home/BlogPreview.astro';
+import HomeVisualSystem from '../components/home/HomeVisualSystem';
 import { getCollection } from 'astro:content';
 import { getTerminalData } from '../lib/terminal/getTerminalData';
 
@@ -17,6 +19,7 @@ const recentPosts = posts
   .slice(0, 3);
 
 const papers = await getCollection('papers');
+const tutorials = await getCollection('tutorials');
 const portfolio = await getCollection('portfolio');
 const terminalData = await getTerminalData();
 ---
@@ -27,6 +30,37 @@ const terminalData = await getTerminalData();
     posts={recentPosts}
     papersCount={papers.length}
     portfolioCount={portfolio.length}
+    blogCount={0}
+    tutorialsCount={tutorials.length}
     terminalData={terminalData}
   />
+  
+  <!-- Blog Preview Section -->
+  <section class="blog-section">
+    <div class="section-container">
+      <BlogPreview />
+    </div>
+  </section>
+  
+  <HomeVisualSystem client:load />
 </LabLayout>
+
+<style>
+  .blog-section {
+    padding: var(--space-2xl) 0;
+    background: linear-gradient(180deg, var(--lab-bg-base) 0%, var(--lab-bg-dark) 100%);
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .section-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+  }
+
+  @media (max-width: 768px) {
+    .section-container {
+      padding: 0 var(--space-md);
+    }
+  }
+</style>

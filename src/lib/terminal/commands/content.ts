@@ -1,5 +1,6 @@
-import type { TerminalData } from '../terminalTypes';
-import { CommandDefinition, registerCommand, UIAction, TERMINAL_DIVIDER } from '../commandRegistry';
+import type { TerminalData, UIAction } from '../terminalTypes';
+import type { CommandDefinition } from '../commandRegistry';
+import { registerCommand, TERMINAL_DIVIDER } from '../commandRegistry';
 
 function formatProjects(projects: TerminalData['projects']): string {
   if (!projects.length) return 'No projects found.';

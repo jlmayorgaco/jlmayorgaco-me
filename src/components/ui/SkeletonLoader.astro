@@ -1,0 +1,218 @@
+---
+interface Props {
+  variant?: 'card' | 'list' | 'chart' | 'terminal' | 'panel';
+  count?: number;
+  class?: string;
+}
+
+const { variant = 'card', count = 1, class: className = '' } = Astro.props;
+---
+
+<div class={`skeleton-container ${className}`}>
+  {Array.from({ length: count }).map((_, i) => (
+    <div class={`skeleton skeleton-${variant}`} aria-hidden="true">
+      {variant === 'card' && (
+        <>
+          <div class="skeleton-header"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line skeleton-line-long"></div>
+            <div class="skeleton-line skeleton-line-medium"></div>
+            <div class="skeleton-line skeleton-line-short"></div>
+          </div>
+          <div class="skeleton-footer"></div>
+        </>
+      )}
+      
+      {variant === 'list' && (
+        <>
+          <div class="skeleton-list-item"></div>
+          <div class="skeleton-list-item"></div>
+          <div class="skeleton-list-item"></div>
+        </>
+      )}
+      
+      {variant === 'chart' && (
+        <div class="skeleton-chart">
+          <div class="skeleton-chart-bar"></div>
+          <div class="skeleton-chart-bar"></div>
+          <div class="skeleton-chart-bar"></div>
+          <div class="skeleton-chart-bar"></div>
+          <div class="skeleton-chart-bar"></div>
+        </div>
+      )}
+      
+      {variant === 'terminal' && (
+        <div class="skeleton-terminal">
+          <div class="skeleton-terminal-header"></div>
+          <div class="skeleton-terminal-body">
+            <div class="skeleton-terminal-line"></div>
+            <div class="skeleton-terminal-line skeleton-terminal-line-short"></div>
+            <div class="skeleton-terminal-line"></div>
+            <div class="skeleton-terminal-line skeleton-terminal-line-medium"></div>
+          </div>
+        </div>
+      )}
+      
+      {variant === 'panel' && (
+        <div class="skeleton-panel">
+          <div class="skeleton-panel-header"></div>
+          <div class="skeleton-panel-content">
+            <div class="skeleton-panel-row"></div>
+            <div class="skeleton-panel-row"></div>
+            <div class="skeleton-panel-row"></div>
+          </div>
+        </div>
+      )}
+    </div>
+  ))}
+</div>
+
+<style>
+  .skeleton-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  
+  .skeleton {
+    background: var(--lab-bg-panel, #f0f2f0);
+    border: 1px solid var(--panel-border, #b8bcba);
+    border-radius: var(--radius-md, 4px);
+    overflow: hidden;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+  }
+  
+  @keyframes skeleton-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  
+  /* Card variant */
+  .skeleton-card {
+    min-height: 120px;
+  }
+  
+  .skeleton-header {
+    height: 32px;
+    background: var(--lab-bg-dark, #d4d7d5);
+    border-bottom: 1px solid var(--panel-border, #b8bcba);
+  }
+  
+  .skeleton-body {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .skeleton-line {
+    height: 12px;
+    background: var(--lab-bg-dark, #d4d7d5);
+    border-radius: 2px;
+  }
+  
+  .skeleton-line-long { width: 100%; }
+  .skeleton-line-medium { width: 80%; }
+  .skeleton-line-short { width: 60%; }
+  
+  .skeleton-footer {
+    height: 24px;
+    background: var(--lab-bg-dark, #d4d7d5);
+    border-top: 1px solid var(--panel-border, #b8bcba);
+  }
+  
+  /* List variant */
+  .skeleton-list-item {
+    height: 48px;
+    background: var(--lab-bg-dark, #d4d7d5);
+    border-bottom: 1px solid var(--panel-border, #b8bcba);
+  }
+  
+  .skeleton-list-item:last-child {
+    border-bottom: none;
+  }
+  
+  /* Chart variant */
+  .skeleton-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-sm);
+    height: 120px;
+    padding: var(--space-md);
+  }
+  
+  .skeleton-chart-bar {
+    flex: 1;
+    background: var(--lab-bg-dark, #d4d7d5);
+    border-radius: 2px 2px 0 0;
+    animation: skeleton-bar-pulse 1.5s ease-in-out infinite;
+  }
+  
+  .skeleton-chart-bar:nth-child(1) { height: 60%; animation-delay: 0s; }
+  .skeleton-chart-bar:nth-child(2) { height: 80%; animation-delay: 0.1s; }
+  .skeleton-chart-bar:nth-child(3) { height: 40%; animation-delay: 0.2s; }
+  .skeleton-chart-bar:nth-child(4) { height: 90%; animation-delay: 0.3s; }
+  .skeleton-chart-bar:nth-child(5) { height: 70%; animation-delay: 0.4s; }
+  
+  @keyframes skeleton-bar-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  
+  /* Terminal variant */
+  .skeleton-terminal {
+    background: #1a2328;
+    border: 2px solid #2d3a40;
+    border-radius: var(--radius-md, 4px);
+    overflow: hidden;
+  }
+  
+  .skeleton-terminal-header {
+    height: 24px;
+    background: #2d3a40;
+    border-bottom: 1px solid #1a2328;
+  }
+  
+  .skeleton-terminal-body {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .skeleton-terminal-line {
+    height: 14px;
+    background: #2d3a40;
+    border-radius: 2px;
+  }
+  
+  .skeleton-terminal-line-short { width: 40%; }
+  .skeleton-terminal-line-medium { width: 70%; }
+  
+  /* Panel variant */
+  .skeleton-panel {
+    min-height: 200px;
+  }
+  
+  .skeleton-panel-header {
+    height: 40px;
+    background: var(--lab-bg-dark, #d4d7d5);
+    border-bottom: 1px solid var(--panel-border, #b8bcba);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-md);
+  }
+  
+  .skeleton-panel-content {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  
+  .skeleton-panel-row {
+    height: 16px;
+    background: var(--lab-bg-dark, #d4d7d5);
+    border-radius: 2px;
+  }
+</style>

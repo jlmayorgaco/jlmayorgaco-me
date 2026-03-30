@@ -28,7 +28,7 @@
 }
 
 .brand-text {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-md);
   font-weight: 700;
   color: var(--lab-text);
@@ -39,7 +39,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-muted);
   letter-spacing: 0.1em;
@@ -68,7 +68,7 @@
 }
 
 .control-btn {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-secondary);
   text-decoration: none;
@@ -102,7 +102,7 @@
 }
 
 .system-time {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-muted);
   letter-spacing: 0.05em;

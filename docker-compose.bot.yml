@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: jlmt-lab-bot
+    restart: unless-stopped
+    
+    environment:
+      # Required
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      
+      # Optional
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.0-flash}
+      - NODE_ENV=production
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - SESSION_TTL_MINUTES=${SESSION_TTL_MINUTES:-30}
+      - MAX_PAPERS_SCAN=${MAX_PAPERS_SCAN:-10}
+      - TELEGRAM_RATE_LIMIT=${TELEGRAM_RATE_LIMIT:-30}
+      
+    volumes:
+      # Mount git repo for publishing
+      - .:/app
+      # Data persistence
+      - bot-data:/app/data
+      
+    healthcheck:
+      test: ["CMD", "node", "scripts/bot/health-check.ts"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+      
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Optional: Redis for session storage (production scale)
+  redis:
+    image: redis:7-alpine
+    container_name: jlmt-bot-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    profiles:
+      - scale
+
+volumes:
+  bot-data:
+  redis-data:

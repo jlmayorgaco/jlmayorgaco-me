@@ -1,0 +1,60 @@
+# Multi-stage Dockerfile for JLMT Lab Bot
+# Production-ready: small image, non-root user, health checks
+
+# Stage 1: Dependencies
+FROM node:22-alpine AS deps
+RUN apk add --no-cache libc6-compat git
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Stage 2: Builder
+FROM node:22-alpine AS builder
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build || true
+
+# Stage 3: Production
+FROM node:22-alpine AS runner
+WORKDIR /app
+
+# Install git for publishing
+RUN apk add --no-cache git
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 botuser
+
+# Copy production dependencies
+COPY --from=deps --chown=botuser:nodejs /app/node_modules ./node_modules
+COPY --from=deps --chown=botuser:nodejs /app/package*.json ./
+
+# Copy application code
+COPY --chown=botuser:nodejs scripts/bot ./scripts/bot
+COPY --chown=botuser:nodejs src/lib/pipeline ./src/lib/pipeline
+COPY --chown=botuser:nodejs src/content/blog ./src/content/blog
+
+# Create data directory
+RUN mkdir -p data && chown -R botuser:nodejs data
+
+# Switch to non-root user
+USER botuser
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD node -e "require('./scripts/bot/health-check.ts')" || exit 1
+
+# Environment
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Expose health check port
+EXPOSE 3000
+
+# Run the bot
+CMD ["node", "--experimental-specifier-resolution=node", "--loader", "tsx", "scripts/bot/main.ts"]

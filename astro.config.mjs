@@ -11,4 +11,11 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
 	site: 'https://jlmayorga.com.co',
 	integrations: [mdx(), react(), sitemap(), icon()],
+	
+	// Image optimization
+	image: {
+		service: {
+			entrypoint: 'astro/assets/services/sharp',
+		},
+	},
 });

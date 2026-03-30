@@ -39,6 +39,7 @@ const {
     />
   </head>
   <body class="base-layout">
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <div class="bg-pattern">
       <div class="bg-grid"></div>
       <svg class="bg-cable" viewBox="0 0 100 20" preserveAspectRatio="none">
@@ -48,7 +49,7 @@ const {
     </div>
     <TopNav />
     <MobileNav />
-    <main class="base-main">
+    <main id="main-content" class="base-main">
       <slot />
     </main>
     <FooterDock />
@@ -138,5 +139,24 @@ const {
     .base-main {
       padding-bottom: 5rem;
     }
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--accent-cyan);
+    color: var(--lab-bg-dark);
+    padding: 8px;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    z-index: 1000;
+    border-radius: 0 0 var(--radius-md) 0;
+    transition: top 0.3s;
+  }
+
+  .skip-link:focus {
+    top: 0;
   }
 </style>

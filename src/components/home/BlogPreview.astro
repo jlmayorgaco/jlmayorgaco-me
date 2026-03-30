@@ -1,0 +1,362 @@
+---
+import { getCollection } from 'astro:content';
+import { calculateReadingTime, formatReadingTime } from '../../lib/readingTime';
+import Icon from '../ui/Icon.astro';
+
+// Get latest research posts
+const posts = await getCollection('research');
+const recentPosts = posts
+  .filter(p => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 4)
+  .map(post => ({
+    ...post,
+    readingTime: post.data.readingTime || calculateReadingTime(post.body || ''),
+  }));
+
+// Get latest papers
+const papers = await getCollection('papers');
+const recentPapers = papers
+  .sort((a, b) => b.data.year - a.data.year)
+  .slice(0, 3);
+---
+
+<div class="blog-preview-section">
+  <!-- Latest Posts -->
+  <div class="preview-column">
+    <div class="column-header">
+      <span class="label-tag">LATEST NOTES</span>
+      <a href="/research" class="view-all">
+        View Archive
+        <Icon name="arrow" size={12} />
+      </a>
+    </div>
+    
+    <div class="posts-list">
+      {recentPosts.map((post, index) => (
+        <article class="post-item" style={`--index: ${index}`}>
+          <div class="post-meta">
+            <time datetime={post.data.date.toISOString()}>
+              {post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            </time>
+            <span class="reading-time">
+              <Icon name="clock" size={10} />
+              {formatReadingTime(post.readingTime)}
+            </span>
+          </div>
+          <h3 class="post-title">
+            <a href={`/research/${post.id}`}>{post.data.title}</a>
+          </h3>
+          <p class="post-excerpt">{post.data.excerpt}</p>
+          <div class="post-tags">
+            {post.data.tags.slice(0, 3).map(tag => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <!-- Recent Papers -->
+  <div class="preview-column papers-column">
+    <div class="column-header">
+      <span class="label-tag">RECENT PAPERS</span>
+      <a href="/papers" class="view-all">
+        View All
+        <Icon name="arrow" size={12} />
+      </a>
+    </div>
+    
+    <div class="papers-list">
+      {recentPapers.map((paper, index) => (
+        <article class="paper-item" style={`--index: ${index}`}>
+          <div class="paper-year">{paper.data.year}</div>
+          <h3 class="paper-title">
+            <a href={`/papers/${paper.id}`}>{paper.data.title}</a>
+          </h3>
+          <div class="paper-venue">{paper.data.venue}</div>
+          <div class="paper-status status-{paper.data.status}">
+            {paper.data.status}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .blog-preview-section {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-xl);
+    margin-top: var(--space-xl);
+  }
+
+  .preview-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .label-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .label-tag::before {
+    content: '';
+    width: 8px;
+    height: 2px;
+    background: var(--accent-cyan);
+    border-radius: 1px;
+  }
+
+  .view-all {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--lab-text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .view-all:hover {
+    color: var(--accent-cyan);
+  }
+
+  /* Posts List */
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .post-item {
+    padding: var(--space-md);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+    animation: fadeInUp 0.5s ease-out forwards;
+    animation-delay: calc(var(--index) * 0.1s);
+    opacity: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .post-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent-cyan);
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .post-item:hover {
+    border-color: var(--accent-cyan);
+    transform: translateX(4px);
+  }
+
+  .post-item:hover::before {
+    transform: scaleY(1);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+  }
+
+  .reading-time {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+    line-height: 1.3;
+  }
+
+  .post-title a {
+    color: var(--lab-text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .post-title a:hover {
+    color: var(--accent-cyan);
+  }
+
+  .post-excerpt {
+    font-size: 0.875rem;
+    color: var(--lab-text-secondary);
+    line-height: 1.5;
+    margin-bottom: var(--space-sm);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    padding: 2px 6px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    color: var(--lab-text-muted);
+  }
+
+  /* Papers List */
+  .papers-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .paper-item {
+    padding: var(--space-md);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .paper-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--accent-copper);
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+  }
+
+  .paper-item:hover {
+    border-color: var(--accent-cyan);
+  }
+
+  .paper-item:hover::before {
+    transform: scaleY(1);
+    background: var(--accent-cyan);
+  }
+
+  .paper-year {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--accent-cyan);
+    margin-bottom: var(--space-xs);
+  }
+
+  .paper-title {
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+    line-height: 1.3;
+  }
+
+  .paper-title a {
+    color: var(--lab-text-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .paper-title a:hover {
+    color: var(--accent-cyan);
+  }
+
+  .paper-venue {
+    font-size: 0.8125rem;
+    color: var(--lab-text-muted);
+    margin-bottom: var(--space-xs);
+  }
+
+  .paper-status {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+  }
+
+  .status-published {
+    background: rgba(63, 185, 80, 0.15);
+    color: var(--led-green);
+  }
+
+  .status-submitted {
+    background: rgba(210, 153, 34, 0.15);
+    color: var(--led-amber);
+  }
+
+  .status-draft {
+    background: var(--lab-bg-dark);
+    color: var(--lab-text-muted);
+  }
+
+  /* Responsive */
+  @media (max-width: 968px) {
+    .blog-preview-section {
+      grid-template-columns: 1fr;
+    }
+
+    .papers-column {
+      order: -1;
+    }
+  }
+</style>

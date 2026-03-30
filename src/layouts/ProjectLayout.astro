@@ -46,7 +46,7 @@ const { title, summary, year, status = 'published', tags, stack, cover, links } 
 
       {cover && (
         <div class="project-cover">
-          <img src={cover} alt="" loading="lazy" />
+          <img src={cover} alt={`Cover image for ${title}`} loading="lazy" />
         </div>
       )}
 
@@ -148,7 +148,7 @@ const { title, summary, year, status = 'published', tags, stack, cover, links } 
 
   .status-badge.wip {
     background: rgba(210, 153, 34, 0.2);
-    color: var(--accent-amber);
+    color: var(--led-amber);
   }
 
   .status-badge.archived {

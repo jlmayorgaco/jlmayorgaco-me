@@ -1,135 +1,613 @@
 ---
-import { SOCIAL_LINKS } from '../../lib/config';
+import { SITE_TITLE, SITE_DESCRIPTION, NAV_ITEMS, NAV_SECONDARY, SOCIAL_LINKS } from '../../lib/config';
+import Icon from '../ui/Icon.astro';
+
+const currentYear = new Date().getFullYear();
+const currentPath = Astro.url.pathname;
 ---
 
 <footer class="lab-footer">
-  <div class="footer-content">
-    <!-- Left: Terminal style -->
-    <div class="footer-terminal">
-      <span class="terminal-prompt">$</span>
-      <span class="terminal-text">echo "Stay curious"</span>
+  <!-- Decorative top line -->
+  <div class="footer-line"></div>
+  
+  <div class="footer-container">
+    <!-- Footer Grid -->
+    <div class="footer-grid">
+      <!-- Brand Column -->
+      <div class="footer-brand">
+        <div class="brand-section">
+          <div class="brand-logo">
+            <span class="logo-icon">
+              <Icon name="chip" size={18} />
+            </span>
+            <span class="logo-text">JLMT LAB</span>
+          </div>
+          <p class="brand-description">{SITE_DESCRIPTION}</p>
+          <div class="brand-status">
+            <span class="status-led"></span>
+            <span class="status-text">System Operational</span>
+          </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="footer-stats">
+          <div class="stat-item">
+            <span class="stat-label">Uptime</span>
+            <span class="stat-value">99.9%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Mode</span>
+            <span class="stat-value">Research</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Primary Navigation -->
+      <div class="footer-nav-section">
+        <h4 class="footer-title">
+          <span class="title-indicator"></span>
+          NAVIGATION
+        </h4>
+        <ul class="footer-nav-list">
+          {NAV_ITEMS.map((item) => (
+            <li>
+              <a 
+                href={item.href} 
+                class:list={['footer-link', { active: currentPath.startsWith(item.href) }]}
+              >
+                <span class="link-dot"></span>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Secondary Navigation -->
+      <div class="footer-nav-section">
+        <h4 class="footer-title">
+          <span class="title-indicator"></span>
+          RESOURCES
+        </h4>
+        <ul class="footer-nav-list">
+          {NAV_SECONDARY.map((item) => (
+            <li>
+              <a 
+                href={item.href} 
+                class:list={['footer-link', { active: currentPath.startsWith(item.href) }]}
+              >
+                <span class="link-dot"></span>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Connect Section -->
+      <div class="footer-connect">
+        <h4 class="footer-title">
+          <span class="title-indicator"></span>
+          CONNECT
+        </h4>
+        <div class="social-links">
+          {SOCIAL_LINKS.map((social) => (
+            <a 
+              href={social.href} 
+              class="social-link" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              aria-label={social.label}
+            >
+              <Icon name={social.icon} size={16} />
+              <span class="social-label">{social.label}</span>
+            </a>
+          ))}
+        </div>
+        
+        <div class="contact-info">
+          <a href="mailto:hello@jlmayorga.co" class="contact-link">
+            hello@jlmayorga.co
+          </a>
+        </div>
+      </div>
     </div>
 
-    <!-- Center: Branding -->
-    <div class="footer-brand">
-      <span class="brand-marker">◈</span>
-      <span class="brand-text">JLMT LAB</span>
-      <span class="brand-year">© {new Date().getFullYear()}</span>
-    </div>
-
-    <!-- Right: Social -->
-    <div class="footer-social">
-      {SOCIAL_LINKS.map((link) => (
-        <a href={link.href} target="_blank" rel="noopener noreferrer" class="social-link">
-          {link.label}
-        </a>
-      ))}
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="footer-copyright">
+        <span class="copyright-text">
+          &copy; {currentYear} {SITE_TITLE}. All rights reserved.
+        </span>
+        <span class="copyright-sub">
+          Built with Astro & React | Lab v2.4.1
+        </span>
+      </div>
+      
+      <!-- System Status Bar -->
+      <div class="footer-system">
+        <div class="system-indicator">
+          <span class="sys-led"></span>
+          <span class="sys-label">SYS</span>
+          <span class="sys-value">OK</span>
+        </div>
+        <div class="system-indicator">
+          <span class="sys-led"></span>
+          <span class="sys-label">UPTIME</span>
+          <span class="sys-value">847d</span>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
 
 <style>
   .lab-footer {
-    background: var(--lab-bg-elevated);
-    border-top: 2px solid var(--panel-frame);
-    padding: var(--space-sm) var(--space-md);
-    margin-top: var(--space-xl);
+    background: var(--lab-bg-panel);
+    border-top: 1px solid var(--panel-border);
+    margin-top: var(--space-2xl);
+    position: relative;
   }
 
-  .footer-content {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--space-md);
-  }
-
-  /* Terminal style left */
-  .footer-terminal {
-    display: none;
-    align-items: center;
-    gap: var(--space-sm);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--lab-text-muted);
-  }
-
-  @media (min-width: 640px) {
-    .footer-terminal {
-      display: flex;
-    }
-  }
-
-  .terminal-prompt {
-    color: var(--accent-cyan);
-  }
-
-  .terminal-text {
+  .footer-line {
+    height: 2px;
+    background: linear-gradient(90deg, 
+      var(--accent-copper-dim) 0%, 
+      var(--accent-cyan) 20%,
+      var(--accent-cyan-dim) 50%,
+      var(--accent-cyan) 80%,
+      var(--accent-copper-dim) 100%
+    );
+    background-size: 300% 100%;
+    animation: gradient-shift 12s ease-in-out infinite;
     opacity: 0.7;
   }
 
-  /* Center branding */
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 100% 50%; }
+    50% { background-position: 0% 50%; }
+  }
+
+  .footer-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: var(--space-xl);
+    padding-bottom: var(--space-xl);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  /* Brand Section */
   .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .brand-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .brand-logo {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
   }
 
-  .brand-marker {
-    font-size: 0.875rem;
+  .logo-icon {
     color: var(--accent-cyan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
   }
 
-  .brand-text {
+  .logo-text {
     font-family: var(--font-display);
-    font-size: 0.8125rem;
+    font-size: 1rem;
     font-weight: 700;
     color: var(--lab-text-primary);
+    letter-spacing: 0.1em;
   }
 
-  .brand-year {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    color: var(--lab-text-muted);
-    padding-left: var(--space-sm);
-    border-left: 1px solid var(--panel-border);
+  .brand-description {
+    font-size: 0.8125rem;
+    color: var(--lab-text-secondary);
+    line-height: 1.6;
+    max-width: 260px;
+    margin: 0;
   }
 
-  /* Social links */
-  .footer-social {
+  .brand-status {
     display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    width: fit-content;
+  }
+
+  .status-led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--led-green);
+    box-shadow: 0 0 6px var(--led-green);
+    animation: led-pulse 2.5s ease-in-out infinite;
+  }
+
+  .status-text {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--led-green);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .footer-stats {
+    display: flex;
+    gap: var(--space-lg);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--accent-cyan);
+    font-weight: 600;
+  }
+
+  /* Navigation Sections */
+  .footer-nav-section {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-md);
   }
 
-  .social-link {
+  .footer-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--lab-text-secondary);
-    text-decoration: none;
-    transition: color 150ms ease;
+    font-size: 0.5625rem;
+    font-weight: 600;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: var(--space-xs);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--panel-border);
   }
 
-  .social-link:hover {
+  .title-indicator {
+    width: 6px;
+    height: 2px;
+    background: var(--accent-cyan);
+    border-radius: 1px;
+  }
+
+  .footer-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .footer-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--lab-text-secondary);
+    text-decoration: none;
+    transition: all 150ms ease;
+    padding: 4px 0;
+    position: relative;
+  }
+
+  .footer-link::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    width: 0;
+    height: 100%;
+    background: var(--accent-cyan);
+    opacity: 0.1;
+    transition: width 150ms ease, opacity 150ms ease;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .footer-link:hover {
+    color: var(--accent-cyan);
+    padding-left: var(--space-sm);
+  }
+
+  .footer-link:hover::before {
+    width: 3px;
+    opacity: 0.5;
+  }
+
+  .footer-link.active {
     color: var(--accent-cyan);
   }
 
-  /* Mobile */
-  @media (max-width: 640px) {
-    .footer-content {
-      flex-direction: column;
-      text-align: center;
+  .footer-link.active::before {
+    width: 3px;
+    opacity: 0.5;
+  }
+
+  .link-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--lab-text-muted);
+    transition: all 150ms ease;
+    flex-shrink: 0;
+  }
+
+  .footer-link:hover .link-dot {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 4px var(--accent-cyan);
+  }
+
+  .footer-link.active .link-dot {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 4px var(--accent-cyan);
+  }
+
+  /* Connect Section */
+  .footer-connect {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: var(--lab-text-secondary);
+    text-decoration: none;
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    transition: all 200ms ease;
+  }
+
+  .social-link:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .social-link:active {
+    transform: translateY(0);
+  }
+
+  .social-label {
+    display: none;
+  }
+
+  .contact-info {
+    margin-top: auto;
+    padding-top: var(--space-sm);
+  }
+
+  .contact-link {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    transition: all 150ms ease;
+  }
+
+  .contact-link:hover {
+    border-color: var(--accent-cyan);
+    background: rgba(63, 185, 167, 0.05);
+  }
+
+  /* Footer Bottom */
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-lg);
+    gap: var(--space-lg);
+  }
+
+  .footer-copyright {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .copyright-text {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--lab-text-muted);
+  }
+
+  .copyright-sub {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    opacity: 0.6;
+  }
+
+  .footer-system {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .system-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 var(--space-xs);
+  }
+
+  .system-indicator:not(:last-child) {
+    border-right: 1px solid var(--panel-border);
+  }
+
+  .sys-led {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+    animation: led-pulse 3s ease-in-out infinite;
+  }
+
+  .sys-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.08em;
+  }
+
+  .sys-value {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-secondary);
+    font-weight: 600;
+  }
+
+  /* LED Animation */
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--led-green); }
+    50% { opacity: 0.7; box-shadow: 0 0 8px var(--led-green); }
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
     }
 
     .footer-brand {
-      flex-direction: column;
-      gap: var(--space-xs);
+      grid-column: span 2;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
     }
 
-    .brand-year {
-      border: none;
-      padding: 0;
+    .brand-section {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .footer-stats {
+      align-self: flex-end;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+    }
+
+    .footer-brand {
+      grid-column: span 2;
+      flex-direction: column;
+    }
+
+    .footer-stats {
+      align-self: flex-start;
+    }
+
+    .footer-system {
+      display: none;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .footer-connect {
+      grid-column: span 2;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-brand,
+    .footer-connect {
+      grid-column: span 1;
+    }
+
+    .footer-nav-section:last-of-type {
+      grid-column: span 1;
+    }
+
+    .footer-container {
+      padding: var(--space-lg) var(--space-md);
+    }
+
+    .footer-stats {
+      flex-direction: row;
+      gap: var(--space-lg);
+    }
+
+    .social-links {
+      gap: var(--space-sm);
     }
   }
 </style>

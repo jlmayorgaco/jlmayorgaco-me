@@ -9,10 +9,12 @@ interface Props {
   posts: CollectionEntry<'research'>[];
   papersCount?: number;
   portfolioCount?: number;
+  blogCount?: number;
+  tutorialsCount?: number;
   terminalData?: TerminalData;
 }
 
-const { projects, posts, papersCount = 0, portfolioCount = 0, terminalData } = Astro.props;
+const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tutorialsCount = 0, terminalData } = Astro.props;
 ---
 
 <div class="lab-board stagger-in">

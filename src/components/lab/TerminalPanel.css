@@ -26,7 +26,7 @@
 }
 
 .monitor-title {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-signal);
   letter-spacing: 0.1em;
@@ -36,7 +36,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-led-green);
   letter-spacing: 0.1em;
@@ -97,7 +97,7 @@
 }
 
 .quick-chip {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   padding: 2px 8px;
   background: var(--lab-bg-dark);
@@ -124,7 +124,7 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-sm);
   color: var(--lab-text);
   caret-color: transparent;
@@ -142,7 +142,7 @@
 .terminal-output {
   flex: 1;
   overflow-y: auto;
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-sm);
   color: var(--lab-text);
   line-height: 1.5;
@@ -179,7 +179,7 @@
 
 .prompt-symbol {
   color: var(--lab-signal);
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-sm);
 }
 
@@ -188,7 +188,7 @@
   background: transparent;
   border: none;
   outline: none;
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-sm);
   color: var(--lab-text);
   caret-color: transparent;
@@ -196,7 +196,7 @@
 
 .cursor {
   color: var(--lab-signal);
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-sm);
   opacity: 0;
 }
@@ -235,7 +235,7 @@
 }
 
 .footer-label {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-muted);
   letter-spacing: 0.1em;

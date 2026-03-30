@@ -1,0 +1,290 @@
+---
+---
+
+<div class="circuit-bg" aria-hidden="true">
+  <!-- Base grid substrate -->
+  <div class="circuit-grid"></div>
+  
+  <!-- Circuit traces layer -->
+  <svg class="circuit-traces" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <!-- Signal pulse animation -->
+      <linearGradient id="signal-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="var(--accent-cyan)" stop-opacity="0"/>
+        <stop offset="50%" stop-color="var(--accent-cyan)" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="var(--accent-cyan)" stop-opacity="0"/>
+      </linearGradient>
+      
+      <!-- Copper trace gradient -->
+      <linearGradient id="copper-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="var(--wire-color)"/>
+        <stop offset="100%" stop-color="var(--wire-dim)"/>
+      </linearGradient>
+      
+      <!-- Node glow -->
+      <radialGradient id="node-glow">
+        <stop offset="0%" stop-color="var(--accent-cyan)" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="var(--accent-cyan)" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    
+    <!-- Cluster 1: Top-right corner -->
+    <g class="trace-cluster cluster-1">
+      <!-- Main trace with 45-degree routing -->
+      <path class="trace-base" d="M1200,50 L1250,50 L1280,80 L1280,150 L1320,190 L1400,190" />
+      <path class="trace-signal" d="M1200,50 L1250,50 L1280,80 L1280,150 L1320,190 L1400,190" />
+      <circle class="trace-node" cx="1200" cy="50" r="3"/>
+      <circle class="trace-node" cx="1400" cy="190" r="3"/>
+      <circle class="trace-node" cx="1280" cy="80" r="2"/>
+      <circle class="trace-node" cx="1320" cy="190" r="2"/>
+      
+      <!-- Branch -->
+      <path class="trace-base branch" d="M1280,150 L1350,150 L1380,120"/>
+      <circle class="trace-node" cx="1380" cy="120" r="2"/>
+    </g>
+    
+    <!-- Cluster 2: Bottom-left area -->
+    <g class="trace-cluster cluster-2">
+      <path class="trace-base" d="M50,700 L120,700 L150,670 L150,600 L200,550 L280,550"/>
+      <path class="trace-signal" d="M50,700 L120,700 L150,670 L150,600 L200,550 L280,550"/>
+      <circle class="trace-node" cx="50" cy="700" r="3"/>
+      <circle class="trace-node" cx="280" cy="550" r="3"/>
+      <circle class="trace-node" cx="150" cy="670" r="2"/>
+      <circle class="trace-node" cx="200" cy="550" r="2"/>
+      
+      <!-- Sub-branch -->
+      <path class="trace-base branch" d="M150,600 L200,600 L230,570"/>
+      <circle class="trace-node" cx="230" cy="570" r="2"/>
+    </g>
+    
+    <!-- Cluster 3: Top-left corner -->
+    <g class="trace-cluster cluster-3">
+      <path class="trace-base" d="M100,100 L100,180 L150,230 L250,230"/>
+      <path class="trace-signal" d="M100,100 L100,180 L150,230 L250,230"/>
+      <circle class="trace-node" cx="100" cy="100" r="3"/>
+      <circle class="trace-node" cx="250" cy="230" r="3"/>
+      <circle class="trace-node" cx="150" cy="230" r="2"/>
+      
+      <!-- Diagonal branch -->
+      <path class="trace-base branch" d="M150,230 L180,260 L180,320"/>
+      <circle class="trace-node" cx="180" cy="320" r="2"/>
+    </g>
+    
+    <!-- Cluster 4: Mid-right -->
+    <g class="trace-cluster cluster-4">
+      <path class="trace-base" d="M1350,400 L1300,400 L1270,430 L1270,500 L1200,570"/>
+      <path class="trace-signal" d="M1350,400 L1300,400 L1270,430 L1270,500 L1200,570"/>
+      <circle class="trace-node" cx="1350" cy="400" r="3"/>
+      <circle class="trace-node" cx="1200" cy="570" r="3"/>
+      <circle class="trace-node" cx="1270" cy="430" r="2"/>
+      
+      <!-- Horizontal branch -->
+      <path class="trace-base branch" d="M1270,500 L1320,500 L1350,470"/>
+      <circle class="trace-node" cx="1350" cy="470" r="2"/>
+    </g>
+    
+    <!-- Cluster 5: Bottom-right -->
+    <g class="trace-cluster cluster-5">
+      <path class="trace-base" d="M1100,800 L1100,750 L1150,700 L1250,700 L1280,730 L1280,780"/>
+      <path class="trace-signal" d="M1100,800 L1100,750 L1150,700 L1250,700 L1280,730 L1280,780"/>
+      <circle class="trace-node" cx="1100" cy="800" r="3"/>
+      <circle class="trace-node" cx="1280" cy="780" r="3"/>
+      <circle class="trace-node" cx="1150" cy="700" r="2"/>
+      <circle class="trace-node" cx="1280" cy="730" r="2"/>
+    </g>
+    
+    <!-- Cluster 6: Center-left sparse -->
+    <g class="trace-cluster cluster-6">
+      <path class="trace-base" d="M80,450 L150,450 L180,420 L180,380"/>
+      <path class="trace-signal" d="M80,450 L150,450 L180,420 L180,380"/>
+      <circle class="trace-node" cx="80" cy="450" r="3"/>
+      <circle class="trace-node" cx="180" cy="380" r="3"/>
+      <circle class="trace-node" cx="150" cy="450" r="2"/>
+    </g>
+    
+    <!-- Cluster 7: Center sparse branch -->
+    <g class="trace-cluster cluster-7">
+      <path class="trace-base" d="M700,150 L750,150 L780,180 L850,180"/>
+      <path class="trace-signal" d="M700,150 L750,150 L780,180 L850,180"/>
+      <circle class="trace-node" cx="700" cy="150" r="2"/>
+      <circle class="trace-node" cx="850" cy="180" r="2"/>
+      
+      <path class="trace-base branch" d="M780,180 L780,250 L850,320"/>
+      <circle class="trace-node" cx="850" cy="320" r="2"/>
+    </g>
+    
+    <!-- IC Chip representation - top center -->
+    <g class="ic-chip" transform="translate(650, 60)">
+      <rect class="ic-body" x="0" y="0" width="80" height="50" rx="3"/>
+      <line class="ic-pin" x1="10" y1="0" x2="10" y2="-8"/>
+      <line class="ic-pin" x1="25" y1="0" x2="25" y2="-8"/>
+      <line class="ic-pin" x1="40" y1="0" x2="40" y2="-8"/>
+      <line class="ic-pin" x1="55" y1="0" x2="55" y2="-8"/>
+      <line class="ic-pin" x1="70" y1="0" x2="70" y2="-8"/>
+      <line class="ic-pin" x1="10" y1="50" x2="10" y2="58"/>
+      <line class="ic-pin" x1="25" y1="50" x2="25" y2="58"/>
+      <line class="ic-pin" x1="40" y1="50" x2="40" y2="58"/>
+      <line class="ic-pin" x1="55" y1="50" x2="55" y2="58"/>
+      <line class="ic-pin" x1="70" y1="50" x2="70" y2="58"/>
+      <!-- IC label dots -->
+      <circle class="ic-dot" cx="8" cy="25" r="2"/>
+    </g>
+    
+    <!-- Via holes (connection points) -->
+    <g class="vias">
+      <circle class="via" cx="1280" cy="150" r="4"/>
+      <circle class="via" cx="150" cy="230" r="4"/>
+      <circle class="via" cx="1270" cy="430" r="4"/>
+      <circle class="via" cx="1150" cy="700" r="4"/>
+      <circle class="via" cx="180" cy="420" r="4"/>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .circuit-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -2;
+    overflow: hidden;
+  }
+
+  /* Subtle PCB-style grid */
+  .circuit-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(63, 185, 167, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(63, 185, 167, 0.02) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .circuit-traces {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Base trace styling */
+  .trace-base {
+    fill: none;
+    stroke: var(--wire-color, var(--accent-copper-dim, #8a704a));
+    stroke-width: 1;
+    opacity: 0.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .trace-base.branch {
+    stroke-width: 0.75;
+    opacity: 0.1;
+  }
+
+  /* Animated signal paths */
+  .trace-signal {
+    fill: none;
+    stroke: var(--accent-cyan);
+    stroke-width: 1.5;
+    stroke-dasharray: 8, 40;
+    opacity: 0.25;
+    animation: signal-flow 8s linear infinite;
+  }
+
+  .trace-signal:nth-child(even) {
+    animation-delay: -4s;
+  }
+
+  @keyframes signal-flow {
+    0% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -200; }
+  }
+
+  /* Node styling */
+  .trace-node {
+    fill: var(--accent-cyan);
+    opacity: 0.3;
+  }
+
+  .trace-node[r="3"] {
+    animation: node-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes node-pulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+
+  /* Via holes */
+  .via {
+    fill: none;
+    stroke: var(--wire-color, var(--accent-copper-dim, #8a704a));
+    stroke-width: 1;
+    opacity: 0.2;
+  }
+
+  .via::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--accent-cyan);
+    border-radius: 50%;
+    opacity: 0.3;
+  }
+
+  /* IC Chip styling */
+  .ic-body {
+    fill: var(--lab-bg-dark, #080b0e);
+    stroke: var(--wire-color, var(--accent-copper-dim, #8a704a));
+    stroke-width: 1;
+    opacity: 0.2;
+  }
+
+  .ic-pin {
+    stroke: var(--wire-color, var(--accent-copper-dim, #8a704a));
+    stroke-width: 1;
+    opacity: 0.2;
+  }
+
+  .ic-dot {
+    fill: var(--accent-cyan);
+    opacity: 0.4;
+  }
+
+  /* Cluster visibility */
+  .trace-cluster {
+    opacity: 1;
+  }
+
+  .cluster-1 { opacity: 0.8; }
+  .cluster-2 { opacity: 0.7; }
+  .cluster-3 { opacity: 0.6; }
+  .cluster-4 { opacity: 0.75; }
+  .cluster-5 { opacity: 0.65; }
+  .cluster-6 { opacity: 0.5; }
+  .cluster-7 { opacity: 0.55; }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .trace-signal {
+      animation: none;
+      opacity: 0;
+    }
+
+    .trace-node[r="3"] {
+      animation: none;
+    }
+  }
+
+  /* Mobile: hide complex traces */
+  @media (max-width: 768px) {
+    .circuit-traces {
+      display: none;
+    }
+  }
+</style>

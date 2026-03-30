@@ -4,26 +4,30 @@ import Icon from '../ui/Icon.astro';
 
 const currentPath = Astro.url.pathname;
 
+// Mobile navigation should match primary NAV_ITEMS
+const mobileItems = NAV_ITEMS;
+
 function getIcon(href: string) {
   if (href === '/') return 'chip';
   if (href === '/projects') return 'projects';
   if (href === '/research') return 'research';
-  if (href === '/papers') return 'papers';
+  if (href === '/datalab') return 'chip';
+  if (href === '/blog') return 'document';
   if (href === '/about') return 'chip';
-  if (href === '/contact') return 'link';
   return 'chip';
 }
 ---
 
-<nav class="tab-bar">
+<nav class="tab-bar" aria-label="Mobile navigation">
   <ul class="tab-list">
-    {NAV_ITEMS.slice(0, 5).map((item) => (
+    {mobileItems.map((item) => (
       <li>
         <a
           href={item.href}
           class:list={['tab-item', { active: currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) }]}
+          aria-current={currentPath === item.href ? 'page' : undefined}
         >
-          <span class="tab-icon">
+          <span class="tab-icon" aria-hidden="true">
             <Icon name={getIcon(item.href)} size={16} />
           </span>
           <span class="tab-label">{item.label}</span>

@@ -1,5 +1,5 @@
 ---
-import { NAV_ITEMS } from '../../lib/config';
+import { NAV_ITEMS, NAV_SECONDARY } from '../../lib/config';
 import Icon from '../ui/Icon.astro';
 
 const currentPath = Astro.url.pathname;
@@ -30,22 +30,51 @@ const currentPath = Astro.url.pathname;
     </a>
 
     <!-- Center: Nav Links - Hardware Tab Style -->
-    <ul class="nav-links">
-      {NAV_ITEMS.map((item) => (
-        <li>
-          <a
-            href={item.href}
-            class:list={['nav-link', { active: currentPath.startsWith(item.href) }]}
-          >
-            <span class="nav-indicator">
-              <span class="indicator-dot"></span>
-            </span>
-            <span class="nav-label">{item.label}</span>
-            <span class="nav-screw"></span>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <div class="nav-container">
+      <ul class="nav-links">
+        {NAV_ITEMS.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class:list={['nav-link', { active: currentPath.startsWith(item.href) }]}
+            >
+              <span class="nav-indicator">
+                <span class="indicator-dot"></span>
+              </span>
+              <span class="nav-label">{item.label}</span>
+              <span class="nav-screw"></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      
+      <!-- Secondary Navigation Dropdown -->
+      <div class="nav-dropdown">
+        <button class="dropdown-trigger" aria-label="More navigation options" data-dropdown-toggle>
+          <span class="dropdown-dots">•••</span>
+          <span class="dropdown-label">More</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        <div class="dropdown-menu" data-dropdown-menu>
+          <div class="dropdown-header">
+            <span class="dropdown-title">Additional Navigation</span>
+          </div>
+          <ul class="dropdown-list">
+            {NAV_SECONDARY.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class:list={['dropdown-link', { active: currentPath.startsWith(item.href) }]}
+                >
+                  <span class="dropdown-indicator"></span>
+                  <span class="dropdown-link-label">{item.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
 
     <!-- Right: Status Panel -->
     <div class="status-panel">
@@ -80,9 +109,17 @@ const currentPath = Astro.url.pathname;
     background: linear-gradient(90deg, 
       var(--accent-cyan) 0%, 
       var(--accent-cyan-dim) 30%,
-      var(--accent-copper) 70%,
-      var(--accent-cyan-dim) 100%
+      var(--accent-copper) 50%,
+      var(--accent-cyan-dim) 70%,
+      var(--accent-cyan) 100%
     );
+    background-size: 200% 100%;
+    animation: gradient-shift 8s ease-in-out infinite;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
   }
 
   .header-container {
@@ -311,6 +348,143 @@ const currentPath = Astro.url.pathname;
     }
   }
 
+  /* Navigation Container */
+  .nav-container {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  /* Dropdown Styles */
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--lab-text-secondary);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-bottom: none;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    cursor: pointer;
+    transition: all 150ms ease;
+  }
+
+  .dropdown-trigger:hover {
+    color: var(--lab-text-primary);
+    background: var(--lab-bg-elevated);
+  }
+
+  .dropdown-dots {
+    letter-spacing: 2px;
+    font-size: 0.5rem;
+    line-height: 1;
+  }
+
+  .dropdown-label {
+    display: none;
+  }
+
+  .dropdown-arrow {
+    font-size: 0.625rem;
+    transition: transform 150ms ease;
+  }
+
+  .dropdown-trigger[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+
+  @media (min-width: 768px) {
+    .dropdown-label {
+      display: inline;
+    }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 220px;
+    background: var(--lab-bg-elevated);
+    border: 1px solid var(--panel-frame);
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 150ms ease;
+  }
+
+  .dropdown-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-header {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-bottom: 1px solid var(--panel-border);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+
+  .dropdown-title {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .dropdown-list {
+    list-style: none;
+    padding: var(--space-xs) 0;
+    margin: 0;
+  }
+
+  .dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--lab-text-secondary);
+    text-decoration: none;
+    transition: all 150ms ease;
+  }
+
+  .dropdown-link:hover {
+    color: var(--accent-cyan);
+    background: var(--lab-bg-panel);
+  }
+
+  .dropdown-link.active {
+    color: var(--accent-cyan);
+    background: var(--lab-bg-panel);
+  }
+
+  .dropdown-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--panel-border);
+    transition: all 150ms ease;
+  }
+
+  .dropdown-link:hover .dropdown-indicator,
+  .dropdown-link.active .dropdown-indicator {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 4px var(--accent-cyan);
+  }
+
   /* Status Panel */
   .status-panel {
     display: flex;
@@ -486,5 +660,33 @@ const currentPath = Astro.url.pathname;
   
   menuBtn?.addEventListener('click', () => {
     header?.classList.toggle('menu-open');
+  });
+
+  // Dropdown functionality
+  const dropdownToggle = document.querySelector('[data-dropdown-toggle]');
+  const dropdownMenu = document.querySelector('[data-dropdown-menu]');
+  
+  dropdownToggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isExpanded = dropdownToggle.getAttribute('aria-expanded') === 'true';
+    dropdownToggle.setAttribute('aria-expanded', (!isExpanded).toString());
+    dropdownMenu?.classList.toggle('open');
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (!target.closest('.nav-dropdown')) {
+      dropdownToggle?.setAttribute('aria-expanded', 'false');
+      dropdownMenu?.classList.remove('open');
+    }
+  });
+
+  // Close dropdown on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      dropdownToggle?.setAttribute('aria-expanded', 'false');
+      dropdownMenu?.classList.remove('open');
+    }
   });
 </script>

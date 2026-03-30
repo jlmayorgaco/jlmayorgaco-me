@@ -8,6 +8,23 @@ import { promises as fs } from 'fs';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 
+// Type for stored paper data (subset of ArxivPaper)
+interface StoredPaper {
+  id: string;
+  title: string;
+  summary: string;
+  authors: string[];
+  published: string;
+  categories: string[];
+  url: string;
+}
+
+// Type for JSON file structure
+interface PapersJsonData {
+  lastUpdated?: string;
+  papers: StoredPaper[];
+}
+
 async function ensureDataDir() {
   try {
     await fs.mkdir(DATA_DIR, { recursive: true });
@@ -18,8 +35,8 @@ async function loadPreviousPapers(): Promise<string[]> {
   const prevPath = path.join(DATA_DIR, 'relevant-papers.json');
   try {
     const data = await fs.readFile(prevPath, 'utf-8');
-    const { papers } = JSON.parse(data);
-    return papers.map((p: any) => p.id);
+    const { papers } = JSON.parse(data) as PapersJsonData;
+    return papers.map((p: StoredPaper) => p.id);
   } catch {
     return [];
   }
@@ -90,11 +107,11 @@ async function runPipeline(options: {
     
     // Get current papers
     const data = await fs.readFile(relevantPath, 'utf-8');
-    const { papers: relevantPapers } = JSON.parse(data);
+    const { papers: relevantPapers } = JSON.parse(data) as PapersJsonData;
     
     // Find new papers
     const newPapers = relevantPapers.filter(
-      (p: any) => !previousIds.includes(p.id)
+      (p: StoredPaper) => !previousIds.includes(p.id)
     );
     
     if (newPapers.length > 0) {
@@ -105,7 +122,7 @@ async function runPipeline(options: {
     }
     
     // Save current as previous
-    await fs.writeFile(previousPath, JSON.stringify(relevantPapers.map((p: any) => p.id)));
+    await fs.writeFile(previousPath, JSON.stringify(relevantPapers.map((p: StoredPaper) => p.id)));
   }
 
   console.log('\n' + '='.repeat(40));

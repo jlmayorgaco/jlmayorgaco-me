@@ -1,5 +1,5 @@
 ---
-import { NAV_ITEMS } from '../../lib/config';
+import { NAV_ITEMS, NAV_SECONDARY } from '../../lib/config';
 import Icon from '../ui/Icon.astro';
 
 const currentPath = Astro.url.pathname;
@@ -20,6 +20,22 @@ const currentPath = Astro.url.pathname;
           class:list={['mobile-nav-link', { active: currentPath.startsWith(item.href) }]}
         >
           <span class="link-indicator"></span>
+          <span class="link-label">{item.label}</span>
+        </a>
+      </li>
+    ))}
+    <li class="nav-divider">
+      <span class="divider-line"></span>
+      <span class="divider-label">More</span>
+      <span class="divider-line"></span>
+    </li>
+    {NAV_SECONDARY.map((item) => (
+      <li>
+        <a
+          href={item.href}
+          class:list={['mobile-nav-link', 'secondary-link', { active: currentPath.startsWith(item.href) }]}
+        >
+          <span class="link-indicator secondary-indicator"></span>
           <span class="link-label">{item.label}</span>
         </a>
       </li>
@@ -115,6 +131,46 @@ const currentPath = Astro.url.pathname;
   .mobile-nav-link.active .link-indicator {
     background: var(--accent-cyan);
     box-shadow: 0 0 6px var(--accent-cyan-glow);
+  }
+
+  /* Navigation Divider */
+  .nav-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+    margin: var(--space-xs) 0;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--panel-border);
+  }
+
+  .divider-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Secondary Links */
+  .mobile-nav-link.secondary-link {
+    background: var(--lab-bg-panel);
+    border: 1px dashed var(--panel-border);
+  }
+
+  .mobile-nav-link.secondary-link:hover,
+  .mobile-nav-link.secondary-link.active {
+    border-color: var(--accent-cyan-dim);
+    border-style: solid;
+  }
+
+  .secondary-indicator {
+    width: 6px;
+    height: 6px;
   }
 
   .mobile-nav-footer {

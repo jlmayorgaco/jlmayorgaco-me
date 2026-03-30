@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SectionTitle from '../../components/ui/SectionTitle.astro';
 import Icon from '../../components/ui/Icon.astro';
+import TutorialsFilter from '../../components/tutorials/TutorialsFilter';
 import { getCollection } from 'astro:content';
 
 const tutorials = await getCollection('tutorials');
@@ -10,6 +11,18 @@ const sortedTutorials = publishedTutorials.sort((a, b) => b.data.date.getTime() 
 
 const categories = [...new Set(sortedTutorials.map(t => t.data.category))];
 const levels = ['beginner', 'intermediate', 'advanced'];
+
+// Serialize tutorials for the React component
+const tutorialsData = sortedTutorials.map(t => ({
+  id: t.id,
+  title: t.data.title,
+  description: t.data.description,
+  category: t.data.category,
+  level: t.data.level,
+  duration: t.data.duration,
+  tags: t.data.tags || [],
+  date: t.data.date.toISOString(),
+}));
 ---
 
 <BaseLayout title="Tutorials" description="Technical tutorials and guides on control systems, robotics, and engineering">
@@ -65,61 +78,7 @@ const levels = ['beginner', 'intermediate', 'advanced'];
       </div>
     </div>
 
-    <div class="tutorials-filter">
-      <div class="filter-group">
-        <span class="filter-label">
-          <Icon name="filter" size={14} />
-          Filter by:
-        </span>
-        <div class="filter-tags">
-          <button class="filter-tag active">All</button>
-          {categories.map(cat => (
-            <button class="filter-tag">{cat}</button>
-          ))}
-        </div>
-      </div>
-    </div>
-
-    <div class="tutorials-grid">
-      {sortedTutorials.map((tutorial) => (
-        <a href={`/tutorials/${tutorial.id}`} class="tutorial-card">
-          <div class="card-header">
-            <div class="header-meta">
-              <span class={`level-badge ${tutorial.data.level}`}>{tutorial.data.level}</span>
-              {tutorial.data.duration && (
-                <span class="duration">
-                  <Icon name="clock" size={12} />
-                  {tutorial.data.duration}
-                </span>
-              )}
-            </div>
-            <Icon name="chevron_right" size={16} />
-          </div>
-          
-          <h3 class="card-title">{tutorial.data.title}</h3>
-          <p class="card-description">{tutorial.data.description}</p>
-          
-          <div class="card-footer">
-            <div class="card-tags">
-              {tutorial.data.tags.slice(0, 3).map((tag) => (
-                <span class="tag">{tag}</span>
-              ))}
-            </div>
-            <span class="card-date">
-              {tutorial.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-            </span>
-          </div>
-        </a>
-      ))}
-    </div>
-
-    {sortedTutorials.length === 0 && (
-      <div class="empty-state">
-        <Icon name="bookmark" size={48} />
-        <h3>No tutorials yet</h3>
-        <p>Technical guides coming soon. Check back later for hands-on content.</p>
-      </div>
-    )}
+    <TutorialsFilter client:load tutorials={tutorialsData} />
   </div>
 </BaseLayout>
 
@@ -241,206 +200,8 @@ const levels = ['beginner', 'intermediate', 'advanced'];
     letter-spacing: 0.05em;
   }
 
-  .tutorials-filter {
-    margin-bottom: var(--space-xl);
-  }
-
-  .filter-group {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    flex-wrap: wrap;
-  }
-
-  .filter-label {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--lab-text-muted);
-  }
-
-  .filter-tags {
-    display: flex;
-    gap: var(--space-xs);
-    flex-wrap: wrap;
-  }
-
-  .filter-tag {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    padding: 4px 10px;
-    background: var(--lab-bg-dark);
-    border: 1px solid var(--panel-border);
-    border-radius: var(--radius-sm);
-    color: var(--lab-text-secondary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .filter-tag:hover,
-  .filter-tag.active {
-    background: var(--accent-cyan);
-    color: var(--lab-bg-dark);
-    border-color: var(--accent-cyan);
-  }
-
-  .tutorials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: var(--space-lg);
-  }
-
-  .tutorial-card {
-    display: flex;
-    flex-direction: column;
-    background: var(--lab-bg-panel);
-    border: 1px solid var(--panel-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-
-  .tutorial-card:hover {
-    border-color: var(--accent-cyan);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4);
-  }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-md);
-  }
-
-  .header-meta {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-  }
-
-  .level-badge {
-    font-family: var(--font-mono);
-    font-size: 0.5625rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 2px 6px;
-    border-radius: var(--radius-sm);
-  }
-
-  .level-badge.beginner {
-    background: rgba(34, 197, 94, 0.15);
-    color: var(--led-green);
-  }
-
-  .level-badge.intermediate {
-    background: rgba(251, 191, 36, 0.15);
-    color: var(--led-amber);
-  }
-
-  .level-badge.advanced {
-    background: rgba(239, 68, 68, 0.15);
-    color: var(--led-red);
-  }
-
-  .duration {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-family: var(--font-mono);
-    font-size: 0.5625rem;
-    color: var(--lab-text-muted);
-  }
-
-  .card-header Icon {
-    color: var(--lab-text-muted);
-    transition: transform 0.2s ease;
-  }
-
-  .tutorial-card:hover .card-header Icon {
-    transform: translateX(4px);
-    color: var(--accent-cyan);
-  }
-
-  .card-title {
-    font-family: var(--font-display);
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: var(--lab-text-primary);
-    margin-bottom: var(--space-sm);
-    line-height: 1.3;
-  }
-
-  .card-description {
-    font-size: 0.875rem;
-    color: var(--lab-text-secondary);
-    line-height: 1.5;
-    margin-bottom: var(--space-md);
-    flex: 1;
-  }
-
-  .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--panel-border);
-  }
-
-  .card-tags {
-    display: flex;
-    gap: var(--space-xs);
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    font-family: var(--font-mono);
-    font-size: 0.5625rem;
-    padding: 2px 6px;
-    background: var(--lab-bg-dark);
-    border: 1px solid var(--panel-border);
-    border-radius: var(--radius-sm);
-    color: var(--lab-text-muted);
-  }
-
-  .card-date {
-    font-family: var(--font-mono);
-    font-size: 0.5625rem;
-    color: var(--lab-text-muted);
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: var(--space-3xl);
-    color: var(--lab-text-muted);
-  }
-
-  .empty-state Icon {
-    opacity: 0.5;
-    margin-bottom: var(--space-md);
-  }
-
-  .empty-state h3 {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    color: var(--lab-text-secondary);
-    margin-bottom: var(--space-sm);
-  }
-
-  .empty-state p {
-    font-size: 0.875rem;
-    color: var(--lab-text-muted);
-  }
-
   @media (max-width: 768px) {
     .tutorials-stats {
-      grid-template-columns: 1fr;
-    }
-
-    .tutorials-grid {
       grid-template-columns: 1fr;
     }
   }

@@ -88,4 +88,21 @@ const tutorials = defineCollection({
   }),
 });
 
-export const collections = { portfolio, projects, research, papers, tutorials };
+const blog = defineCollection({
+  loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      date: z.coerce.date(),
+      author: z.string().default('Jorge Mayorga'),
+      tags: z.array(z.string()).optional(),
+      category: z.string().default('General'),
+      draft: z.boolean().default(false),
+      featured: z.boolean().default(false),
+      cover: image().optional(),
+      readingTime: z.number().optional(),
+    }),
+});
+
+export const collections = { portfolio, projects, research, papers, tutorials, blog };

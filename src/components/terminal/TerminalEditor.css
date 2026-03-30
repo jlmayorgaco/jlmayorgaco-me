@@ -1,0 +1,195 @@
+.terminal-editor {
+  width: 100%;
+  height: 100%;
+  background: #0a0e12;
+  color: #e8ebe9;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.editor-titlebar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: #141a20;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.editor-name {
+  font-weight: bold;
+  color: #3fb9a7;
+}
+
+.editor-filename {
+  color: #a0a8a3;
+}
+
+.editor-switch {
+  padding: 4px 12px;
+  background: #0f1419;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  color: #a0a8a3;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.editor-switch:hover {
+  border-color: #3fb9a7;
+  color: #3fb9a7;
+}
+
+.editor-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.editor-line {
+  display: flex;
+  min-height: 1.5em;
+}
+
+.editor-line.active {
+  background: rgba(63, 185, 167, 0.05);
+}
+
+.line-number {
+  width: 40px;
+  color: #6a726d;
+  text-align: right;
+  padding-right: 16px;
+  user-select: none;
+}
+
+.line-content {
+  flex: 1;
+  white-space: pre;
+}
+
+.char {
+  display: inline-block;
+}
+
+.char.cursor {
+  background: #3fb9a7;
+  color: #0a0e12;
+}
+
+.editor-status {
+  padding: 8px 16px;
+  background: #141a20;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  display: flex;
+  gap: 16px;
+}
+
+.mode-indicator {
+  font-weight: bold;
+}
+
+.mode-normal {
+  color: #3fb950;
+}
+
+.mode-insert {
+  color: #d29922;
+}
+
+.mode-visual {
+  color: #9d7cbf;
+}
+
+.filename {
+  flex: 1;
+}
+
+.modified {
+  color: #d29922;
+}
+
+.position {
+  color: #6a726d;
+}
+
+.command-line {
+  background: #0f1419;
+}
+
+.command-prefix {
+  color: #3fb9a7;
+}
+
+.command-text {
+  color: #e8ebe9;
+}
+
+.command-cursor {
+  animation: blink 1s step-end infinite;
+}
+
+.nano-status {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nano-help {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.help-item {
+  color: #6a726d;
+}
+
+.nano-info {
+  display: flex;
+  justify-content: space-between;
+  color: #a0a8a3;
+}
+
+.editor-message {
+  padding: 8px 16px;
+  background: #0f1419;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  color: #d29922;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Focus states */
+.terminal-editor:focus {
+  outline: none;
+  border-color: #3fb9a7;
+}
+
+/* Scrollbar styling */
+.editor-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.editor-content::-webkit-scrollbar-track {
+  background: #0f1419;
+}
+
+.editor-content::-webkit-scrollbar-thumb {
+  background: #1a1f1d;
+  border-radius: 4px;
+}
+
+.editor-content::-webkit-scrollbar-thumb:hover {
+  background: #2a3530;
+}

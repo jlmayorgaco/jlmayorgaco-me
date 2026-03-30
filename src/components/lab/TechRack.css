@@ -12,7 +12,7 @@
 }
 
 .rack-label {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-muted);
   letter-spacing: 0.1em;
@@ -65,7 +65,7 @@
 }
 
 .unit-label {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-secondary);
   letter-spacing: 0.05em;

@@ -13,7 +13,7 @@
 }
 
 .track-label {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-muted);
   letter-spacing: 0.1em;
@@ -31,14 +31,14 @@
 }
 
 .focus-label {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-muted);
   letter-spacing: 0.05em;
 }
 
 .focus-value {
-  font-family: var(--lab-font-display);
+  font-family: var(--font-display);
   font-size: var(--lab-text-sm);
   font-weight: 600;
   color: var(--lab-text);
@@ -62,7 +62,7 @@
 }
 
 .bullet-text {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-secondary);
 }

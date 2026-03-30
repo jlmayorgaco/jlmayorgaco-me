@@ -1,5 +1,6 @@
-import type { TerminalData } from '../terminalTypes';
-import { CommandDefinition, registerCommand, UIAction, TERMINAL_DIVIDER } from '../commandRegistry';
+import type { TerminalData, UIAction } from '../terminalTypes';
+import type { CommandDefinition } from '../commandRegistry';
+import { registerCommand, TERMINAL_DIVIDER } from '../commandRegistry';
 
 let terminalDataRef: TerminalData;
 
@@ -41,10 +42,10 @@ const tagsCommand: CommandDefinition = {
   aliases: ['tags'],
   description: 'List all available tags',
   category: 'navigation',
-  execute: (_, data) => {
+  execute: () => {
     const tags = new Set<string>();
-    data.projects.forEach(p => p.tags.forEach(t => tags.add(t)));
-    data.research.forEach(r => r.tags.forEach(t => tags.add(t)));
+    terminalDataRef.projects.forEach(p => p.tags.forEach(t => tags.add(t)));
+    terminalDataRef.research.forEach(r => r.tags.forEach(t => tags.add(t)));
     const sorted = Array.from(tags).sort();
     return { output: `Available tags (${sorted.length})\n${TERMINAL_DIVIDER}\n${sorted.join(', ')}`, action: 'none' };
   },
@@ -74,10 +75,6 @@ const cdCommand: CommandDefinition = {
       return { output: `cd: ${target}: No such directory\n\nAvailable: projects, papers, research, tutorials, portfolio, contact`, action: 'none' };
     }
     
-    if (['~', 'home', '..', 'back'].includes(target)) {
-      return { output: dir.path, uiAction: dir.uiAction };
-    }
-    
     return { output: `Changed directory to: ${dir.path}`, uiAction: dir.uiAction };
   },
 };
@@ -95,7 +92,6 @@ const historyCommand: CommandDefinition = {
 const openCommand: CommandDefinition = {
   aliases: ['open', 'goto', 'view'],
   description: 'Open a project/paper/research item',
-  category: 'navigation',
   execute: (args) => {
     const query = args.join(' ');
     if (!query) {
@@ -105,7 +101,7 @@ const openCommand: CommandDefinition = {
     const q = query.toLowerCase();
     
     const project = q.length < 50 
-      ? data.projects.find(p => matchQuery(p, q)) 
+      ? terminalDataRef.projects.find(p => matchQuery(p, q)) 
       : null;
     if (project) {
       return {
@@ -114,7 +110,7 @@ const openCommand: CommandDefinition = {
       };
     }
     
-    const paper = data.papers.find(p => p.id.toLowerCase() === q || p.title.toLowerCase().includes(q));
+    const paper = terminalDataRef.papers.find(p => p.id.toLowerCase() === q || p.title.toLowerCase().includes(q));
     if (paper) {
       return {
         output: `Opening: ${paper.title}\n${TERMINAL_DIVIDER}\nVenue: ${paper.venue}\nYear: ${paper.year}\n\n→ /papers/${paper.id}`,
@@ -122,7 +118,7 @@ const openCommand: CommandDefinition = {
       };
     }
     
-    const research = data.research.find(r => matchQuery(r, q));
+    const research = terminalDataRef.research.find(r => matchQuery(r, q));
     if (research) {
       return {
         output: `Opening: ${research.title}\n${TERMINAL_DIVIDER}\n${research.excerpt}\n\nCategory: ${research.category}\nDate: ${research.date.toLocaleDateString()}\n\n→ /research/${research.id}`,
@@ -133,10 +129,6 @@ const openCommand: CommandDefinition = {
     return { output: `Not found: "${query}"\n\nTry: open <slug> or search <term>`, action: 'none' };
   },
 };
-
-let data: TerminalData;
-
-export function setData(d: TerminalData) { data = d; }
 
 export function registerNavigationCommands() {
   registerCommand(searchCommand);

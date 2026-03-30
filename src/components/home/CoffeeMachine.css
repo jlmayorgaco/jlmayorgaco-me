@@ -1,0 +1,306 @@
+.coffee-machine {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #1a2328, #12191d);
+  border-radius: var(--radius-lg, 6px);
+  overflow: hidden;
+}
+
+/* Header */
+.coffee-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--lab-bg-elevated);
+  border-bottom: 1px solid rgba(63, 185, 167, 0.3);
+}
+
+.coffee-label {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--accent-cyan);
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.coffee-status {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+}
+
+.coffee-status.idle {
+  color: var(--lab-text-muted);
+  background: rgba(122, 128, 124, 0.2);
+}
+
+.coffee-status.brewing {
+  color: var(--led-amber);
+  background: rgba(210, 153, 34, 0.2);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.coffee-status.ready {
+  color: var(--led-green);
+  background: rgba(63, 185, 80, 0.2);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Body */
+.coffee-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  gap: var(--space-md);
+}
+
+/* Machine Display */
+.machine-display {
+  width: 100%;
+  max-width: 180px;
+}
+
+.display-screen {
+  background: #0a0f0d;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.screen-content {
+  display: flex;
+  justify-content: space-around;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.screen-content .temp {
+  color: var(--led-amber);
+}
+
+.screen-content .pressure {
+  color: var(--accent-cyan);
+}
+
+/* Progress Bar */
+.brew-progress {
+  height: 4px;
+  background: var(--lab-bg-dark);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--led-green));
+  transition: width 0.1s linear;
+}
+
+/* Cup Container */
+.cup-container {
+  position: relative;
+  height: 80px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Coffee Cup */
+.cup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cup-body {
+  width: 50px;
+  height: 40px;
+  background: linear-gradient(145deg, #2a3530, #1a2520);
+  border: 2px solid var(--panel-border);
+  border-radius: 0 0 25px 25px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cup-handle {
+  position: absolute;
+  right: -12px;
+  top: 8px;
+  width: 15px;
+  height: 20px;
+  border: 2px solid var(--panel-border);
+  border-left: none;
+  border-radius: 0 10px 10px 0;
+}
+
+.cup-saucer {
+  width: 60px;
+  height: 6px;
+  background: linear-gradient(145deg, #3a4540, #2a3530);
+  border: 1px solid var(--panel-border);
+  border-radius: 3px;
+  margin-top: 2px;
+}
+
+.coffee-liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, #8B4513, #3d2817);
+  transition: height 0.3s ease;
+}
+
+/* Steam Animation */
+.steam-container {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 30px;
+}
+
+.steam {
+  position: absolute;
+  width: 8px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  filter: blur(4px);
+  animation: steam-rise 2s ease-out infinite;
+}
+
+.steam-1 {
+  left: 10px;
+  animation-delay: 0s;
+}
+
+.steam-2 {
+  left: 20px;
+  animation-delay: 0.5s;
+}
+
+.steam-3 {
+  left: 30px;
+  animation-delay: 1s;
+}
+
+@keyframes steam-rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-25px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Machine Controls */
+.machine-controls {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.control-btn {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  padding: 6px 16px;
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.control-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.control-btn.brew {
+  background: linear-gradient(180deg, rgba(63, 185, 167, 0.2), rgba(63, 185, 167, 0.1));
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.control-btn.brew:hover:not(:disabled) {
+  background: var(--accent-cyan);
+  color: var(--lab-bg-dark);
+}
+
+.control-btn.brew.active {
+  background: var(--accent-cyan);
+  color: var(--lab-bg-dark);
+  animation: brew-pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes brew-pulse {
+  0%, 100% { box-shadow: 0 0 5px var(--accent-cyan); }
+  50% { box-shadow: 0 0 15px var(--accent-cyan); }
+}
+
+.control-btn.reset {
+  background: linear-gradient(180deg, rgba(122, 128, 124, 0.2), rgba(122, 128, 124, 0.1));
+  border-color: var(--panel-border);
+  color: var(--lab-text-muted);
+}
+
+.control-btn.reset:hover:not(:disabled) {
+  background: rgba(248, 81, 73, 0.2);
+  border-color: var(--led-red);
+  color: var(--led-red);
+}
+
+/* Footer */
+.coffee-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--lab-bg-dark);
+  border-top: 1px solid var(--panel-border);
+}
+
+.machine-info {
+  display: flex;
+  gap: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: var(--lab-text-muted);
+}
+
+.flip-hint {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--accent-cyan);
+  opacity: 0.6;
+}
+
+/* Loading State */
+.coffee-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--accent-cyan);
+  animation: pulse 1.5s ease-in-out infinite;
+}

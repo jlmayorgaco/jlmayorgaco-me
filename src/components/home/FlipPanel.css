@@ -1,0 +1,198 @@
+.flip-card-container {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  perspective: 1200px;
+  position: relative;
+}
+
+.flip-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.flip-card.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--radius-lg, 6px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.flip-card-front {
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--panel-border);
+  z-index: 2;
+}
+
+.flip-card-back {
+  background: linear-gradient(145deg, #1a2328, #12191d);
+  border: 1px solid var(--panel-border);
+  transform: rotateY(180deg);
+  z-index: 1;
+}
+
+/* Front content styling */
+.flip-card-front .panel-header,
+.flip-card-back .back-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--lab-bg-elevated);
+  border-bottom: 1px solid var(--panel-border);
+  flex-shrink: 0;
+}
+
+.flip-card-front .panel-content {
+  flex: 1;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  overflow-y: auto;
+}
+
+.flip-card-front .panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--lab-bg-dark);
+  border-top: 1px solid var(--panel-border);
+  flex-shrink: 0;
+}
+
+/* Back content styling */
+.back-header {
+  border-bottom: 1px solid rgba(63, 185, 167, 0.3);
+}
+
+.back-label {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--accent-cyan);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.back-status {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: var(--lab-text-muted);
+  padding: 2px 6px;
+  background: rgba(63, 185, 167, 0.1);
+  border-radius: var(--radius-sm);
+}
+
+.back-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  text-align: center;
+  gap: var(--space-md);
+}
+
+.back-placeholder {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--lab-text-muted);
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.back-hint {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--accent-cyan);
+  opacity: 0.6;
+}
+
+/* Flip indicator LED */
+.flip-indicator {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.flip-card-container.flipped .flip-indicator {
+  opacity: 1;
+}
+
+/* Animation improvements */
+@media (prefers-reduced-motion: reduce) {
+  .flip-card {
+    transition: none;
+  }
+}
+
+/* Ensure proper rendering on Safari */
+.flip-card-face {
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+/* Fix for Firefox */
+.flip-card-front {
+  transform: translateZ(1px);
+}
+
+/* Flip Button */
+.flip-button {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(63, 185, 167, 0.1);
+  border: 1px solid rgba(63, 185, 167, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--accent-cyan);
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.flip-card-front:hover .flip-button {
+  opacity: 1;
+}
+
+.flip-button:hover {
+  background: var(--accent-cyan);
+  color: var(--lab-bg-dark);
+  transform: rotate(90deg);
+}
+
+/* Mobile: always show flip button */
+@media (max-width: 768px) {
+  .flip-button {
+    opacity: 1;
+  }
+}

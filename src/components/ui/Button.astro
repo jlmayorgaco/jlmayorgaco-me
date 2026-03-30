@@ -33,12 +33,16 @@ const Tag = href ? 'a' : 'button';
     border: 1px solid var(--panel-border);
     border-radius: var(--radius-md);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 150ms ease;
   }
 
   .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  .btn:active:not(:disabled) {
+    transform: scale(0.96);
   }
 
   .btn-sm {
@@ -65,6 +69,11 @@ const Tag = href ? 'a' : 'button';
   .btn-primary:hover:not(:disabled) {
     background: var(--accent-cyan);
     color: var(--lab-bg-dark);
+  }
+
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
   }
 
   .btn-secondary {

@@ -1,0 +1,234 @@
+/* Electric Field Cursor & Reactive Background Styles */
+
+/* ============================================
+   ELECTRIC PANEL LED SYSTEM
+   ============================================ */
+
+.electric-panel {
+  position: relative;
+}
+
+.panel-led-indicator {
+  pointer-events: none;
+  z-index: 10;
+}
+
+.panel-led-indicator.pulse {
+  animation: led-idle-pulse 4s ease-in-out infinite;
+}
+
+@keyframes led-idle-pulse {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ============================================
+   CURSOR-REACTIVE BACKGROUND
+   ============================================ */
+
+/* Electric field container sets up the context */
+.electric-field-container {
+  position: relative;
+}
+
+/* Cursor position CSS variables (set by JS) */
+:root {
+  --cursor-x: 50vw;
+  --cursor-y: 50vh;
+  --cursor-vx: 0;
+  --cursor-vy: 0;
+  --cursor-active: 0;
+}
+
+/* Subtle cursor glow - very restrained */
+.electric-field-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(
+    circle 120px at var(--cursor-x) var(--cursor-y),
+    rgba(63, 185, 167, 0.015) 0%,
+    transparent 70%
+  );
+  opacity: var(--cursor-active);
+  transition: opacity 0.3s ease;
+}
+
+/* ============================================
+   TRACE SIGNAL BOOST ON CURSOR PROXIMITY
+   ============================================ */
+
+/* Signal paths get slightly more visible when cursor is active */
+.electric-field-container[data-cursor-active="true"] .trace-signal {
+  opacity: 0.35;
+}
+
+/* ============================================
+   PANEL HOVER STATES
+   ============================================ */
+
+/* Panel gets subtle electric border on hover */
+.electric-panel:hover {
+  box-shadow: 
+    inset 0 0 0 1px rgba(63, 185, 167, 0.1),
+    0 0 20px rgba(63, 185, 167, 0.05);
+}
+
+/* Existing panel LEDs get energized */
+.electric-panel:hover .panel-leds .led {
+  opacity: 1 !important;
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+/* ============================================
+   REDUCED MOTION FALLBACK
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .electric-field-container::before {
+    display: none;
+  }
+  
+  .panel-led-indicator {
+    opacity: 0.5 !important;
+    box-shadow: none !important;
+  }
+  
+  .panel-led-indicator.pulse {
+    animation: none;
+  }
+  
+  .electric-panel:hover {
+    box-shadow: none;
+  }
+}
+
+/* ============================================
+   MODULE CARD LEDS
+   ============================================ */
+
+.module-card {
+  position: relative;
+}
+
+.module-card .module-led {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: rgba(63, 185, 167, 0.2);
+  box-shadow: 0 0 0 rgba(63, 185, 167, 0);
+  transition: 
+    background-color 0.8s ease-out,
+    box-shadow 0.8s ease-out;
+}
+
+.module-card:hover .module-led {
+  background-color: rgba(63, 185, 167, 0.9);
+  box-shadow: 0 0 6px rgba(63, 185, 167, 0.6);
+  transition: 
+    background-color 0.4s ease-out,
+    box-shadow 0.4s ease-out;
+}
+
+/* ============================================
+   CONTENT CARD LEDS
+   ============================================ */
+
+.content-card {
+  position: relative;
+}
+
+.content-card .card-led {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(63, 185, 167, 0.3);
+  transition: 
+    background-color 0.6s ease-out,
+    box-shadow 0.6s ease-out;
+}
+
+.content-card:hover .card-led {
+  background-color: rgba(63, 185, 167, 0.85);
+  box-shadow: 0 0 4px rgba(63, 185, 167, 0.5);
+}
+
+/* ============================================
+   POST ITEM LEDS
+   ============================================ */
+
+.post-item .post-led {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: rgba(63, 185, 167, 0.25);
+  transition: 
+    background-color 0.5s ease-out,
+    box-shadow 0.5s ease-out;
+}
+
+.post-item:hover .post-led {
+  background-color: rgba(63, 185, 167, 0.8);
+  box-shadow: 0 0 4px rgba(63, 185, 167, 0.4);
+}
+
+/* ============================================
+   FLICKER ANIMATION (for instability)
+   ============================================ */
+
+@keyframes led-flicker {
+  0%, 100% {
+    opacity: var(--led-brightness, 0.8);
+  }
+  10% {
+    opacity: calc(var(--led-brightness, 0.8) * 0.3);
+  }
+  20% {
+    opacity: calc(var(--led-brightness, 0.8) * 0.9);
+  }
+  30% {
+    opacity: calc(var(--led-brightness, 0.8) * 0.5);
+  }
+  40% {
+    opacity: var(--led-brightness, 0.8);
+  }
+}
+
+.electric-panel[data-flickering="true"] .panel-led-indicator {
+  animation: led-flicker 0.15s ease-in-out;
+}
+
+/* ============================================
+   TRACE PULSE ON PANEL HOVER (optional)
+   ============================================ */
+
+@keyframes trace-pulse {
+  0% {
+    stroke-dashoffset: 0;
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0.25;
+  }
+}
+
+/* When cursor is over a panel, nearby traces pulse once */
+.trace-cluster.near-cursor .trace-signal {
+  animation: trace-pulse 1s ease-out;
+}

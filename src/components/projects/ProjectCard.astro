@@ -14,7 +14,14 @@ const { data } = project;
 <a href={`/projects/${project.id}`} class:list={['project-card', `card-${variant}`]}>
   {data.cover && (
     <div class="card-cover">
-      <img src={data.cover.src} alt="" loading="lazy" />
+      <img 
+        src={data.cover.src} 
+        alt={data.title} 
+        loading="lazy" 
+        width="400"
+        height="225"
+        decoding="async"
+      />
     </div>
   )}
   

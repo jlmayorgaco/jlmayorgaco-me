@@ -4,8 +4,8 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import './HomeTerminal.css';
 import type { TerminalData, HistoryEntry } from '../../lib/terminal/terminalTypes';
 import { QUICK_COMMANDS } from '../../lib/terminal/terminalTypes';
-import { executeCommand } from '../../lib/terminal/execute';
-import { checkEasterEgg } from '../../lib/terminal/easterEggs';
+import { executeCommand, getHelpText } from '../../lib/terminal';
+import type { UIAction } from '../../lib/terminal/commandRegistry';
 
 interface Props {
   data: TerminalData;
@@ -23,7 +23,7 @@ const BOOT_SEQUENCE: HistoryEntry[] = [
   { type: 'output', content: 'Type "help" for available commands...' },
 ];
 
-const scrollActions = ['scroll-projects', 'scroll-papers', 'scroll-research', 'scroll-contact'] as const;
+const SCROLL_ACTIONS = ['scroll-projects', 'scroll-papers', 'scroll-research', 'scroll-contact'] as const;
 
 function TerminalLine({ entry }: { entry: HistoryEntry }) {
   const lines = entry.content.split('\n');
@@ -39,6 +39,36 @@ function TerminalLine({ entry }: { entry: HistoryEntry }) {
   );
 }
 
+function dispatchUIAction(action: UIAction) {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('terminal:ui-action', { detail: action }));
+}
+
+function handleUIAction(action: UIAction) {
+  switch (action.type) {
+    case 'scroll':
+      document.getElementById(action.id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      break;
+    case 'navigate':
+      window.location.href = action.path;
+      break;
+    case 'theme':
+    case 'accent':
+    case 'layout':
+    case 'shuffle':
+    case 'reset':
+    case 'focus':
+    case 'chaos':
+    case 'stabilize':
+    case 'open-hmi':
+    case 'close-hmi':
+    case 'construction':
+    case 'flip-panel':
+      dispatchUIAction(action);
+      break;
+  }
+}
+
 export default function HomeTerminal({ data }: Props) {
   const [history, setHistory] = useState<HistoryEntry[]>(BOOT_SEQUENCE);
   const [input, setInput] = useState('');
@@ -48,14 +78,6 @@ export default function HomeTerminal({ data }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const outputRef = useRef<HTMLDivElement>(null);
 
-  const scrollToSection = useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, []);
-
-  const navigateTo = useCallback((path: string) => {
-    window.location.href = path;
-  }, []);
-
   const handleCommand = useCallback((cmd: string) => {
     const trimmed = cmd.trim();
     if (!trimmed) return;
@@ -63,11 +85,7 @@ export default function HomeTerminal({ data }: Props) {
     setCommandHistory(prev => [...prev, trimmed]);
     setHistoryIndex(-1);
 
-    let result = checkEasterEgg(trimmed);
-    if (!result) {
-      const parts = trimmed.toLowerCase().split(/\s+/);
-      result = executeCommand(parts[0], parts.slice(1), data);
-    }
+    const result = executeCommand(trimmed, [], data);
 
     if (result.output === '__CLEAR__') {
       setHistory([]);
@@ -80,12 +98,13 @@ export default function HomeTerminal({ data }: Props) {
       { type: 'output', content: result.output },
     ]);
 
-    if (result.action === 'navigate' && result.navigateTo) {
-      navigateTo(result.navigateTo);
-    } else if (scrollActions.includes(result.action as typeof scrollActions[number])) {
-      scrollToSection(result.action!.replace('scroll-', ''));
+    if (result.uiAction) {
+      handleUIAction(result.uiAction);
+    } else if (SCROLL_ACTIONS.includes(result.action as typeof SCROLL_ACTIONS[number])) {
+      const id = result.action!.replace('scroll-', '');
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [data, scrollToSection, navigateTo]);
+  }, [data]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     const { key } = e;
@@ -134,6 +153,14 @@ export default function HomeTerminal({ data }: Props) {
   }, []);
 
   const handleQuickCommand = useCallback((cmd: string) => {
+    if (cmd === 'help') {
+      setHistory(prev => [
+        ...prev,
+        { type: 'input', content: `$ ${cmd}` },
+        { type: 'output', content: getHelpText() },
+      ]);
+      return;
+    }
     handleCommand(cmd);
   }, [handleCommand]);
 
@@ -208,7 +235,7 @@ export default function HomeTerminal({ data }: Props) {
           <span className="wave-bar" />
           <span className="wave-bar" />
         </div>
-        <span className="footer-label">LAB_TERMINAL v1.0</span>
+        <span className="footer-label">LAB_TERMINAL v2.0</span>
       </div>
     </div>
   );

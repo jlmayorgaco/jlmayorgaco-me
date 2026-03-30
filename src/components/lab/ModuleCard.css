@@ -22,14 +22,14 @@
 }
 
 .module-label {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-signal);
   letter-spacing: 0.1em;
 }
 
 .module-id {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-muted);
 }
@@ -51,7 +51,7 @@
 }
 
 .module-title {
-  font-family: var(--lab-font-display);
+  font-family: var(--font-display);
   font-size: var(--lab-text-md);
   font-weight: 600;
   color: var(--lab-text);
@@ -59,7 +59,7 @@
 }
 
 .module-subtitle {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-secondary);
   margin: 0;
@@ -80,7 +80,7 @@
 }
 
 .tag {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   padding: 2px 6px;
   background: var(--lab-bg-dark);
@@ -102,7 +102,7 @@
 }
 
 .status-text {
-  font-family: var(--lab-font-mono);
+  font-family: var(--font-mono);
   font-size: var(--lab-text-xs);
   color: var(--lab-text-muted);
   letter-spacing: 0.05em;

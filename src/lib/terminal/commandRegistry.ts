@@ -1,4 +1,4 @@
-import type { TerminalData, CommandResult, HistoryEntry } from './terminalTypes';
+import type { TerminalData, CommandResult, HistoryEntry, UIAction } from './terminalTypes';
 
 export type CommandCategory = 
   | 'identity' 
@@ -17,20 +17,7 @@ export interface CommandDefinition {
   execute: (args: string[], data: TerminalData) => CommandResult;
 }
 
-export type UIAction = 
-  | { type: 'theme'; name: string }
-  | { type: 'accent'; name: string }
-  | { type: 'layout'; name: string }
-  | { type: 'shuffle' }
-  | { type: 'reset' }
-  | { type: 'focus'; id: string }
-  | { type: 'scroll'; id: string }
-  | { type: 'navigate'; path: string }
-  | { type: 'none' };
-
-export interface UIActionResult extends CommandResult {
-  uiAction?: UIAction;
-}
+export { UIAction };
 
 export const COMMANDS = new Map<string, CommandDefinition>();
 
