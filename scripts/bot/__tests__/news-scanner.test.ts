@@ -24,10 +24,10 @@ describe('News Scanner Module', () => {
         <rss>
           <channel>
             <item>
-              <title>Test Article</title>
+              <title>Robotics Article</title>
               <link>https://example.com/article</link>
               <pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate>
-              <description>Test description</description>
+              <description>Test description about robotics research</description>
             </item>
           </channel>
         </rss>`;
@@ -40,7 +40,7 @@ describe('News Scanner Module', () => {
       const result = await scanNewsSources(mockConfig);
       
       expect(result).toHaveLength(1);
-      expect(result[0].title).toBe('Test Article');
+      expect(result[0].title).toBe('Robotics Article');
     });
 
     it('should parse CDATA content', async () => {
@@ -48,7 +48,7 @@ describe('News Scanner Module', () => {
         <rss>
           <channel>
             <item>
-              <title><![CDATA[Test with <special> chars]]></title>
+              <title><![CDATA[Robotics Control System Update]]></title>
               <link>https://example.com</link>
               <description><![CDATA[<p>HTML content</p>]]></description>
             </item>
@@ -62,7 +62,7 @@ describe('News Scanner Module', () => {
 
       const result = await scanNewsSources(mockConfig);
       
-      expect(result[0].title).toBe('Test with <special> chars');
+      expect(result[0].title).toBe('Robotics Control System Update');
       expect(result[0].description).not.toContain('<p>');
     });
 
@@ -101,11 +101,11 @@ describe('News Scanner Module', () => {
         <rss>
           <channel>
             <item>
-              <title>Duplicate</title>
+              <title>Robotics Duplicate Topic</title>
               <link>https://example.com/same</link>
             </item>
             <item>
-              <title>Duplicate</title>
+              <title>Robotics Duplicate Topic</title>
               <link>https://example.com/same</link>
             </item>
           </channel>
@@ -231,7 +231,7 @@ describe('News Scanner Module', () => {
     it('should handle empty items array', () => {
       const formatted = formatNewsForTelegram([]);
       
-      expect(formatted).toContain('0 relevant items');
+      expect(formatted).toContain('No relevant news found');
     });
 
     it('should truncate long descriptions', () => {

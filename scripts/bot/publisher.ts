@@ -160,7 +160,7 @@ export async function gitAddCommitPush(
     if (errorMessage.includes('nothing to commit')) {
       return { success: false, message: 'No changes to commit' };
     }
-    if (errorMessage.includes('could not resolve host')) {
+    if (errorMessage.toLowerCase().includes('could not resolve host')) {
       return { success: false, message: 'Network error: Cannot reach git remote' };
     }
     if (errorMessage.includes('merge conflict')) {

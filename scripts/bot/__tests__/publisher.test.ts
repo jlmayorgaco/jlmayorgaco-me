@@ -60,10 +60,16 @@ describe('Publisher Module (Production)', () => {
   describe('gitAddCommitPush', () => {
     it('should successfully publish with safe path', async () => {
       mockedExecFile
+        // checkGitStatus calls (4 calls)
+        .mockResolvedValueOnce({ stdout: '.git', stderr: '' }) // git rev-parse --git-dir
+        .mockResolvedValueOnce({ stdout: 'main', stderr: '' }) // git branch --show-current
+        .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' }) // git status --porcelain
+        .mockResolvedValueOnce({ stdout: 'git@github.com:user/repo.git', stderr: '' }) // git remote get-url origin
+        // gitAddCommitPush calls (5 calls)
         .mockResolvedValueOnce({ stdout: '', stderr: '' }) // git add
-        .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' }) // git status
+        .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' }) // git status --porcelain
         .mockResolvedValueOnce({ stdout: '', stderr: '' }) // git commit
-        .mockResolvedValueOnce({ stdout: 'abc1234', stderr: '' }) // git rev-parse
+        .mockResolvedValueOnce({ stdout: 'abc1234', stderr: '' }) // git rev-parse --short HEAD
         .mockResolvedValueOnce({ stdout: '', stderr: '' }); // git push
 
       const result: PublishResult = await gitAddCommitPush(
@@ -100,10 +106,17 @@ describe('Publisher Module (Production)', () => {
 
     it('should rollback on push failure', async () => {
       mockedExecFile
+        // checkGitStatus calls
+        .mockResolvedValueOnce({ stdout: '.git', stderr: '' }) // git rev-parse --git-dir
+        .mockResolvedValueOnce({ stdout: 'main', stderr: '' }) // git branch --show-current
+        .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' }) // git status --porcelain
+        .mockResolvedValueOnce({ stdout: 'git@github.com:user/repo.git', stderr: '' }) // git remote get-url origin
+        // gitAddCommitPush calls
         .mockResolvedValueOnce({ stdout: '', stderr: '' }) // git add
-        .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' }) // git status
+        .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' }) // git status --porcelain
         .mockResolvedValueOnce({ stdout: '', stderr: '' }) // git commit
-        .mockRejectedValueOnce(new Error('push failed')); // git push
+        .mockResolvedValueOnce({ stdout: 'abc1234', stderr: '' }) // git rev-parse --short HEAD
+        .mockRejectedValueOnce(new Error('push failed')); // git push fails
 
       const result: PublishResult = await gitAddCommitPush(
         'src/content/blog/test.md',
@@ -116,6 +129,12 @@ describe('Publisher Module (Production)', () => {
 
     it('should handle network errors gracefully', async () => {
       mockedExecFile
+        // checkGitStatus calls
+        .mockResolvedValueOnce({ stdout: '.git', stderr: '' })
+        .mockResolvedValueOnce({ stdout: 'main', stderr: '' })
+        .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' })
+        .mockResolvedValueOnce({ stdout: 'git@github.com:user/repo.git', stderr: '' })
+        // gitAddCommitPush calls
         .mockResolvedValueOnce({ stdout: '', stderr: '' })
         .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' })
         .mockResolvedValueOnce({ stdout: '', stderr: '' })
@@ -135,6 +154,12 @@ describe('Publisher Module (Production)', () => {
   describe('publishPost', () => {
     it('should generate proper commit message', async () => {
       mockedExecFile
+        // checkGitStatus calls
+        .mockResolvedValueOnce({ stdout: '.git', stderr: '' })
+        .mockResolvedValueOnce({ stdout: 'main', stderr: '' })
+        .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' })
+        .mockResolvedValueOnce({ stdout: 'git@github.com:user/repo.git', stderr: '' })
+        // gitAddCommitPush calls
         .mockResolvedValueOnce({ stdout: '', stderr: '' })
         .mockResolvedValueOnce({ stdout: 'M  test.md', stderr: '' })
         .mockResolvedValueOnce({ stdout: '', stderr: '' })
@@ -147,8 +172,8 @@ describe('Publisher Module (Production)', () => {
         call => call[1]?.[0] === 'commit'
       );
       
-      expect(commitCall?.[1]).toContain('blog: My Blog Post Title');
-      expect(commitCall?.[1]).toContain('Auto-generated');
+      expect(commitCall?.[1]?.[2]).toContain('blog: My Blog Post Title');
+      expect(commitCall?.[1]?.[2]).toContain('Auto-generated');
     });
   });
 
