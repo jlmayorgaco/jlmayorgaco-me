@@ -1,5 +1,6 @@
 import type { CommandDefinition } from '../commandRegistry';
 import { registerCommand, TERMINAL_DIVIDER } from '../commandRegistry';
+import { handleCoffeeGameCommand } from './coffeeGame';
 
 const NEOFETCH_ASCII = `       ████████       │jlmt@lab
       ██        ██     │──────────
@@ -149,9 +150,9 @@ const topCommand: CommandDefinition = {
 
 const sudoMakeCoffeeCommand: CommandDefinition = {
   aliases: ['sudo make coffee', 'sudo coffee'],
-  description: 'Make coffee (sudo)',
+  description: '☕ Make coffee (sudo) - interactive coffee game',
   category: 'easter',
-  execute: () => ({ output: SUDO_COFFEE, action: 'none' }),
+  execute: () => ({ output: handleCoffeeGameCommand(), action: 'none' }),
 };
 
 const deploySwarmCommand: CommandDefinition = {

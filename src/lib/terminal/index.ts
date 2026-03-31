@@ -72,7 +72,7 @@ export function executeCommand(input: string, _args: string[], data: TerminalDat
   
   if (isCoffeeGameActive() && (input.trim() === 'exit' || input.trim() === '0')) {
     exitCoffeeGame();
-    return { output: `\n  👋 Coffee game exited.\n  Type 'coffee' to start a new order.\n`, action: 'none' };
+    return { output: `\n  👋 Coffee game exited.\n  Type 'sudo make coffee' to start a new order.\n`, action: 'none' };
   }
   
   const bestMatch = findBestCommandMatch(input);
@@ -104,7 +104,7 @@ export function getHelpText(): string {
     { name: 'Research', cmds: ['rocof', 'consensus', 'swarm', 'low-inertia', 'openfreqbench'] },
     { name: 'Editor', cmds: ['nano', 'vim', 'emacs', 'edit', 'editors'] },
     { name: 'Linux Tools', cmds: ['sudo', 'apt', 'ssh', 'ping', 'ps', 'git', 'docker', 'man', 'history'] },
-    { name: 'Easter Eggs', cmds: ['neofetch', 'cowsay', 'sl', 'cmatrix', 'fortune', 'tree', 'hackerman', 'coffee'] },
+    { name: 'Easter Eggs', cmds: ['neofetch', 'cowsay', 'sl', 'cmatrix', 'fortune', 'tree', 'hackerman', 'sudo make coffee'] },
   ];
   
   let help = `Available commands:\n${'═'.repeat(40)}\n`;

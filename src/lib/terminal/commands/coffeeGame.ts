@@ -1,21 +1,19 @@
 import type { CommandDefinition } from '../commandRegistry';
 import { registerCommand } from '../commandRegistry';
+import { 
+  isCoffeeGameActive, 
+  startCoffeeGame, 
+  exitCoffeeGame,
+  getCoffeeGameState,
+  setCoffeeGameState,
+  type CoffeeOrder 
+} from './coffeeGameState';
 
-export interface CoffeeOrder {
-  step: number;
-  method?: string;
-  bean?: string;
-  roast?: string;
-  intensity?: string;
-  size?: string;
-  temperature?: string;
-  milk?: string;
-  foam?: string;
-  sugar?: string;
-  extras: string[];
-}
+export { isCoffeeGameActive, exitCoffeeGame };
 
-const COFFEE_METHODS = [
+export interface CoffeeOrder extends CoffeeOrder {}
+
+export const COFFEE_METHODS = [
   { id: 'espresso', name: 'Espresso', icon: '☕', time: '25-30s', desc: 'Bold, concentrated' },
   { id: 'americano', name: 'Americano', icon: '🫖', time: '30s', desc: 'Espresso + water' },
   { id: 'v60', name: 'V60 Pour Over', icon: '🫗', time: '2:30', desc: 'Clean, aromatic' },
@@ -26,7 +24,7 @@ const COFFEE_METHODS = [
   { id: 'mocha', name: 'Mocha', icon: '🍫', time: '2min', desc: 'Chocolate + coffee' },
 ];
 
-const COFFEE_BEANS = [
+export const COFFEE_BEANS = [
   { id: 'ethiopian', name: 'Ethiopian Yirgacheffe', icon: '🌍', desc: 'Floral, citrus' },
   { id: 'colombian', name: 'Colombian Huila', icon: '🌎', desc: 'Caramel, nutty' },
   { id: 'brazilian', name: 'Brazilian Santos', icon: '🌎', desc: 'Chocolate, smooth' },
@@ -37,35 +35,35 @@ const COFFEE_BEANS = [
   { id: 'robusta', name: 'Robusta Vietnam', icon: '💪', desc: 'Maximum caffeine' },
 ];
 
-const ROAST_LEVELS = [
+export const ROAST_LEVELS = [
   { id: 'light', name: 'Light Roast', icon: '🟡', desc: 'Bright, acidic' },
   { id: 'medium', name: 'Medium Roast', icon: '🟠', desc: 'Balanced' },
   { id: 'dark', name: 'Dark Roast', icon: '🟤', desc: 'Bold, smoky' },
   { id: 'french', name: 'French Roast', icon: '⚫', desc: 'Very dark' },
 ];
 
-const INTENSITY_LEVELS = [
+export const INTENSITY_LEVELS = [
   { id: 'mild', name: 'Mild', icon: '🌸' },
   { id: 'balanced', name: 'Balanced', icon: '⚖️' },
   { id: 'strong', name: 'Strong', icon: '💪' },
   { id: 'espresso', name: 'Espresso Style', icon: '☕' },
 ];
 
-const SIZES = [
+export const SIZES = [
   { id: 'small', name: 'Small (150ml)', icon: '☕' },
   { id: 'medium', name: 'Medium (250ml)', icon: '☕☕' },
   { id: 'large', name: 'Large (350ml)', icon: '☕☕☕' },
   { id: 'xlarge', name: 'XL (500ml)', icon: '🧋' },
 ];
 
-const TEMPERATURES = [
+export const TEMPERATURES = [
   { id: 'iced', name: 'Iced (0°C)', icon: '🧊' },
   { id: 'cold', name: 'Cold (10-15°C)', icon: '❄️' },
   { id: 'hot', name: 'Hot (60-70°C)', icon: '☕' },
   { id: 'extraHot', name: 'Extra Hot (80°C)', icon: '🔥' },
 ];
 
-const MILK_OPTIONS = [
+export const MILK_OPTIONS = [
   { id: 'none', name: 'Black (No Milk)', icon: '🚫' },
   { id: 'whole', name: 'Whole Milk', icon: '🥛' },
   { id: 'oat', name: 'Oat Milk', icon: '🌾' },
@@ -74,14 +72,14 @@ const MILK_OPTIONS = [
   { id: 'coconut', name: 'Coconut Milk', icon: '🥥' },
 ];
 
-const FOAM_LEVELS = [
+export const FOAM_LEVELS = [
   { id: 'none', name: 'No Foam', icon: '🚫' },
   { id: 'light', name: 'Light Foam', icon: '☁️' },
   { id: 'medium', name: 'Medium Foam', icon: '⛅' },
   { id: 'thick', name: 'Thick Foam', icon: '🧁' },
 ];
 
-const SUGAR_LEVELS = [
+export const SUGAR_LEVELS = [
   { id: 'none', name: 'No Sugar', icon: '🚫' },
   { id: 'light', name: 'Light (1 tsp)', icon: '🍬' },
   { id: 'medium', name: 'Medium (2 tsp)', icon: '🍬🍬' },
@@ -89,7 +87,7 @@ const SUGAR_LEVELS = [
   { id: 'honey', name: 'Honey', icon: '🍯' },
 ];
 
-const EXTRAS = [
+export const EXTRAS = [
   { id: 'whipped', name: 'Whipped Cream', icon: '🍦' },
   { id: 'chocolate', name: 'Chocolate Syrup', icon: '🍫' },
   { id: 'caramel', name: 'Caramel Syrup', icon: '🍯' },
@@ -105,8 +103,6 @@ const COFFEE_ASCII = `
     |      |]
     \\      /
      \`----'`;
-
-let coffeeGameState: CoffeeOrder | null = null;
 
 function formatMenu(title: string, items: any[], currentStep: number): string {
   let output = `\n${'═'.repeat(45)}\n`;
@@ -149,23 +145,8 @@ function calculatePrice(order: CoffeeOrder): number {
   return price;
 }
 
-function getNextStep(currentStep: number): number {
-  const skipConditions: Record<number, (order: CoffeeOrder) => boolean> = {
-    7: (o) => o.method === 'espresso' || o.method === 'americano',
-    8: (o) => o.milk === 'none',
-  };
-  
-  for (let s = currentStep + 1; s <= 10; s++) {
-    if (skipConditions[s] && skipConditions[s](coffeeGameState!)) {
-      continue;
-    }
-    return s;
-  }
-  return 10;
-}
-
 function showOrderSummary(): string {
-  const order = coffeeGameState!;
+  const order = getCoffeeGameState()!;
   const method = COFFEE_METHODS.find(m => m.id === order.method);
   const bean = COFFEE_BEANS.find(b => b.id === order.bean);
   const roast = ROAST_LEVELS.find(r => r.id === order.roast);
@@ -214,7 +195,8 @@ function showBrewingAnimation(): string {
   output += `  🔧 BREWING YOUR COFFEE\n`;
   output += `${'═'.repeat(45)}\n\n`;
 
-  const method = COFFEE_METHODS.find(m => m.id === coffeeGameState?.method);
+  const order = getCoffeeGameState();
+  const method = COFFEE_METHODS.find(m => m.id === order?.method);
   output += `  ☕ Method: ${method?.name}\n`;
   output += `  ⏱️  Time: ${method?.time}\n`;
   output += `  🌡️  Temp: 93°C\n\n`;
@@ -232,17 +214,22 @@ function showBrewingAnimation(): string {
 
 function processCoffeeInput(input: string): { output: string; isComplete: boolean } {
   const trimmed = input.trim().toLowerCase();
+  const order = getCoffeeGameState();
+  
+  if (!order) {
+    return { output: '\n  ❌ Coffee game not active\n', isComplete: true };
+  }
   
   if (trimmed === '0' || trimmed === 'exit' || trimmed === 'q' || trimmed === 'cancel') {
-    coffeeGameState = null;
+    exitCoffeeGame();
     return {
-      output: `\n  👋 Coffee game cancelled.\n  Type 'coffee' to start a new order.\n`,
+      output: `\n  👋 Coffee game cancelled.\n  Type 'sudo make coffee' to start a new order.\n`,
       isComplete: true
     };
   }
 
-  if (trimmed === '2' && coffeeGameState?.step === 10) {
-    coffeeGameState = { step: 1, extras: [] };
+  if (trimmed === '2' && order.step === 11) {
+    startCoffeeGame();
     return {
       output: formatMenu('SELECT METHOD', COFFEE_METHODS, 1),
       isComplete: false
@@ -250,118 +237,91 @@ function processCoffeeInput(input: string): { output: string; isComplete: boolea
   }
 
   const num = parseInt(trimmed);
-  const step = coffeeGameState!.step;
+  const step = order.step;
 
   if (step === 1) {
     if (num < 1 || num > COFFEE_METHODS.length) {
       return { output: `  ⚠️ Invalid choice. Select 1-${COFFEE_METHODS.length}\n`, isComplete: false };
     }
-    coffeeGameState!.method = COFFEE_METHODS[num - 1].id;
-    coffeeGameState!.step = 2;
-    return {
-      output: formatMenu('SELECT BEAN', COFFEE_BEANS, 2),
-      isComplete: false
-    };
+    order.method = COFFEE_METHODS[num - 1].id;
+    order.step = 2;
+    return { output: formatMenu('SELECT BEAN', COFFEE_BEANS, 2), isComplete: false };
   }
 
   if (step === 2) {
     if (num < 1 || num > COFFEE_BEANS.length) {
       return { output: `  ⚠️ Invalid choice. Select 1-${COFFEE_BEANS.length}\n`, isComplete: false };
     }
-    coffeeGameState!.bean = COFFEE_BEANS[num - 1].id;
-    coffeeGameState!.step = 3;
-    return {
-      output: formatMenu('SELECT ROAST', ROAST_LEVELS, 3),
-      isComplete: false
-    };
+    order.bean = COFFEE_BEANS[num - 1].id;
+    order.step = 3;
+    return { output: formatMenu('SELECT ROAST', ROAST_LEVELS, 3), isComplete: false };
   }
 
   if (step === 3) {
     if (num < 1 || num > ROAST_LEVELS.length) {
       return { output: `  ⚠️ Invalid choice. Select 1-${ROAST_LEVELS.length}\n`, isComplete: false };
     }
-    coffeeGameState!.roast = ROAST_LEVELS[num - 1].id;
-    coffeeGameState!.step = 4;
-    return {
-      output: formatMenu('SELECT INTENSITY', INTENSITY_LEVELS, 4),
-      isComplete: false
-    };
+    order.roast = ROAST_LEVELS[num - 1].id;
+    order.step = 4;
+    return { output: formatMenu('SELECT INTENSITY', INTENSITY_LEVELS, 4), isComplete: false };
   }
 
   if (step === 4) {
     if (num < 1 || num > INTENSITY_LEVELS.length) {
       return { output: `  ⚠️ Invalid choice. Select 1-${INTENSITY_LEVELS.length}\n`, isComplete: false };
     }
-    coffeeGameState!.intensity = INTENSITY_LEVELS[num - 1].id;
-    coffeeGameState!.step = 5;
-    return {
-      output: formatMenu('SELECT SIZE', SIZES, 5),
-      isComplete: false
-    };
+    order.intensity = INTENSITY_LEVELS[num - 1].id;
+    order.step = 5;
+    return { output: formatMenu('SELECT SIZE', SIZES, 5), isComplete: false };
   }
 
   if (step === 5) {
     if (num < 1 || num > SIZES.length) {
       return { output: `  ⚠️ Invalid choice. Select 1-${SIZES.length}\n`, isComplete: false };
     }
-    coffeeGameState!.size = SIZES[num - 1].id;
-    coffeeGameState!.step = 6;
-    return {
-      output: formatMenu('SELECT TEMPERATURE', TEMPERATURES, 6),
-      isComplete: false
-    };
+    order.size = SIZES[num - 1].id;
+    order.step = 6;
+    return { output: formatMenu('SELECT TEMPERATURE', TEMPERATURES, 6), isComplete: false };
   }
 
   if (step === 6) {
     if (num < 1 || num > TEMPERATURES.length) {
       return { output: `  ⚠️ Invalid choice. Select 1-${TEMPERATURES.length}\n`, isComplete: false };
     }
-    coffeeGameState!.temperature = TEMPERATURES[num - 1].id;
-    coffeeGameState!.step = 7;
-    return {
-      output: formatMenu('SELECT MILK', MILK_OPTIONS, 7),
-      isComplete: false
-    };
+    order.temperature = TEMPERATURES[num - 1].id;
+    order.step = 7;
+    return { output: formatMenu('SELECT MILK', MILK_OPTIONS, 7), isComplete: false };
   }
 
   if (step === 7) {
     if (num < 1 || num > MILK_OPTIONS.length) {
       return { output: `  ⚠️ Invalid choice. Select 1-${MILK_OPTIONS.length}\n`, isComplete: false };
     }
-    coffeeGameState!.milk = MILK_OPTIONS[num - 1].id;
-    coffeeGameState!.step = 8;
+    order.milk = MILK_OPTIONS[num - 1].id;
     
-    if (coffeeGameState!.method === 'espresso' || coffeeGameState!.method === 'americano') {
-      coffeeGameState!.step = 9;
-      return {
-        output: formatMenu('SELECT SUGAR', SUGAR_LEVELS, 9),
-        isComplete: false
-      };
+    if (order.method === 'espresso' || order.method === 'americano') {
+      order.step = 9;
+      return { output: formatMenu('SELECT SUGAR', SUGAR_LEVELS, 9), isComplete: false };
     }
-    return {
-      output: formatMenu('SELECT FOAM', FOAM_LEVELS, 8),
-      isComplete: false
-    };
+    order.step = 8;
+    return { output: formatMenu('SELECT FOAM', FOAM_LEVELS, 8), isComplete: false };
   }
 
   if (step === 8) {
     if (num < 1 || num > FOAM_LEVELS.length) {
       return { output: `  ⚠️ Invalid choice. Select 1-${FOAM_LEVELS.length}\n`, isComplete: false };
     }
-    coffeeGameState!.foam = FOAM_LEVELS[num - 1].id;
-    coffeeGameState!.step = 9;
-    return {
-      output: formatMenu('SELECT SUGAR', SUGAR_LEVELS, 9),
-      isComplete: false
-    };
+    order.foam = FOAM_LEVELS[num - 1].id;
+    order.step = 9;
+    return { output: formatMenu('SELECT SUGAR', SUGAR_LEVELS, 9), isComplete: false };
   }
 
   if (step === 9) {
     if (num < 1 || num > SUGAR_LEVELS.length) {
       return { output: `  ⚠️ Invalid choice. Select 1-${SUGAR_LEVELS.length}\n`, isComplete: false };
     }
-    coffeeGameState!.sugar = SUGAR_LEVELS[num - 1].id;
-    coffeeGameState!.step = 10;
+    order.sugar = SUGAR_LEVELS[num - 1].id;
+    order.step = 10;
 
     let output = `\n${'═'.repeat(45)}\n`;
     output += `  ✨ EXTRAS (multi-select)\n`;
@@ -377,29 +337,29 @@ function processCoffeeInput(input: string): { output: string; isComplete: boolea
 
   if (step === 10) {
     if (trimmed === 'd') {
-      coffeeGameState!.step = 11;
+      order.step = 11;
       return { output: showOrderSummary(), isComplete: false };
     }
     
     if (trimmed === '0') {
-      coffeeGameState!.step = 11;
+      order.step = 11;
       return { output: showOrderSummary(), isComplete: false };
     }
     
     const extraNum = parseInt(trimmed);
     if (extraNum >= 1 && extraNum <= EXTRAS.length) {
       const extraId = EXTRAS[extraNum - 1].id;
-      if (coffeeGameState!.extras.includes(extraId)) {
-        coffeeGameState!.extras = coffeeGameState!.extras.filter(e => e !== extraId);
+      if (order.extras.includes(extraId)) {
+        order.extras = order.extras.filter(e => e !== extraId);
       } else {
-        coffeeGameState!.extras.push(extraId);
+        order.extras.push(extraId);
       }
       
       let output = `\n  ✨ Your extras:\n`;
-      if (coffeeGameState!.extras.length === 0) {
+      if (order.extras.length === 0) {
         output += `     (none)\n`;
       } else {
-        coffeeGameState!.extras.forEach(e => {
+        order.extras.forEach(e => {
           const ex = EXTRAS.find(x => x.id === e);
           output += `     - ${ex?.icon} ${ex?.name}\n`;
         });
@@ -413,7 +373,7 @@ function processCoffeeInput(input: string): { output: string; isComplete: boolea
 
   if (step === 11) {
     if (num === 1) {
-      const price = calculatePrice(coffeeGameState!);
+      const price = calculatePrice(order);
       const orderNum = Math.floor(Math.random() * 900) + 100;
       
       let output = showBrewingAnimation();
@@ -421,31 +381,25 @@ function processCoffeeInput(input: string): { output: string; isComplete: boolea
       output += `  ☕☕☕ COFFEE READY! ☕☕☕\n`;
       output += `${'═'.repeat(45)}\n\n`;
       output += `  🏷️  Order #${orderNum}\n`;
-      output += `  📦 Size: ${SIZES.find(s => s.id === coffeeGameState!.size)?.name}\n`;
-      output += `  ☕ ${COFFEE_BEANS.find(b => b.id === coffeeGameState!.bean)?.name}\n`;
-      output += `  🔥 ${ROAST_LEVELS.find(r => r.id === coffeeGameState!.roast)?.name}\n`;
+      output += `  📦 Size: ${SIZES.find(s => s.id === order.size)?.name}\n`;
+      output += `  ☕ ${COFFEE_BEANS.find(b => b.id === order.bean)?.name}\n`;
+      output += `  🔥 ${ROAST_LEVELS.find(r => r.id === order.roast)?.name}\n`;
       output += `\n  💶 Price: €${price.toFixed(2)}\n`;
       output += `\n  "Served with precision by JLMT LAB Barista"\n`;
-      output += `\n  Type 'coffee' to order another!\n`;
+      output += `\n  Type 'sudo make coffee' to order another!\n`;
       
-      coffeeGameState = null;
+      exitCoffeeGame();
       return { output, isComplete: true };
     }
     
     if (num === 2) {
-      coffeeGameState = { step: 1, extras: [] };
-      return {
-        output: formatMenu('SELECT METHOD', COFFEE_METHODS, 1),
-        isComplete: false
-      };
+      startCoffeeGame();
+      return { output: formatMenu('SELECT METHOD', COFFEE_METHODS, 1), isComplete: false };
     }
     
     if (num === 0) {
-      coffeeGameState = null;
-      return {
-        output: `\n  👋 Order cancelled.\n  Type 'coffee' to start a new order.\n`,
-        isComplete: true
-      };
+      exitCoffeeGame();
+      return { output: `\n  👋 Order cancelled.\n  Type 'sudo make coffee' to start a new order.\n`, isComplete: true };
     }
     
     return { output: `  ⚠️ Invalid choice\n`, isComplete: false };
@@ -454,8 +408,8 @@ function processCoffeeInput(input: string): { output: string; isComplete: boolea
   return { output: '  ⚠️ Error\n', isComplete: true };
 }
 
-function startCoffeeGame(): string {
-  coffeeGameState = { step: 1, extras: [] };
+function startCoffeeGameOutput(): string {
+  startCoffeeGame();
 
   let output = `\n${COFFEE_ASCII}\n`;
   output += `\n${'═'.repeat(45)}\n`;
@@ -483,32 +437,25 @@ function startCoffeeGame(): string {
   return output;
 }
 
-function handleCoffeeCommand(input: string): string {
-  if (!coffeeGameState) {
-    return startCoffeeGame();
+export function handleCoffeeCommand(input: string): string {
+  if (!isCoffeeGameActive()) {
+    return startCoffeeGameOutput();
   }
   
   const { output } = processCoffeeInput(input);
   return output;
 }
 
-function isCoffeeGameActive(): boolean {
-  return coffeeGameState !== null;
+export function handleCoffeeGameCommand(): string {
+  return startCoffeeGameOutput();
 }
-
-function exitCoffeeGame(): void {
-  coffeeGameState = null;
-}
-
-export { handleCoffeeCommand, isCoffeeGameActive, exitCoffeeGame };
 
 const coffeeInteractiveCommand: CommandDefinition = {
   aliases: ['coffee', 'make coffee', 'brew', 'order coffee', 'cafe'],
   description: '☕ Order coffee - interactive coffee game',
   category: 'easter',
   execute: (args) => {
-    const input = args.join(' ');
-    const output = handleCoffeeCommand(input);
+    const output = handleCoffeeCommand(args.join(' '));
     return { output, action: 'none' };
   },
 };
