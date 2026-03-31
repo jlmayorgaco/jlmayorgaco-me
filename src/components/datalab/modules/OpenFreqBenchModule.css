@@ -1,0 +1,129 @@
+/* OpenFreqBench Module Styles */
+
+.openfreqbench-module {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.openfreqbench-module .metrics-row {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.openfreqbench-module .metrics-row .metric-card {
+  flex: 1;
+  min-width: 120px;
+}
+
+.module-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-md);
+}
+
+.content-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.content-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.status-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm);
+  background: var(--lab-bg-elevated);
+  border-radius: var(--radius-md);
+}
+
+.last-update {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--lab-text-muted);
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.no-alerts {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--lab-text-muted);
+  font-style: italic;
+}
+
+/* Loading/Error States */
+.module-loading,
+.module-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-2xl);
+  background: var(--lab-bg-elevated);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--lab-text-secondary);
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--panel-border);
+  border-top-color: var(--accent-cyan);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.module-error {
+  color: var(--led-red);
+}
+
+.error-detail {
+  font-size: 0.75rem;
+  color: var(--lab-text-muted);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .module-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-sidebar {
+    order: -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .content-sidebar > * {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 640px) {
+  .openfreqbench-module .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

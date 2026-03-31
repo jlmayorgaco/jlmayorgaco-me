@@ -52,6 +52,19 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
         <div class="identity-info">
           <p class="identity-title">Research Engineer</p>
           <p class="identity-focus">Robotics &middot; Distributed Systems &middot; FPGA</p>
+          <p class="identity-tagline">Building real-time control systems and distributed algorithms for robotics applications.</p>
+        </div>
+        
+        <!-- CTA Buttons -->
+        <div class="identity-ctas">
+          <a href="/contact" class="cta-primary">
+            <Icon name="mail" size={12} />
+            Collaborate
+          </a>
+          <a href="/projects" class="cta-secondary">
+            <Icon name="projects" size={12} />
+            View Work
+          </a>
         </div>
         
         <!-- Stats with LED indicators -->
@@ -135,6 +148,19 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
           <a href="/contact" class="info-link">hello@jlmayorga.co</a>
         </div>
         
+        <!-- Now/Currently Section -->
+        <div class="now-section">
+          <div class="now-header">
+            <span class="now-label">NOW</span>
+            <span class="led led-green led-pulse"></span>
+          </div>
+          <ul class="now-list">
+            <li>Distributed control algorithms</li>
+            <li>FPGA-based estimation</li>
+            <li>Real-time systems</li>
+          </ul>
+        </div>
+        
         <!-- Decorative vent -->
         <div class="info-vent">
           <span class="vent-slot"></span>
@@ -154,6 +180,39 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
     </div>
   </div>
 
+  <!-- Metrics Strip -->
+  <div class="board-row metrics-row panel-reveal-delay-1">
+    <div class="metric-item">
+      <span class="metric-value">{projects.length}</span>
+      <span class="metric-label">Projects</span>
+      <span class="metric-led"></span>
+    </div>
+    <div class="metric-divider"></div>
+    <div class="metric-item">
+      <span class="metric-value">{papersCount}</span>
+      <span class="metric-label">Papers</span>
+      <span class="metric-led"></span>
+    </div>
+    <div class="metric-divider"></div>
+    <div class="metric-item">
+      <span class="metric-value">{posts.length}</span>
+      <span class="metric-label">Research</span>
+      <span class="metric-led"></span>
+    </div>
+    <div class="metric-divider"></div>
+    <div class="metric-item">
+      <span class="metric-value">{tutorialsCount}</span>
+      <span class="metric-label">Tutorials</span>
+      <span class="metric-led"></span>
+    </div>
+    <div class="metric-divider"></div>
+    <div class="metric-item">
+      <span class="metric-value">3</span>
+      <span class="metric-label">Dashboards</span>
+      <span class="metric-led"></span>
+    </div>
+  </div>
+
   <!-- Row 2: Modules -->
   <div class="board-row modules-row">
     <a href="/projects" id="projects" class="panel module-card card-lift panel-reveal-delay-1">
@@ -169,8 +228,8 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
         <div class="module-icon">
           <Icon name="projects" size={28} />
         </div>
-        <span class="module-count">{projects.length}+</span>
-        <span class="module-desc">Technical Projects</span>
+        <span class="module-count">{projects.length}</span>
+        <span class="module-desc">Engineering Projects</span>
       </div>
     </a>
 
@@ -187,8 +246,8 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
         <div class="module-icon">
           <Icon name="research" size={28} />
         </div>
-        <span class="module-count">{posts.length}+</span>
-        <span class="module-desc">Technical Notes</span>
+        <span class="module-count">{posts.length}</span>
+        <span class="module-desc">Lab Notes</span>
       </div>
     </a>
 
@@ -210,10 +269,10 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
       </div>
     </a>
 
-    <a href="/contact" id="contact" class="panel module-card card-lift panel-reveal-delay-4">
+    <a href="/datalab" id="datalab" class="panel module-card card-lift panel-reveal-delay-4">
       <div class="panel-header compact">
         <div class="header-left">
-          <span class="label-tag">CONTACT</span>
+          <span class="label-tag">DATA LAB</span>
         </div>
         <span class="module-arrow">
           <Icon name="arrow" size={14} />
@@ -221,10 +280,10 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
       </div>
       <div class="panel-content module-content">
         <div class="module-icon">
-          <Icon name="contact" size={28} />
+          <Icon name="database" size={28} />
         </div>
-        <span class="module-count">→</span>
-        <span class="module-desc">Get in Touch</span>
+        <span class="module-count">3</span>
+        <span class="module-desc">Dashboards</span>
       </div>
     </a>
   </div>
@@ -301,6 +360,57 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
 
   .main-row {
     grid-template-columns: 280px 1fr 260px;
+  }
+
+  .metrics-row {
+    grid-template-columns: repeat(9, 1fr);
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--space-xs) 0;
+    position: relative;
+  }
+
+  .metric-value {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+    line-height: 1;
+  }
+
+  .metric-label {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .metric-led {
+    position: absolute;
+    top: 0;
+    right: 25%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 4px var(--accent-cyan-glow);
+  }
+
+  .metric-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--panel-border);
   }
 
   .modules-row {
@@ -485,6 +595,53 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
     margin: 0;
   }
 
+  .identity-tagline {
+    font-size: 0.75rem;
+    color: var(--lab-text-muted);
+    margin: var(--space-xs) 0 0 0;
+    line-height: 1.5;
+  }
+
+  .identity-ctas {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+
+  .cta-primary, .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-decoration: none;
+    transition: all 150ms ease;
+  }
+
+  .cta-primary {
+    background: var(--accent-cyan);
+    color: var(--lab-bg-base);
+    border: 1px solid var(--accent-cyan);
+  }
+
+  .cta-primary:hover {
+    background: var(--accent-cyan-dim);
+    border-color: var(--accent-cyan-dim);
+  }
+
+  .cta-secondary {
+    background: transparent;
+    color: var(--lab-text-secondary);
+    border: 1px solid var(--panel-border);
+  }
+
+  .cta-secondary:hover {
+    border-color: var(--accent-cyan-dim);
+    color: var(--accent-cyan);
+  }
+
   .identity-stats {
     display: flex;
     gap: var(--space-md);
@@ -597,6 +754,51 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     color: var(--accent-cyan);
+  }
+
+  .now-section {
+    margin-top: var(--space-sm);
+    padding: var(--space-sm);
+    background: var(--lab-bg-dark);
+    border-radius: var(--radius-md);
+  }
+
+  .now-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-xs);
+  }
+
+  .now-label {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+  }
+
+  .now-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .now-list li {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-secondary);
+    padding-left: var(--space-sm);
+    position: relative;
+  }
+
+  .now-list li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: var(--accent-cyan-dim);
   }
 
   .info-vent {
@@ -834,6 +1036,14 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
   @media (max-width: 1024px) {
     .main-row {
       grid-template-columns: 1fr;
+    }
+
+    .metrics-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .metric-divider:nth-child(6) {
+      display: none;
     }
 
     .modules-row {
@@ -1098,6 +1308,25 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
   }
 
   @media (max-width: 640px) {
+    .metrics-row {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-xs);
+    }
+
+    .metric-value {
+      font-size: 1.125rem;
+    }
+
+    .metric-label {
+      font-size: 0.4375rem;
+    }
+
+    .metric-divider:nth-child(4),
+    .metric-divider:nth-child(6),
+    .metric-divider:nth-child(8) {
+      display: none;
+    }
+
     .modules-row {
       grid-template-columns: 1fr;
     }

@@ -1,0 +1,176 @@
+/* FpgaPipeline Module Styles */
+
+.fpga-module {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.fpga-module .metrics-row {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.fpga-module .metrics-row .metric-card {
+  flex: 1;
+  min-width: 120px;
+}
+
+.fpga-module .module-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: var(--space-md);
+}
+
+.fpga-module .content-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.fpga-module .content-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.fpga-module .chart-container {
+  height: 180px;
+}
+
+/* Pipeline Visualization */
+.pipeline-visualization {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.pipeline-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: var(--lab-bg-dark);
+  border-radius: var(--radius-md);
+}
+
+.pipeline-stage {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.stage-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--lab-bg-panel);
+  border: 2px solid;
+  border-radius: var(--radius-sm);
+  min-width: 70px;
+}
+
+.stage-name {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--lab-text-primary);
+  font-weight: 500;
+}
+
+.stage-latency {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: var(--lab-text-muted);
+}
+
+.stage-arrow {
+  color: var(--lab-text-muted);
+  font-size: 0.75rem;
+}
+
+.pipeline-summary {
+  display: flex;
+  gap: var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--lab-text-muted);
+}
+
+/* Status & Device */
+.fpga-module .status-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm);
+  background: var(--lab-bg-elevated);
+  border-radius: var(--radius-md);
+}
+
+.fpga-module .last-update {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--lab-text-muted);
+}
+
+.device-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+}
+
+.device-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent-copper);
+}
+
+.device-params {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--lab-text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .fpga-module .module-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fpga-module .content-sidebar {
+    order: -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .fpga-module .content-sidebar > * {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .pipeline-blocks {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .stage-block {
+    min-width: 60px;
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .stage-name {
+    font-size: 0.5rem;
+  }
+
+  .stage-latency {
+    font-size: 0.4375rem;
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "openfreqbench",
+  "title": "OpenFreqBench",
+  "updated_at": "2026-03-31T09:00:00Z",
+  "status": "active",
+  "metrics": {
+    "frequency": 60.023,
+    "rocof": 0.015,
+    "snr": 45.2,
+    "thd": 0.82
+  },
+  "waveform": {
+    "sample_rate": 1000,
+    "duration": 2.0,
+    "data": [
+      { "t": 0.000, "v": 0.002 },
+      { "t": 0.001, "v": 0.683 },
+      { "t": 0.002, "v": 0.985 },
+      { "t": 0.003, "v": 0.865 },
+      { "t": 0.004, "v": 0.342 },
+      { "t": 0.005, "v": -0.234 },
+      { "t": 0.006, "v": -0.756 },
+      { "t": 0.007, "v": -0.967 },
+      { "t": 0.008, "v": -0.743 },
+      { "t": 0.009, "v": -0.201 },
+      { "t": 0.010, "v": 0.456 },
+      { "t": 0.011, "v": 0.889 },
+      { "t": 0.012, "v": 0.998 },
+      { "t": 0.013, "v": 0.723 },
+      { "t": 0.014, "v": 0.156 },
+      { "t": 0.015, "v": -0.523 }
+    ]
+  },
+  "spectrum": {
+    "frequencies": [50, 60, 100, 120, 150, 180, 200],
+    "magnitudes": [0.12, 1.0, 0.045, 0.032, 0.018, 0.009, 0.005]
+  },
+  "history": [
+    { "timestamp": "2026-03-31T08:00:00Z", "frequency": 59.987, "rocof": 0.012, "event": "normal" },
+    { "timestamp": "2026-03-31T07:00:00Z", "frequency": 60.001, "rocof": 0.008, "event": "normal" },
+    { "timestamp": "2026-03-31T06:00:00Z", "frequency": 60.156, "rocof": 0.023, "event": "disturbance" },
+    { "timestamp": "2026-03-31T05:00:00Z", "frequency": 60.008, "rocof": 0.005, "event": "normal" },
+    { "timestamp": "2026-03-31T04:00:00Z", "frequency": 59.945, "rocof": 0.018, "event": "disturbance" }
+  ],
+  "alerts": [
+    { "level": "info", "message": "Frequency within nominal range", "timestamp": "2026-03-31T09:00:00Z" },
+    { "level": "warn", "message": "RoCoF exceeded 0.01 Hz/s", "timestamp": "2026-03-31T08:45:00Z" }
+  ]
+}

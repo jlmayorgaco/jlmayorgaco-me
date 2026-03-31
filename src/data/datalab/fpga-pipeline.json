@@ -1,0 +1,46 @@
+{
+  "id": "fpga-pipeline",
+  "title": "FPGA Pipeline",
+  "updated_at": "2026-03-31T09:00:00Z",
+  "status": "active",
+  "metrics": {
+    "latency": 12,
+    "throughput": 250,
+    "dsp_utilization": 67,
+    "bram_utilization": 42
+  },
+  "pipeline": {
+    "stages": [
+      { "id": 0, "name": "ADC", "latency": 1, "utilization": 100 },
+      { "id": 1, "name": "Input Buffer", "latency": 2, "utilization": 85 },
+      { "id": 2, "name": "Digital Filter", "latency": 3, "utilization": 72 },
+      { "id": 3, "name": "Kalman Filter", "latency": 4, "utilization": 91 },
+      { "id": 4, "name": "Matrix Inv", "latency": 2, "utilization": 88 },
+      { "id": 5, "name": "Output Buffer", "latency": 1, "utilization": 65 },
+      { "id": 6, "name": "DAC", "latency": 1, "utilization": 100 }
+    ],
+    "total_latency": 14,
+    "max_throughput": 250
+  },
+  "resources": {
+    "dsp": { "used": 134, "total": 200, "percentage": 67 },
+    "bram": { "used": 42, "total": 100, "percentage": 42 },
+    "ff": { "used": 8540, "total": 170880, "percentage": 5 },
+    "lut": { "used": 12300, "total": 85440, "percentage": 14 }
+  },
+  "dataflow": [
+    { "stage": "ADC", "cycles": 250, "status": "active" },
+    { "stage": "Input Buffer", "cycles": 500, "status": "active" },
+    { "stage": "Digital Filter", "cycles": 750, "status": "processing" },
+    { "stage": "Kalman Filter", "cycles": 1000, "status": "idle" },
+    { "stage": "Matrix Inv", "cycles": 500, "status": "idle" },
+    { "stage": "Output Buffer", "cycles": 250, "status": "idle" },
+    { "stage": "DAC", "cycles": 250, "status": "idle" }
+  ],
+  "optimization": {
+    "unroll_factor": 4,
+    "pipeline_stages": 7,
+    "clock_frequency": 100,
+    "data_width": 16
+  }
+}

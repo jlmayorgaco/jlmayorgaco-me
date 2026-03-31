@@ -1,0 +1,38 @@
+{
+  "id": "control-workbench",
+  "title": "Control Workbench",
+  "updated_at": "2026-03-31T09:00:00Z",
+  "status": "active",
+  "metrics": {
+    "overshoot": 15.2,
+    "settling_time": 0.84,
+    "rise_time": 0.32,
+    "steady_state_error": 0.003
+  },
+  "step_response": {
+    "time": [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9, 1.0],
+    "response": [0, 0.1, 0.32, 0.55, 0.72, 0.86, 0.96, 1.08, 1.12, 1.08, 1.04, 1.02, 1.01, 1.005, 1.002, 1.001, 1.0],
+    "reference": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  },
+  "bode": {
+    "frequency": [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100],
+    "magnitude": [0.0, -0.2, -1.2, -3.0, -6.5, -12.0, -18.0, -24.0, -32.0, -40.0],
+    "phase": [0, -5, -25, -55, -90, -130, -150, -165, -175, -180]
+  },
+  "controller": {
+    "type": "PID",
+    "kp": 1.2,
+    "ki": 0.8,
+    "kd": 0.15
+  },
+  "plant": {
+    "type": "second_order",
+    "omega_n": 5.0,
+    "zeta": 0.3
+  },
+  "stability": {
+    "gain_margin": 2.5,
+    "phase_margin": 45.2,
+    "crossover_freq": 3.2
+  }
+}

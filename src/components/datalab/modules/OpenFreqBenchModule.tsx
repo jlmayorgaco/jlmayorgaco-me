@@ -1,69 +1,162 @@
 'use client';
 
+import { useDashboardData } from '../../../hooks/useDashboardData';
+import { CHART_THEMES } from '../../../lib/datalab/chartConfigs';
+import {
+  DashboardModule,
+  MetricCard,
+  ChartPanel,
+  WaveformChart,
+  SpectrumChart,
+  ControlsPanel,
+  ControlGroup,
+  StatusBadge,
+} from '../DashboardModule';
+import './OpenFreqBenchModule.css';
+
 export default function OpenFreqBenchModule() {
+  const { data, loading, error, lastUpdate } = useDashboardData('openfreqbench', {
+    useCache: true,
+  });
+
+  const theme = CHART_THEMES.signals;
+
+  if (loading) {
+    return (
+      <DashboardModule className="openfreqbench-module">
+        <div className="module-loading">
+          <span className="loading-spinner" />
+          <span>Loading signal data...</span>
+        </div>
+      </DashboardModule>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <DashboardModule className="openfreqbench-module">
+        <div className="module-error">
+          <span>⚠ Error loading data</span>
+          <span className="error-detail">{error || 'No data available'}</span>
+        </div>
+      </DashboardModule>
+    );
+  }
+
+  const metrics = data.metrics as { frequency: number; rocof: number; snr: number; thd: number };
+  const waveformData = (data as any).waveform?.data || [];
+  const spectrumData = (data as any).spectrum || { frequencies: [], magnitudes: [] };
+  const alerts = (data as any).alerts || [];
+
   return (
-    <div className="module-content openfreqbench">
-      <div className="module-placeholder">
-        <div className="placeholder-header">
-          <h3>Signal Analysis Workbench</h3>
-          <p>Frequency estimation and PMU data analysis</p>
+    <DashboardModule className="openfreqbench-module">
+      {/* Metrics Row */}
+      <div className="metrics-row">
+        <MetricCard
+          label="Frequency"
+          value={metrics.frequency.toFixed(3)}
+          unit="Hz"
+          accent={theme.primary}
+        />
+        <MetricCard
+          label="RoCoF"
+          value={(metrics.rocof * 1000).toFixed(1)}
+          unit="mHz/s"
+          trend="stable"
+          accent={theme.primary}
+        />
+        <MetricCard
+          label="SNR"
+          value={metrics.snr.toFixed(1)}
+          unit="dB"
+          trend="up"
+          accent={theme.primary}
+        />
+        <MetricCard
+          label="THD"
+          value={metrics.thd.toFixed(2)}
+          unit="%"
+          accent={theme.primary}
+        />
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="module-content-grid">
+        <div className="content-main">
+          {/* Waveform Chart */}
+          <ChartPanel title="Signal Waveform" accent={theme.primary}>
+            <WaveformChart
+              data={waveformData}
+              accent={theme.primary}
+              height={200}
+            />
+          </ChartPanel>
+
+          {/* FFT Spectrum */}
+          <ChartPanel title="Frequency Spectrum" accent={theme.primary}>
+            <SpectrumChart
+              frequencies={spectrumData.frequencies}
+              magnitudes={spectrumData.magnitudes}
+              accent={theme.primary}
+              height={180}
+            />
+          </ChartPanel>
         </div>
-        
-        <div className="placeholder-visual">
-          <div className="waveform-display">
-            <svg viewBox="0 0 400 100" className="waveform-svg">
-              <path 
-                d="M0,50 Q50,10 100,50 T200,50 T300,50 T400,50" 
-                fill="none" 
-                stroke="#3fb9a7" 
-                strokeWidth="2"
-              />
-              <path 
-                d="M0,50 Q50,90 100,50 T200,50 T300,50 T400,50" 
-                fill="none" 
-                stroke="#3fb9a7" 
-                strokeWidth="1"
-                opacity="0.5"
-              />
-            </svg>
-            <div className="waveform-labels">
-              <span>Time →</span>
-              <span>Amplitude</span>
+
+        <div className="content-sidebar">
+          {/* Status */}
+          <div className="status-section">
+            <StatusBadge status="active" label="Live" />
+            {lastUpdate && (
+              <span className="last-update">
+                Updated: {lastUpdate.toLocaleTimeString()}
+              </span>
+            )}
+          </div>
+
+          {/* Controls */}
+          <ChartPanel title="Analysis Parameters" accent={theme.primary}>
+            <ControlsPanel>
+              <ControlGroup label="Algorithm">
+                <select defaultValue="dft">
+                  <option value="dft">DFT (4-cycle)</option>
+                  <option value="pll">PLL-SOGI</option>
+                  <option value="ekf">EKF (8-state)</option>
+                  <option value="nn">Neural Network</option>
+                </select>
+              </ControlGroup>
+              <ControlGroup label="Window Size">
+                <input type="range" min="1" max="10" defaultValue="4" />
+              </ControlGroup>
+              <ControlGroup label="Sample Rate">
+                <select defaultValue="1000">
+                  <option value="500">500 Hz</option>
+                  <option value="1000">1000 Hz</option>
+                  <option value="2000">2000 Hz</option>
+                </select>
+              </ControlGroup>
+            </ControlsPanel>
+          </ChartPanel>
+
+          {/* Alerts */}
+          <ChartPanel title="System Alerts" accent={theme.primary}>
+            <div className="alerts-list">
+              {alerts.length === 0 ? (
+                <span className="no-alerts">No active alerts</span>
+              ) : (
+                alerts.map((alert: any, i: number) => (
+                  <div key={i} className={`alert-item ${alert.level}`}>
+                    <span className="alert-icon">
+                      {alert.level === 'warn' ? '⚠' : 'ℹ'}
+                    </span>
+                    <span className="alert-message">{alert.message}</span>
+                  </div>
+                ))
+              )}
             </div>
-          </div>
-        </div>
-
-        <div className="placeholder-stats">
-          <div className="stat-box">
-            <span className="stat-label">Frequency</span>
-            <span className="stat-value">60.002 Hz</span>
-          </div>
-          <div className="stat-box">
-            <span className="stat-label">RoCoF</span>
-            <span className="stat-value">-12.4 mHz/s</span>
-          </div>
-          <div className="stat-box">
-            <span className="stat-label">SNR</span>
-            <span className="stat-value">45.2 dB</span>
-          </div>
-        </div>
-
-        <div className="placeholder-controls">
-          <div className="control-group">
-            <label>Algorithm</label>
-            <select>
-              <option>DFT (4-cycle)</option>
-              <option>PLL-SOGI</option>
-              <option>EKF (8-state)</option>
-              <option>Neural Network</option>
-            </select>
-          </div>
-          <div className="control-group">
-            <label>Window Size</label>
-            <input type="range" min="1" max="10" defaultValue="4" />
-          </div>
+          </ChartPanel>
         </div>
       </div>
-    </div>
+    </DashboardModule>
   );
 }

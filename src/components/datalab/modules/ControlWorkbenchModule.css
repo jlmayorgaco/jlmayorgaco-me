@@ -1,0 +1,124 @@
+/* ControlWorkbench Module Styles */
+
+.control-module {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.control-module .metrics-row {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.control-module .metrics-row .metric-card {
+  flex: 1;
+  min-width: 120px;
+}
+
+.control-module .module-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: var(--space-md);
+}
+
+.control-module .content-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.control-module .content-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.control-module .chart-container {
+  height: 220px;
+}
+
+.control-module .stability-metrics {
+  display: flex;
+  gap: var(--space-lg);
+  padding: var(--space-sm);
+}
+
+.control-module .stability-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.control-module .stability-label {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--lab-text-muted);
+  text-transform: uppercase;
+}
+
+.control-module .stability-value {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.control-module .status-section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm);
+  background: var(--lab-bg-elevated);
+  border-radius: var(--radius-md);
+}
+
+.control-module .last-update {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--lab-text-muted);
+}
+
+.control-module .controller-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+}
+
+.control-module .controller-type {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--accent-copper);
+}
+
+.control-module .controller-params {
+  display: flex;
+  gap: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--lab-text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .control-module .module-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .control-module .content-sidebar {
+    order: -1;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .control-module .content-sidebar > * {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .control-module .stability-metrics {
+    flex-wrap: wrap;
+  }
+}

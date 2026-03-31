@@ -1,7 +1,7 @@
 'use client';
 
 import { useDataLab } from '../../hooks/useDataLab';
-import { DASHBOARDS } from '../../lib/datalab/registry';
+import { DASHBOARDS, getPresetsForModule } from '../../lib/datalab/registry';
 import DataLabTopBar from './DataLabTopBar';
 import DataLabSidebar from './DataLabSidebar';
 import DataLabLogPanel from './DataLabLogPanel';
@@ -30,15 +30,17 @@ export default function DataLabShell() {
     ? MODULE_COMPONENTS[activeDashboard.component]
     : null;
 
+  const presets = activeDashboard 
+    ? getPresetsForModule(activeDashboard.id) 
+    : [];
+
   return (
     <div className="datalab-container">
-      {/* Top Bar */}
+      {/* Top Bar - Brand + Status only */}
       <DataLabTopBar 
         activeModule={activeDashboard}
         status={lab.status}
         mode={lab.mode}
-        onRun={lab.runSimulation}
-        onReset={lab.resetModule}
       />
 
       {/* Main Content */}
@@ -58,13 +60,19 @@ export default function DataLabShell() {
               module={activeDashboard}
               onRun={lab.runSimulation}
               onReset={lab.resetModule}
+              presets={presets}
+              isRunning={lab.status === 'loading'}
             >
               <ActiveModuleComponent />
             </DashboardHMIFrame>
           ) : (
             <div className="datalab-empty">
               <div className="empty-content">
-                <span className="empty-icon">🔬</span>
+                <svg className="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                  <path d="M8 21h8M12 17v4" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
                 <h2 className="empty-title">Welcome to Data Lab</h2>
                 <p className="empty-description">
                   Select a module from the sidebar to begin your experiment.

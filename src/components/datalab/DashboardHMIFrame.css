@@ -1,0 +1,158 @@
+/* Dashboard HMI Frame */
+.dashboard-hmi-frame {
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.hmi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--lab-bg-elevated);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.hmi-title-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.hmi-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: 2px;
+}
+
+.hmi-title {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--lab-text-primary);
+  margin: 0;
+}
+
+.hmi-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--lab-text-muted);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.hmi-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--lab-bg-panel);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.toolbar-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.toolbar-tag {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--lab-text-muted);
+  padding: 2px 6px;
+  background: var(--lab-bg-dark);
+  border-radius: var(--radius-sm);
+}
+
+.toolbar-meta {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.meta-item {
+  display: flex;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+}
+
+.meta-label {
+  color: var(--lab-text-muted);
+}
+
+.meta-value {
+  color: var(--lab-text-secondary);
+}
+
+.hmi-viewport {
+  flex: 1;
+  min-height: 400px;
+  padding: var(--space-md);
+  background: var(--lab-bg-base);
+}
+
+.hmi-footer {
+  display: none;
+}
+
+/* Toolbar buttons (legacy, replaced by HMIControls) */
+.toolbar-actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.toolbar-btn {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--lab-text-secondary);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--lab-bg-dark);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.toolbar-btn:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hmi-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hmi-title-row {
+    flex-wrap: wrap;
+  }
+
+  .hmi-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .toolbar-meta {
+    display: none;
+  }
+}

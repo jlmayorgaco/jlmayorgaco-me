@@ -52,16 +52,15 @@ export default function VisualCommandHandler({ onOpenHmi, onCloseHmi, onConstruc
         }
         break;
 
-      case 'layout':
-        if (VALID_LAYOUTS.includes(action.name)) {
-          const board = document.querySelector('.lab-board');
-          if (board) {
-            board.classList.remove(`layout-${currentLayout}`);
-            board.classList.add(`layout-${action.name}`);
-            setCurrentLayout(action.name);
-          }
+      case 'layout': {
+        const board = document.querySelector('.lab-board');
+        if (board && VALID_LAYOUTS.includes(action.name)) {
+          board.classList.remove(`layout-${currentLayout}`);
+          board.classList.add(`layout-${action.name}`);
+          setCurrentLayout(action.name);
         }
         break;
+      }
 
       case 'shuffle': {
         const board = document.querySelector('.lab-board');

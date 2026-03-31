@@ -1,0 +1,55 @@
+.hmi-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.hmi-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--panel-border, #b8bcba);
+  border-radius: var(--radius-md, 4px);
+  background: var(--lab-bg-dark, #d4d7d5);
+  color: var(--lab-text-secondary, #4a524d);
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 0.6875rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.hmi-btn:hover:not(:disabled) {
+  border-color: var(--accent, #3fb9a7);
+  color: var(--accent, #3fb9a7);
+}
+
+.hmi-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.hmi-btn-icon {
+  font-size: 0.625rem;
+}
+
+.hmi-btn-label {
+  font-weight: 500;
+}
+
+.hmi-btn-primary {
+  background: var(--accent, #3fb9a7);
+  border-color: var(--accent, #3fb9a7);
+  color: var(--lab-bg-base, #e8ebe9);
+}
+
+.hmi-btn-primary:hover:not(:disabled) {
+  background: var(--accent-cyan-dim, #2d8a7b);
+  border-color: var(--accent-cyan-dim, #2d8a7b);
+  color: var(--lab-bg-base, #e8ebe9);
+  box-shadow: 0 0 8px rgba(63, 185, 167, 0.3);
+}
+
+.hmi-btn-secondary:hover:not(:disabled) {
+  background: var(--lab-bg-elevated, #f5f7f5);
+}

@@ -6,22 +6,18 @@ interface DataLabTopBarProps {
   activeModule: DashboardModule | null | undefined;
   status: LabStatus;
   mode: LabMode;
-  onRun: () => void;
-  onReset: () => void;
 }
 
 export default function DataLabTopBar({ 
   activeModule, 
-  status, 
-  mode,
-  onRun,
-  onReset 
+  status,
+  mode 
 }: DataLabTopBarProps) {
   const getStatusColor = () => {
     switch (status) {
       case 'active': return '#3fb950';
       case 'loading': return '#d29922';
-      case 'error': return '#ef4444';
+      case 'error': return '#f85149';
       default: return '#6b7280';
     }
   };
@@ -30,7 +26,11 @@ export default function DataLabTopBar({
     <header className="datalab-topbar">
       <div className="topbar-left">
         <div className="lab-brand">
-          <span className="lab-icon">🔬</span>
+          <svg className="lab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <rect x="2" y="3" width="20" height="14" rx="2" />
+            <path d="M8 21h8M12 17v4" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
           <span className="lab-name">DATA LAB</span>
         </div>
         
@@ -57,27 +57,9 @@ export default function DataLabTopBar({
       </div>
 
       <div className="topbar-right">
-        {activeModule && (
-          <>
-            <button 
-              className="action-btn primary"
-              onClick={onRun}
-              disabled={status === 'loading'}
-            >
-              ▶ Run
-            </button>
-            <button 
-              className="action-btn"
-              onClick={onReset}
-              disabled={status === 'loading'}
-            >
-              ↺ Reset
-            </button>
-            <button className="action-btn">
-              ⬇ Export
-            </button>
-          </>
-        )}
+        <span className="topbar-timestamp">
+          {new Date().toLocaleTimeString('en-US', { hour12: false })}
+        </span>
       </div>
     </header>
   );
