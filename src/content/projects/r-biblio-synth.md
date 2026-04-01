@@ -9,6 +9,38 @@ featured: false
 order: 5
 links:
   repo: "https://github.com/jlmayorga/r-biblio-synth"
+roadmap:
+  completion: 90
+  current_phase: "Future"
+  phases:
+    - label: "Idea"
+      status: "completed"
+      date: "2023-01"
+    - label: "Research"
+      status: "completed"
+      date: "2023-04"
+    - label: "Prototype"
+      status: "completed"
+      date: "2023-08"
+    - label: "Validation"
+      status: "completed"
+      date: "2024-01"
+    - label: "Future"
+      status: "active"
+      date: "2024-06"
+  what_works:
+    - "CrossRef API integration"
+    - "Topic modeling with LDA"
+    - "Citation network visualization"
+    - "Export to BibTeX/JSON/CSV"
+  limitations:
+    - "Slow API rate limiting"
+    - "Limited to publicly available metadata"
+    - "No full-text analysis"
+  next_steps:
+    - "Semantic Scholar API integration"
+    - "Full-text PDF analysis"
+    - "Collaboration features for research groups"
 ---
 
 ## Problem

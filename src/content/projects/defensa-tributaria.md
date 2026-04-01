@@ -9,6 +9,39 @@ featured: false
 order: 6
 links:
   demo: "https://defensatributaria.co"
+roadmap:
+  completion: 100
+  current_phase: "Future"
+  phases:
+    - label: "Idea"
+      status: "completed"
+      date: "2022-06"
+    - label: "Research"
+      status: "completed"
+      date: "2022-09"
+    - label: "Prototype"
+      status: "completed"
+      date: "2023-01"
+    - label: "Validation"
+      status: "completed"
+      date: "2023-06"
+    - label: "Future"
+      status: "planned"
+      date: "2024-01"
+  what_works:
+    - "Dynamic quote wizard"
+    - "Wompi payment integration"
+    - "Zoho CRM sync"
+    - "Document upload and organization"
+    - "Client portal"
+  limitations:
+    - "Colombian market only"
+    - "No mobile app"
+    - "Manual onboarding process"
+  next_steps:
+    - "Mobile app development"
+    - "AI-powered document analysis"
+    - "Multi-country expansion"
 ---
 
 ## Problem

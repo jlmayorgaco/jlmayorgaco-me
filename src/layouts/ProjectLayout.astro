@@ -1,7 +1,23 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import ProjectMetaPanel from '../components/projects/ProjectMetaPanel.astro';
+import ProjectRoadmap from '../components/projects/ProjectRoadmap.astro';
 import Icon from '../components/ui/Icon.astro';
+
+interface Phase {
+  label: string;
+  status: 'completed' | 'active' | 'pending' | 'planned';
+  date?: string;
+}
+
+interface RoadmapData {
+  completion: number;
+  current_phase: string;
+  phases: Phase[];
+  what_works: string[];
+  limitations: string[];
+  next_steps: string[];
+}
 
 interface Props {
   title: string;
@@ -16,9 +32,10 @@ interface Props {
     repo?: string;
     pdf?: string;
   };
+  roadmap?: RoadmapData;
 }
 
-const { title, summary, year, status = 'published', tags, stack, cover, links } = Astro.props;
+const { title, summary, year, status = 'published', tags, stack, cover, links, roadmap } = Astro.props;
 ---
 
 <BaseLayout title={title} description={summary}>
@@ -49,6 +66,8 @@ const { title, summary, year, status = 'published', tags, stack, cover, links } 
           <img src={cover} alt={`Cover image for ${title}`} loading="lazy" />
         </div>
       )}
+
+      {roadmap && <ProjectRoadmap roadmap={roadmap} />}
 
       <ProjectMetaPanel {tags} {stack} {links} />
 

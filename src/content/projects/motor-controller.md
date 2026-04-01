@@ -10,6 +10,38 @@ order: 1
 links:
   repo: "https://github.com/jlmayorga/motor-controller"
   demo: "https://jlmayorga.co/projects/motor-controller"
+roadmap:
+  completion: 65
+  current_phase: "Prototype"
+  phases:
+    - label: "Idea"
+      status: "completed"
+      date: "2024-01"
+    - label: "Research"
+      status: "completed"
+      date: "2024-03"
+    - label: "Prototype"
+      status: "completed"
+      date: "2024-06"
+    - label: "Validation"
+      status: "active"
+      date: "2025-01"
+    - label: "Future"
+      status: "planned"
+      date: "2025-06"
+  what_works:
+    - "Closed-loop PID control at 20kHz"
+    - "Encoder feedback with quadrature decoding"
+    - "PWM generation up to 100kHz"
+    - "10μs response time"
+  limitations:
+    - "DC motors only, no BLDC support"
+    - "No thermal protection"
+    - "Single motor only"
+  next_steps:
+    - "Add BLDC / FOC support"
+    - "Implement CAN bus interface"
+    - "Multi-axis coordination"
 ---
 
 ## Overview

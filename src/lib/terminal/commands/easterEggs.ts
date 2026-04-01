@@ -307,15 +307,18 @@ const INVADERS = `
    ██      ██    ██      ██    ██      ██
     ████████        ████████      ████████
 
-SPACE INVADERS activated...
-Bullets: ∞
-Lives: 3
-Score: 00000
+SPACE INVESTADORS activated...
+Bullets: ∞ (but funded by grants)
+Lives: 3 (like your thesis chapters)
+Score: 00000 (like your h-index)
 
-(Game not implemented - this is a research terminal, not an arcade)
+Research shows this game improves hand-eye coordination
+for thesis writing. Also, procrastination skills.
 
-Press ESC to exit game
-You can't actually play this btw`;
+[WARNING] Game time counts as research time
+[INFO] Consider actual work after this game
+
+Press ESC to exit (jk, you're already behind on deadlines)`;
 
 const SNAKE_ART = `
     ════════════════════════
@@ -329,12 +332,19 @@ const SNAKE_ART = `
     ║                      ║
     ════════════════════════
 
-SNAKE game loaded...
+SNAKE research edition...
 Controls: Arrow keys
-Eat: research papers
-Avoid: deadlines
+Eat: research papers (+knowledge)
+Avoid: peer reviewers, deadlines
+Bonus: coffee pods (+energy)
 
-(Game not implemented - it's 2AM and I have papers to write)`;
+Score multiplier: caffeine level
+Game over: thesis submission
+
+[SYSTEM] Your productivity: DECREASED
+[SYSTEM] Thesis progress: UNCHANGED
+
+This game is sponsored by: Procrastination™`;
 
 const BASTARD = `
 EXCUSE BUILDER v1.0
@@ -496,6 +506,22 @@ const fortuneCommand: CommandDefinition = {
       '"Any fool can write code that a computer can understand." - Martin Fowler',
       '"The only way to learn a new programming language is by writing programs in it." - Dennis Ritchie',
       '"Sometimes it pays to stay in bed on Monday." - Douglas Adams',
+      // Lab-specific wisdom
+      '"The best control system is the one you don\'t notice." - Unknown Controls Engineer',
+      '"Kalman filters are just fancy averaging with marketing." - Probably Greg Welch',
+      '"Real robots don\'t have blinking lights." - Any roboticist ever',
+      '"My FPGA is 95% utilized and 100% on fire." - FPGA Developer',
+      '"Swarm robotics: because one robot is never enough to break." - Swarm Lab Alumni',
+      '"The best research happens at 3am when everything finally works." - Every Researcher Ever',
+      '"Paper deadline tomorrow? Time to optimize every peripheral task." - The Procrastinator\'s Paradox',
+      '"This Kalman filter converges. Just kidding, I need more states." - DSP Engineer',
+      '"In theory, theory and practice are the same. In practice, they\'re not." - Someone Tired',
+      '"The FPGA synthesis failed with 847 errors. It works on my machine." - The FPGA Developer\'s Lullaby',
+      '"I\'ve read the paper 47 times and I still don\'t understand it. This is peer review." - Future Reviewer',
+      '"Coffee to code ratio: 1:1. Any deviation causes undefined behavior." - Embedded Systems Wisdom',
+      '"Your simulation works perfectly. Your hardware will fail in spectacular ways." - Murphy\'s Law of Robotics',
+      '"The bug is in the part of the code you swore you didn\'t touch." - The Developer\'s Paradox',
+      '"Late night debugging: where \'just one more change\' becomes \'I\'ve broken the entire architecture.\'" - Growth Experience',
     ];
     return { output: fortunes[Math.floor(Math.random() * fortunes.length)], action: 'none' };
   },

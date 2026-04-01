@@ -37,6 +37,18 @@ const projects = defineCollection({
           pdf: z.string().url().optional(),
         })
         .optional(),
+      roadmap: z.object({
+        completion: z.number().min(0).max(100),
+        current_phase: z.string(),
+        phases: z.array(z.object({
+          label: z.string(),
+          status: z.enum(['completed', 'active', 'pending', 'planned']),
+          date: z.string().optional(),
+        })),
+        what_works: z.array(z.string()),
+        limitations: z.array(z.string()),
+        next_steps: z.array(z.string()),
+      }),
     }),
 });
 

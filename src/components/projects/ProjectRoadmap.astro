@@ -1,0 +1,450 @@
+---
+interface Phase {
+  label: string;
+  status: 'completed' | 'active' | 'pending' | 'planned';
+  date?: string;
+}
+
+interface RoadmapData {
+  completion: number;
+  current_phase: string;
+  phases: Phase[];
+  what_works: string[];
+  limitations: string[];
+  next_steps: string[];
+}
+
+interface Props {
+  roadmap: RoadmapData;
+}
+
+const { roadmap } = Astro.props;
+
+const statusIcons: Record<string, string> = {
+  completed: '✓',
+  active: '▶',
+  pending: '○',
+  planned: '◯',
+};
+
+const statusLabels: Record<string, string> = {
+  completed: 'Completed',
+  active: 'In Progress',
+  pending: 'Pending',
+  planned: 'Planned',
+};
+---
+
+<div class="project-roadmap">
+  <div class="roadmap-header">
+    <div class="roadmap-title">
+      <svg class="roadmap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 3v18h18" />
+        <path d="M7 16l4-4 4 4 5-6" />
+      </svg>
+      <span>PROJECT ROADMAP</span>
+    </div>
+    <div class="roadmap-progress">
+      <span class="progress-label">{roadmap.completion}%</span>
+      <div class="progress-bar">
+        <div class="progress-fill" style={`width: ${roadmap.completion}%`}></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phases-timeline">
+    <div class="timeline-line">
+      <div class="timeline-progress" style={`width: ${roadmap.completion}%`}></div>
+    </div>
+    <div class="phases-container">
+      {roadmap.phases.map((phase, index) => (
+        <div class={`phase-node ${phase.status}`}>
+          <div class="phase-dot">
+            <span class="phase-icon">{statusIcons[phase.status]}</span>
+          </div>
+          <div class="phase-label">{phase.label}</div>
+          <div class="phase-date">{phase.date || ''}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="roadmap-status">
+    <div class="status-badge">
+      <span class="status-label">CURRENT:</span>
+      <span class="status-value">{roadmap.current_phase}</span>
+    </div>
+  </div>
+
+  <div class="roadmap-grid">
+    <div class="roadmap-card works">
+      <div class="card-header">
+        <span class="card-icon">✓</span>
+        <span class="card-title">WORKS</span>
+      </div>
+      <ul class="card-list">
+        {roadmap.what_works.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="roadmap-card limitations">
+      <div class="card-header">
+        <span class="card-icon">⚠</span>
+        <span class="card-title">LIMITATIONS</span>
+      </div>
+      <ul class="card-list">
+        {roadmap.limitations.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="roadmap-card next">
+      <div class="card-header">
+        <span class="card-icon">→</span>
+        <span class="card-title">NEXT STEPS</span>
+      </div>
+      <ul class="card-list numbered">
+        {roadmap.next_steps.map((item, index) => (
+          <li><span class="step-num">{index + 1}.</span> {item}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .project-roadmap {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: var(--space-lg);
+  }
+
+  .roadmap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-elevated);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .roadmap-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+  }
+
+  .roadmap-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .roadmap-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .progress-label {
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--lab-text-primary);
+  }
+
+  .progress-bar {
+    width: 100px;
+    height: 6px;
+    background: var(--lab-bg-dark);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent-cyan);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  .phases-timeline {
+    position: relative;
+    padding: var(--space-lg) var(--space-md);
+    background: var(--lab-bg-dark);
+  }
+
+  .timeline-line {
+    position: absolute;
+    top: 50%;
+    left: var(--space-md);
+    right: var(--space-md);
+    height: 2px;
+    background: var(--panel-border);
+    transform: translateY(-50%);
+  }
+
+  .timeline-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: var(--accent-cyan);
+    transition: width 0.5s ease;
+  }
+
+  .phases-container {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+
+  .phase-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .phase-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: 2px solid var(--panel-border);
+    background: var(--lab-bg-panel);
+  }
+
+  .phase-node.completed .phase-dot {
+    background: var(--accent-cyan);
+    border-color: var(--accent-cyan);
+    color: var(--lab-bg-base);
+  }
+
+  .phase-node.active .phase-dot {
+    background: var(--lab-bg-panel);
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+    box-shadow: 0 0 12px var(--accent-cyan-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .phase-node.pending .phase-dot,
+  .phase-node.planned .phase-dot {
+    background: var(--lab-bg-panel);
+    border-color: var(--panel-border);
+    color: var(--lab-text-muted);
+  }
+
+  .phase-label {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    max-width: 70px;
+  }
+
+  .phase-node.active .phase-label {
+    color: var(--accent-cyan);
+    font-weight: 600;
+  }
+
+  .phase-date {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--lab-text-muted);
+  }
+
+  .roadmap-status {
+    padding: var(--space-sm) var(--space-md);
+    border-top: 1px solid var(--panel-border);
+    border-bottom: 1px solid var(--panel-border);
+    background: var(--lab-bg-panel);
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 4px 12px;
+    background: var(--lab-bg-dark);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-label {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .status-value {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--accent-cyan);
+    font-weight: 600;
+  }
+
+  .roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--lab-bg-base);
+  }
+
+  .roadmap-card {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .roadmap-card:hover {
+    border-color: var(--accent-cyan-dim);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+    background: var(--lab-bg-elevated);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .roadmap-card.works .card-header {
+    border-left: 3px solid var(--led-green);
+  }
+
+  .roadmap-card.limitations .card-header {
+    border-left: 3px solid var(--led-amber);
+  }
+
+  .roadmap-card.next .card-header {
+    border-left: 3px solid var(--accent-cyan);
+  }
+
+  .card-icon {
+    font-size: 0.75rem;
+  }
+
+  .roadmap-card.works .card-icon { color: var(--led-green); }
+  .roadmap-card.limitations .card-icon { color: var(--led-amber); }
+  .roadmap-card.next .card-icon { color: var(--accent-cyan); }
+
+  .card-title {
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    color: var(--lab-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .card-list {
+    list-style: none;
+    padding: var(--space-sm);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .card-list li {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--lab-text-secondary);
+    padding-left: var(--space-sm);
+    position: relative;
+  }
+
+  .card-list.works li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: var(--led-green);
+  }
+
+  .card-list.limitations li::before {
+    content: '!';
+    position: absolute;
+    left: 0;
+    color: var(--led-amber);
+  }
+
+  .card-list.numbered li {
+    padding-left: var(--space-lg);
+  }
+
+  .step-num {
+    position: absolute;
+    left: var(--space-sm);
+    color: var(--accent-cyan);
+    font-weight: 600;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      box-shadow: 0 0 8px var(--accent-cyan-glow);
+    }
+    50% {
+      box-shadow: 0 0 16px var(--accent-cyan-glow);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .phases-container {
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      justify-content: center;
+    }
+
+    .phase-node {
+      flex: 0 0 calc(33.333% - var(--space-md));
+    }
+
+    .timeline-line {
+      display: none;
+    }
+
+    .roadmap-header {
+      flex-direction: column;
+      gap: var(--space-sm);
+      align-items: flex-start;
+    }
+
+    .roadmap-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .phase-node {
+      flex: 0 0 calc(50% - var(--space-sm));
+    }
+
+    .phase-label {
+      font-size: 0.5rem;
+      max-width: 60px;
+    }
+  }
+</style>

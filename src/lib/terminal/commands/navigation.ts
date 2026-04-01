@@ -32,9 +32,46 @@ const searchCommand: CommandDefinition = {
   description: 'Search across all content',
   category: 'navigation',
   execute: (args) => {
-    const term = args.join(' ');
-    if (!term) return { output: 'Usage: search <term>', action: 'none' };
-    return { output: `Search for "${term}" - results appear in terminal\n\nUse: open <slug> to navigate`, action: 'none' };
+    const term = args.join(' ').toLowerCase();
+    if (!term) return { output: 'Usage: search <term>\nExample: search FPGA', action: 'none' };
+    
+    const results: { type: string; id: string; title: string; path: string }[] = [];
+    
+    terminalDataRef.projects.forEach(p => {
+      if (p.title.toLowerCase().includes(term) || 
+          p.summary?.toLowerCase().includes(term) ||
+          p.tags?.some(t => t.toLowerCase().includes(term))) {
+        results.push({ type: 'Project', id: p.id, title: p.title, path: `/projects/${p.id}` });
+      }
+    });
+    
+    terminalDataRef.papers.forEach(p => {
+      if (p.title.toLowerCase().includes(term) || 
+          p.abstract?.toLowerCase().includes(term)) {
+        results.push({ type: 'Paper', id: p.id, title: p.title, path: `/papers/${p.id}` });
+      }
+    });
+    
+    terminalDataRef.research.forEach(r => {
+      if (r.title.toLowerCase().includes(term) || 
+          r.excerpt?.toLowerCase().includes(term) ||
+          r.tags?.some(t => t.toLowerCase().includes(term))) {
+        results.push({ type: 'Research', id: r.id, title: r.title, path: `/research/${r.id}` });
+      }
+    });
+    
+    if (results.length === 0) {
+      return { output: `Search: "${term}" - No results found\n\nMaybe try: robots, FPGA, control, distributed`, action: 'none' };
+    }
+    
+    const formatted = results.map((r, i) => 
+      `[${i + 1}] ${r.type}: ${r.title}\n     → ${r.path}`
+    ).join('\n\n');
+    
+    return { 
+      output: `Search: "${term}" - Found ${results.length} result(s)\n${TERMINAL_DIVIDER}\n\n${formatted}\n\nUse: open <slug> to navigate`, 
+      action: 'none' 
+    };
   },
 };
 
@@ -47,7 +84,10 @@ const tagsCommand: CommandDefinition = {
     terminalDataRef.projects.forEach(p => p.tags.forEach(t => tags.add(t)));
     terminalDataRef.research.forEach(r => r.tags.forEach(t => tags.add(t)));
     const sorted = Array.from(tags).sort();
-    return { output: `Available tags (${sorted.length})\n${TERMINAL_DIVIDER}\n${sorted.join(', ')}`, action: 'none' };
+    return { 
+      output: `Available tags (${sorted.length})\n${TERMINAL_DIVIDER}\n${sorted.join(', ')}\n\nTip: use 'tag <name>' to filter`, 
+      action: 'none' 
+    };
   },
 };
 
@@ -56,9 +96,37 @@ const tagCommand: CommandDefinition = {
   description: 'Filter by tag',
   category: 'navigation',
   execute: (args) => {
-    const tagName = args.join(' ');
+    const tagName = args.join(' ').toLowerCase();
     if (!tagName) return { output: 'Usage: tag <tag-name>\nExample: tag FPGA', action: 'none' };
-    return { output: `Filtering by tag "${tagName}" - results appear in terminal\n\nUse: open <slug> to navigate`, action: 'none' };
+    
+    const results: { type: string; id: string; title: string; path: string }[] = [];
+    
+    terminalDataRef.projects.forEach(p => {
+      const match = p.tags?.find(t => t.toLowerCase().includes(tagName));
+      if (match) {
+        results.push({ type: 'Project', id: p.id, title: p.title, path: `/projects/${p.id}` });
+      }
+    });
+    
+    terminalDataRef.research.forEach(r => {
+      const match = r.tags?.find(t => t.toLowerCase().includes(tagName));
+      if (match) {
+        results.push({ type: 'Research', id: r.id, title: r.title, path: `/research/${r.id}` });
+      }
+    });
+    
+    if (results.length === 0) {
+      return { output: `Tag: "${tagName}" - No results\n\nTry: robotics, fpga, control, distributed`, action: 'none' };
+    }
+    
+    const formatted = results.map((r, i) => 
+      `[${i + 1}] ${r.type}: ${r.title}`
+    ).join('\n');
+    
+    return { 
+      output: `Tag: "${tagName}" - ${results.length} result(s)\n${TERMINAL_DIVIDER}\n\n${formatted}\n\nUse: open <slug> to navigate`, 
+      action: 'none' 
+    };
   },
 };
 
@@ -75,7 +143,17 @@ const cdCommand: CommandDefinition = {
       return { output: `cd: ${target}: No such directory\n\nAvailable: projects, papers, research, tutorials, portfolio, contact`, action: 'none' };
     }
     
-    return { output: `Changed directory to: ${dir.path}`, uiAction: dir.uiAction };
+    const emoji = target === 'projects' ? '🔧' : 
+                  target === 'papers' ? '📄' : 
+                  target === 'research' ? '📚' : 
+                  target === 'tutorials' ? '⚡' : 
+                  target === 'portfolio' ? '🎨' : 
+                  target === 'contact' ? '📧' : '→';
+    
+    return { 
+      output: `${emoji} Navigating to: ${dir.path}\n${TERMINAL_DIVIDER}\n[INFO] Scroll initiated...\n[OK] Panel focus set`, 
+      uiAction: dir.uiAction 
+    };
   },
 };
 

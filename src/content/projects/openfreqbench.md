@@ -9,6 +9,38 @@ featured: true
 order: 1
 links:
   repo: "https://github.com/jlmayorga/openfreqbench"
+roadmap:
+  completion: 80
+  current_phase: "Validation"
+  phases:
+    - label: "Idea"
+      status: "completed"
+      date: "2023-01"
+    - label: "Research"
+      status: "completed"
+      date: "2023-06"
+    - label: "Prototype"
+      status: "completed"
+      date: "2024-01"
+    - label: "Validation"
+      status: "active"
+      date: "2024-06"
+    - label: "Future"
+      status: "planned"
+      date: "2025-06"
+  what_works:
+    - "Dual-rate EMT + DSP simulation"
+    - "Modular estimator API"
+    - "Multi-scenario disturbance injection"
+    - "Automated statistical evaluation"
+  limitations:
+    - "Limited to single-phase analysis"
+    - "No real-time hardware input"
+    - "ML estimators need more training data"
+  next_steps:
+    - "Three-phase system support"
+    - "Real PMU data integration"
+    - "Web interface for results visualization"
 ---
 
 ## Problem

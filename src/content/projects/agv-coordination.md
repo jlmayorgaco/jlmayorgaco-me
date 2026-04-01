@@ -9,6 +9,38 @@ featured: false
 order: 4
 links:
   repo: "https://github.com/jlmayorga/agv-coordination"
+roadmap:
+  completion: 40
+  current_phase: "Research"
+  phases:
+    - label: "Idea"
+      status: "completed"
+      date: "2023-06"
+    - label: "Research"
+      status: "active"
+      date: "2023-09"
+    - label: "Prototype"
+      status: "pending"
+      date: "2024-06"
+    - label: "Validation"
+      status: "pending"
+      date: "2025-01"
+    - label: "Future"
+      status: "planned"
+      date: "2025-06"
+  what_works:
+    - "Consensus-based formation control"
+    - "Conflict detection algorithms"
+    - "Dynamic topology handling"
+    - "Simulation framework in Python"
+  limitations:
+    - "Limited to 2D planar motion"
+    - "No physical hardware validation"
+    - "Simplified communication model"
+  next_steps:
+    - "Hardware-in-the-loop testing"
+    - "ROS2 integration for real robots"
+    - "Fault tolerance mechanisms"
 ---
 
 ## Problem

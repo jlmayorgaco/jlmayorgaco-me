@@ -112,7 +112,28 @@ const mapCommand: CommandDefinition = {
   description: 'Show site structure',
   category: 'system',
   execute: () => ({
-    output: `Site Map\n${TERMINAL_DIVIDER}\n/               - Homepage\n/projects       - Technical projects\n/papers         - Publications\n/research       - Research notes\n/tutorials      - Technical tutorials\n/about          - About me\n/contact        - Contact information\n/lab            - Lab interface`,
+    output: `Site Map\n${TERMINAL_DIVIDER}
+          ___
+         /   \\
+        | JLMT |
+        | LAB  |
+         \\___/
+    _________|_________
+   |         |         |
+projects   papers   research
+   |         |         |
+🔧 FPGA    📄 IEEE    📚 Control
+🔧 ROS     📄 arXiv    📚 Swarm
+🔧 Embedded📄 Springer 📚 FPGA
+    _________|_________
+   |         |         |
+tutorials portfolio datalab
+   |         |         |
+⚡ DIY     🎨 Work     📊 Dash
+⚡ Kalman  🎨 Photos   📈 Live
+                       📡 Drone
+
+Tip: cd <section> to navigate`,
     action: 'none',
   }),
 };
@@ -121,8 +142,23 @@ const runSystemCommand: CommandDefinition = {
   aliases: ['run system', 'run'],
   description: 'Run system diagnostics',
   category: 'system',
-  execute: () => ({
-    output: `Running system diagnostics...\n${TERMINAL_DIVIDER}\n[OK] All modules operational\n[OK] Signal paths stable\n[OK] Control systems online\n[OK] Drone swarm ready\n\nSystem: NOMINAL`,
+  execute: (_, data) => ({
+    output: `Running system diagnostics...\n${TERMINAL_DIVIDER}
+[OK] FPGA Synthesis: READY (42% utilized)
+[OK] Robot Arm: STANDBY (home position)
+[OK] Drone Swarm: IDLE (6 agents online)
+[OK] Signal Processing: ACTIVE
+[OK] Research Stack: UPDATED
+[OK] Coffee Machine: OFFLINE (sad)
+[OK] Neural Interface: CONNECTED
+
+System Modules:
+  🔧 Projects:  ${data.projects.length} (${data.projects.filter(p => p.status === 'published').length} published)
+  📄 Papers:    ${data.papers.length} (${data.papers.filter(p => p.status === 'published').length} published)
+  📚 Research:  ${data.research.length} notes
+  ⚡ Tutorials: ${data.projects.filter(p => p.tags?.includes('tutorial')).length} available
+
+System: NOMINAL (like your thesis will be)`,
     action: 'none',
   }),
 };
@@ -151,17 +187,53 @@ const pwdCommand: CommandDefinition = {
   aliases: ['pwd', 'path'],
   description: 'Print working directory',
   category: 'system',
-  execute: () => ({ output: '/lab/home/jlmt', action: 'none' }),
+  execute: () => ({ 
+    output: `/lab/home/jlmt
+    │
+    ├── projects/   (🔧 engineering work)
+    ├── papers/     (📄 publications)
+    ├── research/   (📚 lab notes)
+    ├── tutorials/  (⚡ fix logs)
+    ├── portfolio/  (🎨 creative)
+    ├── datalab/    (📊 live data)
+    └── secrets/    (🔒 jk, nothing here)
+
+You are here: /lab/home/jlmt
+Coffee level: LOW (prioritize)`,
+    action: 'none' 
+  }),
 };
 
 const statusCommand: CommandDefinition = {
   aliases: ['status'],
   description: 'System status',
   category: 'system',
-  execute: (_, data) => ({
-    output: `${createHeader('System Status')}\n${formatTimestamp()}\n\nNode:      ACTIVE\nUptime:    99.9%\nProjects:  ${data.projects.length} (${data.projects.filter(p => p.status === 'published').length} published)\nPapers:    ${data.papers.length}\nResearch:  ${data.research.length}\nStack:     ${data.techStack.length} technologies`,
-    action: 'none',
-  }),
+  execute: (_, data) => {
+    const hour = new Date().getHours();
+    const mood = hour < 6 ? '🌙 Night owl mode' : 
+                hour < 9 ? '☕ Coffee loading...' :
+                hour < 12 ? '⚡ Productivity: OPTIMAL' :
+                hour < 14 ? '🍕 Lunch detection' :
+                hour < 17 ? '📈 Afternoon surge' :
+                hour < 20 ? '🌆 Winding down' : '🌙 Research mode';
+    
+    return {
+      output: `${createHeader('System Status')}
+${formatTimestamp()}
+
+${mood}
+
+Node:      ACTIVE ✓
+Uptime:    99.9% (you're doing great)
+Projects:  ${data.projects.length} (${data.projects.filter(p => p.status === 'published').length} published)
+Papers:    ${data.papers.length}
+Research:  ${data.research.length} notes
+Stack:     ${data.techStack.length} technologies
+
+Current obsession: Check back later`,
+      action: 'none',
+    };
+  },
 };
 
 const dateCommand: CommandDefinition = {
@@ -170,8 +242,16 @@ const dateCommand: CommandDefinition = {
   category: 'system',
   execute: () => {
     const now = new Date();
+    const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const isDeadline = now.getDay() === 5 && now.getHours() >= 17;
+    
     return {
-      output: `${createHeader('System Date')}\nUTC:   ${now.toUTCString()}\nLocal: ${now.toLocaleString()}`,
+      output: `${createHeader('System Date')}
+UTC:   ${now.toUTCString()}
+Local: ${now.toLocaleString('en-US', options)}
+
+${isDeadline ? '⚠️ FRIDAY 5PM DETECTED - Weekend incoming!' : 'Just another day in the lab...'}
+${now.getHours() < 6 ? '🌙 Why are you awake? Go to sleep.' : ''}`,
       action: 'none',
     };
   },
@@ -181,10 +261,22 @@ const uptimeCommand: CommandDefinition = {
   aliases: ['uptime'],
   description: 'Show system uptime',
   category: 'system',
-  execute: () => ({
-    output: `System uptime: 847 days, 12 hours, 34 minutes\nLoad average: 0.42, 0.38, 0.31`,
-    action: 'none',
-  }),
+  execute: () => {
+    const days = Math.floor(Math.random() * 500 + 300);
+    const hours = Math.floor(Math.random() * 24);
+    const mins = Math.floor(Math.random() * 60);
+    return {
+      output: `System uptime: ${days} days, ${hours} hours, ${mins} minutes
+Load average: 0.42, 0.38, 0.31
+Processes: 42 running (3 are actually useful)
+Users: 1 (you, apparently)
+
+Fun fact: This uptime is more stable than your thesis deadline.
+
+System: NOMINAL (unlike your sleep schedule)`,
+      action: 'none',
+    };
+  },
 };
 
 const echoCommand: CommandDefinition = {

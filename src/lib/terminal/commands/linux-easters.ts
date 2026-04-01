@@ -49,29 +49,486 @@ const aptCommand: CommandDefinition = {
   },
 };
 
+// SSH hosts with jokes
+const SSH_JOKES: Record<string, string> = {
+  'google.com': `ssh jlmt@google.com
+
+Connecting to Google...
+Accessing 1.4B search results...
+Now reading: 'How to build a time machine' 
+Result: 0 papers found (you invented time travel!)
+
+(Note: This is a simulation. Google is busy indexing your browser history.)`,
+  
+  'netflix': `ssh jlmt@netflix
+
+Connecting to Netflix...
+Now streaming: 'The Theory of Everything' 
+         (academia edition)
+Credits: 47 PhD reviewers, 3 Nobel winners
+
+"Recommended for you: Documentary about 
+ Control Theory - 24h extended version"`,
+  
+  'amazon': `ssh jlmt@amazon.com
+
+Connecting to Amazon...
+Your recommended items:
+  - 'FPGA for Beginners' (3rd edition) $49.99
+  - 'Coffee for Engineers' - BESTSELLER $12.99
+  - 'How to Escape Your Thesis' - Out of stock
+
+"Your cart is lonely. Add something!"`,
+  
+  'github': `ssh jlmt@github.com
+
+Connecting to GitHub...
+Cloning repositories...
+Error: Must be a robot to access 10,000 repos
+Loading your contribution graph...
+Green squares: 0 (because... research)
+Stars: 42 (you starred your own repos, it's fine)`,
+  
+  'arxiv.org': `ssh jlmt@arxiv.org
+
+Connecting to arxiv.org...
+Downloading latest papers on distributed control...
+Warning: 847 papers found
+Downloading... (this will take a while, grab coffee)
+ 
+"Today's arxiv spotlight: 
+ 'When Transformers Meet Kalman Filters: 
+  A Match Made in Heaven'"`,
+  
+  'youtube.com': `ssh jlmt@youtube.com
+
+Connecting to YouTube...
+Now playing: 'Advanced Control Theory - 24h Extended'
+Buffering... buffering... buffering...
+Video quality: 144p (your thesis is buffering too)
+
+"Up next: 'How to finish your PhD in 10 minutes'"`,
+  
+  'spotify.com': `ssh jlmt@spotify.com
+
+Connecting to Spotify...
+Now playing: 'Lofi Beats for debugging'
+Focus mode: ACTIVATED
+Energy level: LOW
+Playlist: 'Songs that hit different at 3am'
+
+"45,000 songs in your library. You're listening to none."`,
+  
+  'twitter.com': `ssh jlmt@twitter.com
+
+Connecting to Twitter/X...
+Your feed: 0 tweets (because you do research)
+Trendy: '#AcademicTwitter'
+Your post: Draft saved (since 2024)
+Engagement: Suspiciously low`,
+  
+  'linkedin.com': `ssh jlmt@linkedin.com
+
+Connecting to LinkedIn...
+Status: 'Open to opportunities'
+Warning: Recruiters detected! Fleeing...
+Connection requests: 0 (rejected all)
+Skills endorsed: 0 (enemies made)
+
+"Join my network or don't. I have 3 connections."`,
+  
+  'mit.edu': `ssh jlmt@mit.edu
+
+Connecting to MIT...
+Downloading course materials...
+Note: This doesn't count as enrollment
+Access level: Tourist (very expensive)
+ 
+"You're doing great! This isn't MIT but..."`,
+  
+  'stanford.edu': `ssh jlmt@stanford.edu
+
+Connecting to Stanford...
+Accessing AI research...
+Warning: Your laptop cannot handle this much 
+ intelligence. Consider using the cloud... or paper.
+ 
+"Your brain: insufficient. Your ambition: 9000."`,
+  
+  'telegram.org': `ssh jlmt@telegram.org
+
+Connecting to Telegram...
+Checking for messages...
+Result: Mom sent 3 'are you eating?' messages
+        Dad sent 1 'when thesis?' message
+        Brother sent 0 messages (he also busy)
+
+Notifications: 4 (all from family)`,
+  
+  'discord.com': `ssh jlmt@discord.com
+
+Connecting to Discord...
+Status: Idle
+Reason: You have actual work to do
+Servers: 47 (all muted)
+DMs: 0 unread (expected)
+
+"Go bother someone else's research lab."`,
+  
+  'reddit.com': `ssh jlmt@reddit.com
+
+Connecting to Reddit...
+Front page: r/ProgrammerHumor
+Hot take: 'Git commit -m "fixed bugs"'
+Irony: DETECTED
+Upvotes: 0 (because you don't use Reddit)
+
+"Front page tomorrow: Your thesis defense highlights"`,
+  
+  'openai.com': `ssh jlmt@openai.com
+
+Connecting to OpenAI...
+'Write a PhD thesis in 3 seconds'
+Processing... Processing... Processing...
+"Just kidding, it would take 4 seconds"
+
+AI will take your job: Pending (since 2023)`,
+  
+  'wikipedia.org': `ssh jlmt@wikipedia.org
+
+Connecting to Wikipedia...
+'Free, free knowledge for all'
+Loading article: 'Control Theory'
+Note: 97% written by 1% of users
+Accuracy: Debatable
+
+"Citation needed. But so is your thesis citation."`,
+  
+  'ieee.org': `ssh jlmt@ieee.org
+
+Connecting to IEEE...
+Accessing academic papers...
+Your institution: 'Home Lab (H-01)'
+Peer review status: NOT peer-reviewed
+$49 paywall: STILL UP
+
+"Full access requires institutional login. 
+ Or a miracle."`,
+  
+  'aws.amazon.com': `ssh jlmt@aws.amazon.com
+
+Connecting to AWS...
+Launching EC2 instance...
+Region: us-east-1 (closest to your bed)
+Instance type: t2.micro (because budget)
+Price: $$$$$ (it adds up fast)
+
+"Lambda cold start: 3 seconds. You: slower."`,
+  
+  'paypal.com': `ssh jlmt@paypal.com
+
+Connecting to PayPal...
+Checking balance...
+Balance: $0.00
+But your research has VALUE, right?
+ RIGHT???
+
+"Payment pending: Your parents' patience (low)"`,
+  
+  'uber.com': `ssh jlmt@uber.com
+
+Connecting to Uber...
+Drivers available: 0
+Reason: They're all doing DoorDash now
+Surge pricing: 9999x
+ETA: Never
+
+"Scooters are faster. Use one."`,
+  
+  'airbnb.com': `ssh jlmt@airbnb.com
+
+Connecting to Airbnb...
+Searching for: 'Research Lab'
+Results: 0
+Searching for: 'Castle'
+Results: 47 (all expensive)
+
+"Your budget: $0. Your dreams: expensive."`,
+  
+  'apple.com': `ssh jlmt@apple.com
+
+Connecting to Apple...
+Your Mac is infected with 0 viruses
+Wait, how is that possible?
+iCloud storage: FULL (screenshots)
+Safari downloads: 0 (you're a good user)
+
+"Have you tried turning it off and on again?"`,
+  
+  'microsoft.com': `ssh jlmt@microsoft.com
+
+Connecting to Microsoft...
+Installing Windows Update...
+Just kidding, I don't actually update
+Bing: Still not Google
+Clippy: Available (for legal reasons, no)
+
+"Xbox Game Pass: Not relevant. Thesis > Gaming."`,
+  
+  'tesla.com': `ssh jlmt@tesla.com
+
+Connecting to Tesla...
+Self-driving mode: ENGAGED
+Still requires hands on wheel
+Full Self-Driving: Beta (like your thesis)
+Auto-park: Works (unlike your parking skills)
+
+"Battery: 97%. Your motivation: 12%."`,
+  
+  'spacex.com': `ssh jlmt@spacex.com
+
+Connecting to SpaceX...
+Starship status: In development
+ETA: Whenever Elon feels like it
+Mars colony: Application submitted
+Status: Pending (finish PhD first)
+
+"Your rocket will launch when your thesis does."`,
+  
+  'nasa.gov': `ssh jlmt@nasa.gov
+
+Connecting to NASA...
+Accessing satellite data...
+Mars rover status: Working
+Your Mars colony spot: Reserved
+Note: Finish PhD first, then we'll talk
+
+"Satellite imagery: Your lab desk (high res)"`,
+  
+  'steamcommunity.com': `ssh jlmt@steamcommunity.com
+
+Connecting to Steam...
+Now playing: nothing, you have deadlines
+Game sales: A myth for researchers
+Library: 847 games, 0 played this month
+Achievements: 0 (because procrastination)
+
+"CS:GO ranked: Silver 2 (and dropping)"`,
+  
+  'roblox.com': `ssh jlmt@roblox.com
+
+Connecting to Roblox...
+Building experiences...
+Error: You can't even build a working control system
+Game dev status: Failed
+Building worlds: Limited to PowerPoint
+
+"Expected playtime: 0 minutes (sad)"`,
+  
+  'humblebundle.com': `ssh jlmt@humblebundle.com
+
+Connecting to Humble Bundle...
+Game bundle: '100 Programming Books'
+Price: $1 (you're welcome)
+Books included: 'Python for Dummies', 
+              'JavaScript for Smart People'
+               
+"Your library: Empty. Your excuses: Full."`,
+  
+  'jstor.org': `ssh jlmt@jstor.org
+
+Connecting to JSTOR...
+Accessing academic papers...
+Your institution: 'The Internet'
+Quality: Questionable
+Download limit: 3 (ha, nice try)
+
+"Your search: 'how to thesis' - 0 results."`,
+};
+
+// SSH rejection messages (random)
+const SSH_REJECTIONS = [
+  'ssh: connect to host {HOST} port 22: Connection rejected by access policy',
+  'ssh: connect to host {HOST} port 22: Administrative prohibition - Your clearance level is insufficient',
+  'ssh: connect to host {HOST} port 22: Connection timed out after 30 seconds - The server is probably on vacation',
+  'ssh: connect to host {HOST} port 22: Connection refused - They don\'t want visitors (fair)',
+  'ssh: connect to host {HOST} port 22: Network unreachable - Have you tried turning it off and on again?',
+];
+
 // ssh - Secure shell
 const sshCommand: CommandDefinition = {
   aliases: ['ssh', 'remote'],
   description: 'OpenSSH client',
   category: 'easter',
   execute: (args) => {
-    const host = args[0] || 'unknown';
+    const host = args[0]?.toLowerCase() || 'unknown';
+    
+    // Check if we have a joke for this host
+    const jokeKey = Object.keys(SSH_JOKES).find(key => 
+      host.includes(key) || key.includes(host)
+    );
+    
+    if (jokeKey) {
+      return {
+        output: SSH_JOKES[jokeKey],
+        action: 'none',
+      };
+    }
+    
+    // Random rejection for unknown hosts
+    const rejection = SSH_REJECTIONS[Math.floor(Math.random() * SSH_REJECTIONS.length)];
     return {
-      output: `ssh jlmt@${host}\n\nThe authenticity of host '${host} (10.0.0.42)' can't be established.\nED25519 key fingerprint is SHA256:JLMT+FPGA+ROBOTICS+CONTROL+SYSTEMS.\nThis key is not known by any other names.\nAre you sure you want to continue connecting (yes/no/[fingerprint])?\n\nWarning: Permanently added '${host}' (ED25519) to the list of known hosts.\njlmt@${host}'s password: \n\nPermission denied, please try again.\n\n(Note: This is a simulation. No actual connection attempted.)`,
+      output: rejection.replace('{HOST}', host),
       action: 'none',
     };
   },
 };
 
-// ping - Network testing
+// PING hosts with jokes
+const PING_JOKES: Record<string, string[]> = {
+  'google.com': [
+    '64 bytes from 142.250.80.46: icmp_seq=1 ttl=115 time=12.342 ms\nDNS resolution: EXCELLENT... Search: RESTORED',
+    '64 bytes from 142.250.80.46: icmp_seq=2 ttl=115 time=11.987 ms\nGoogle: RESPONDING... Searches today: 5.4B',
+  ],
+  '8.8.8.8': [
+    '64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=8.421 ms\nGoogle DNS: Responding... Cloud: SECURE',
+    '64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=7.234 ms\nDNS: FAST... Privacy: GUARANTEED (by Google)',
+  ],
+  '1.1.1.1': [
+    '64 bytes from 1.1.1.1: icmp_seq=1 ttl=64 time=4.1337 ms\nCloudflare: FAST... Privacy: GUARANTEED',
+    '64 bytes from 1.1.1.1: icmp_seq=2 ttl=64 time=3.987 ms\nNo tracking. Your ISP: Confused',
+  ],
+  'localhost': [
+    '64 bytes from localhost: icmp_seq=1 ttl=64 time=0.001 ms\nHome network: WORKING... Existential status: QUESTIONABLE',
+    '64 bytes from localhost: icmp_seq=2 ttl=64 time=0.000 ms\nYou are talking to yourself. Again.',
+  ],
+  '127.0.0.1': [
+    '64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.000 ms\nLoopback: ALIVE... You are your own backup',
+    '64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.001 ms\nNetwork: PERFECT (because it\'s just you)',
+  ],
+  'github.com': [
+    '64 bytes from 140.82.121.4: icmp_seq=1 ttl=128 time=23.456 ms\nGitHub: REACHABLE... Commit away, my friend',
+    '64 bytes from 140.82.121.4: icmp_seq=2 ttl=128 time=21.789 ms\nStars: Updated... Green squares: Pending',
+  ],
+  'arxiv.org': [
+    '64 bytes from 13.55.107.82: icmp_seq=1 ttl=45 time=89.234 ms\narxiv: SLOW... Paper downloads: 847 in queue',
+    '64 bytes from 13.55.107.82: icmp_seq=2 ttl=45 time=92.123 ms\nLaTeX: Compiling... Just kidding, arxiv doesn\'t compile',
+  ],
+  'netflix.com': [
+    '64 bytes from 23.246.31.82: icmp_seq=1 ttl=52 time=15.678 ms\nNetflix: STREAMING... "Are you still watching?" - Yes',
+    '64 bytes from 23.246.31.82: icmp_seq=2 ttl=52 time=14.345 ms\nBuffering: MINIMAL... Show: Auto-selected for you',
+  ],
+  'mit.edu': [
+    '64 bytes from 23.45.67.89: icmp_seq=1 ttl=64 time=45.123 ms\nMIT: RESPONDING... Intelligence: OVER 9000',
+    '64 bytes from 23.45.67.89: icmp_seq=2 ttl=64 time=43.987 ms\nOpenCourseWare: Available... Tuition: Not required',
+  ],
+  'stanford.edu': [
+    '64 bytes from 171.64.64.64: icmp_seq=1 ttl=64 time=52.789 ms\nStanford: ALIVE... Your brain: INSUFFICIENT',
+    '64 bytes from 171.64.64.64: icmp_seq=2 ttl=64 time=51.456 ms\nAI Lab: Access granted... Your laptop: Not',
+  ],
+  'youtube.com': [
+    '64 bytes from 208.117.239.142: icmp_seq=1 ttl=52 time=18.234 ms\nYouTube: BUFFERING... Video: NOT LOADING',
+    '64 bytes from 208.117.239.142: icmp_seq=2 ttl=52 time=19.567 ms\nRecommended: "How to debug in 24h"... 2M views',
+  ],
+  'amazon.com': [
+    '64 bytes from 52.94.236.248: icmp_seq=1 ttl=48 time=25.789 ms\nAWS: ONLINE... Your wallet: STILL EMPTY',
+    '64 bytes from 52.94.236.248: icmp_seq=2 ttl=48 time=24.123 ms\nEC2: Running... Brain: NOT',
+  ],
+  'spotify.com': [
+    '64 bytes from 35.186.224.47: icmp_seq=1 ttl=100 time=22.123 ms\nSpotify: PLAYING... Lofi beats for PhD stress',
+    '64 bytes from 35.186.224.47: icmp_seq=2 ttl=100 time=21.456 ms\nPlaylist: "Songs for Engineers"... Shuffle: ON',
+  ],
+  'twitter.com': [
+    '64 bytes from 199.59.150.39: icmp_seq=1 ttl=48 time=31.456 ms\nTwitter: REACHABLE... Your tweet: 0 likes (expected)',
+    '64 bytes from 199.59.150.39: icmp_seq=2 ttl=48 time=32.789 ms\nX: Still running... Ironic tweets: 0',
+  ],
+  'linkedin.com': [
+    '64 bytes from 108.174.10.10: icmp_seq=1 ttl=50 time=35.789 ms\nLinkedIn: CONNECTED... Recruiters: INCOMING',
+    '64 bytes from 108.174.10.10: icmp_seq=2 ttl=50 time=34.123 ms\nProfile views: 0... But your potential: INFINITE',
+  ],
+  'ieee.org': [
+    '64 bytes from 140.98.193.126: icmp_seq=1 ttl=110 time=78.234 ms\nIEEE: ACCESSIBLE... $49 paywall: STILL UP',
+    '64 bytes from 140.98.193.126: icmp_seq=2 ttl=110 time=76.891 ms\nPapers: Locked... Your budget: ALREADY GONE',
+  ],
+  'openai.com': [
+    '64 bytes from 104.18.2.169: icmp_seq=1 ttl=53 time=28.567 ms\nOpenAI: THINKING... Time to AGI: UNKNOWN',
+    '64 bytes from 104.18.2.169: icmp_seq=2 ttl=53 time=27.234 ms\nAI: Processing... Your job: Still safe (for now)',
+  ],
+  'discord.com': [
+    '64 bytes from 162.159.128.233: icmp_seq=1 ttl=53 time=38.123 ms\nDiscord: IDLE... Your DMs: 0 (as expected)',
+    '64 bytes from 162.159.128.233: icmp_seq=2 ttl=53 time=37.456 ms\nServer activity: LOW... Because everyone working',
+  ],
+  'reddit.com': [
+    '64 bytes from 151.101.1.140: icmp_seq=1 ttl=52 time=33.456 ms\nReddit: LOADING... echo "Hello World" in r/ProgrammerHumor',
+    '64 bytes from 151.101.1.140: icmp_seq=2 ttl=52 time=32.789 ms\nFront page: Programming humor... Irony: DETECTED',
+  ],
+  'wikipedia.org': [
+    '64 bytes from 208.80.154.224: icmp_seq=1 ttl=240 time=25.789 ms\nWikipedia: ACCURATE (rare)... Procrastination: ENGAGED',
+    '64 bytes from 208.80.154.224: icmp_seq=2 ttl=240 time=24.123 ms\nCitation needed... Your thesis: ALSO needs citations',
+  ],
+};
+
+// Helper to generate realistic ping output
+function generatePingOutput(host: string): string {
+  const jitter = () => (Math.random() * 40 + 5).toFixed(3);
+  const ttl = Math.floor(Math.random() * 80 + 48);
+  const seq = (n: number) => n;
+  
+  return `PING ${host} (${Math.floor(Math.random()*200+50)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)})
+56(84) bytes of data.
+
+64 bytes from ${host}: icmp_seq=${seq(1)} ttl=${ttl} time=${jitter()} ms
+64 bytes from ${host}: icmp_seq=${seq(2)} ttl=${ttl} time=${jitter()} ms
+64 bytes from ${host}: icmp_seq=${seq(3)} ttl=${ttl} time=${jitter()} ms
+
+--- ${host} ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = ${jitter()}/${jitter()}/${jitter()}/0.${Math.floor(Math.random()*99+1)} ms
+
+Status: ONLINE (as if you had doubts)`;
+}
+
+// ping - Network testing (always works)
 const pingCommand: CommandDefinition = {
   aliases: ['ping', 'ping6'],
   description: 'Send ICMP echo requests',
   category: 'easter',
   execute: (args) => {
-    const host = args[0] || 'localhost';
+    const host = args[0]?.toLowerCase() || 'localhost';
+    
+    // Find matching joke host
+    const jokeKey = Object.keys(PING_JOKES).find(key => 
+      host.includes(key) || key.includes(host)
+    );
+    
+    if (jokeKey && PING_JOKES[jokeKey].length > 0) {
+      const jokes = PING_JOKES[jokeKey];
+      const base64Joke = jokes[Math.floor(Math.random() * jokes.length)];
+      
+      // Build complete ping output with joke
+      const jitter = () => (Math.random() * 40 + 5).toFixed(3);
+      const ttl = Math.floor(Math.random() * 80 + 48);
+      
+      return {
+        output: `PING ${host} (simulated)
+56(84) bytes of data.
+
+64 bytes from ${host}: icmp_seq=1 ttl=${ttl} time=${jitter()} ms
+64 bytes from ${host}: icmp_seq=2 ttl=${ttl} time=${jitter()} ms
+64 bytes from ${host}: icmp_seq=3 ttl=${ttl} time=${jitter()} ms
+
+--- ${host} ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/mdev = ${jitter()}/${jitter()}/${jitter()}/0.${Math.floor(Math.random()*99+1)} ms
+
+${base64Joke}`,
+        action: 'none',
+      };
+    }
+    
+    // For unknown hosts, generate realistic ping output
     return {
-      output: `PING ${host} (127.0.0.1) 56(84) bytes of data.\n64 bytes from localhost: icmp_seq=1 ttl=64 time=0.420 ms\n64 bytes from localhost: icmp_seq=2 ttl=64 time=0.1337 ms\n64 bytes from localhost: icmp_seq=3 ttl=64 time=0.69 ms\n^C\n--- ${host} ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 0.420/0.749/1.337/0.404 ms\n\nSystem latency: EXCELLENT (FPGA-grade)`,
+      output: generatePingOutput(host),
       action: 'none',
     };
   },

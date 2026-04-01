@@ -9,6 +9,38 @@ featured: false
 order: 3
 links:
   demo: "https://jlmayorga.co/projects/abb-yumi"
+roadmap:
+  completion: 75
+  current_phase: "Validation"
+  phases:
+    - label: "Idea"
+      status: "completed"
+      date: "2023-01"
+    - label: "Research"
+      status: "completed"
+      date: "2023-04"
+    - label: "Prototype"
+      status: "completed"
+      date: "2023-09"
+    - label: "Validation"
+      status: "active"
+      date: "2024-03"
+    - label: "Future"
+      status: "planned"
+      date: "2024-12"
+  what_works:
+    - "Dual-arm coordination control"
+    - "Workspace zoning with proximity sensors"
+    - "ISO 10218-1/2 compliant safety"
+    - "Pick-and-place assembly pipeline"
+  limitations:
+    - "Simulation only, no physical robot"
+    - "Simplified force feedback model"
+    - "Limited to electronic assembly"
+  next_steps:
+    - "Physical robot deployment"
+    - "Real force feedback integration"
+    - "Multi-task extension"
 ---
 
 ## Problem

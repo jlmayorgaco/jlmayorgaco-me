@@ -1,6 +1,6 @@
 ---
 title: "FPGA Kalman Estimation"
-summary: "Hardware-native Kalman filter architectures for real-time state estimation"
+summary: "Hardware-native Kalman filter architectures for real-time State estimation"
 year: 2024
 status: "wip"
 tags: ["FPGA", "Kalman Filter", "Hardware Architecture", "Signal Processing"]
@@ -9,6 +9,38 @@ featured: false
 order: 2
 links:
   repo: "https://github.com/jlmayorga/fpga-kalman"
+roadmap:
+  completion: 35
+  current_phase: "Research"
+  phases:
+    - label: "Idea"
+      status: "completed"
+      date: "2023-06"
+    - label: "Research"
+      status: "active"
+      date: "2023-09"
+    - label: "Prototype"
+      status: "pending"
+      date: "2024-06"
+    - label: "Validation"
+      status: "pending"
+      date: "2025-01"
+    - label: "Future"
+      status: "planned"
+      date: "2025-06"
+  what_works:
+    - "Cholesky decomposition in hardware"
+    - "Matrix inversion pipeline"
+    - "Fixed-point arithmetic with scaling"
+    - "Up to 20D state spaces"
+  limitations:
+    - "Numerical stability issues at high dimensions"
+    - "Resource utilization vs latency tradeoff"
+    - "No soft-core processor fallback"
+  next_steps:
+    - "Verify numerical stability bounds"
+    - "Test with real IMU data"
+    - "Optimize for Xilinx DSP blocks"
 ---
 
 ## Problem
