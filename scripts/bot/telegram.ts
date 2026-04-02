@@ -15,6 +15,26 @@ interface TelegramUpdate {
     chat: { id: number };
     text?: string;
     from?: { first_name: string; id: number };
+    voice?: {
+      file_id: string;
+      file_unique_id: string;
+      duration: number;
+      mime_type?: string;
+      file_size?: number;
+    };
+    audio?: {
+      file_id: string;
+      file_unique_id: string;
+      duration: number;
+      mime_type?: string;
+      file_size?: number;
+    };
+    video_note?: {
+      file_id: string;
+      file_unique_id: string;
+      duration: number;
+      file_size?: number;
+    };
   };
 }
 
@@ -34,6 +54,7 @@ export class TelegramBot {
   private offset: number = 0;
   private running: boolean = false;
   private messageHandler: ((text: string, chatId: number) => Promise<void>) | null = null;
+  private voiceHandler: ((fileId: string, chatId: number) => Promise<void>) | null = null;
   private rateLimiter: TokenBucket;
   private abortController: AbortController | null = null;
 
@@ -175,6 +196,10 @@ export class TelegramBot {
     this.messageHandler = handler;
   }
 
+  onVoice(handler: (fileId: string, chatId: number) => Promise<void>): void {
+    this.voiceHandler = handler;
+  }
+
   /**
    * Start polling for updates
    */
@@ -205,11 +230,21 @@ export class TelegramBot {
           for (const update of data.result as TelegramUpdate[]) {
             this.offset = update.update_id + 1;
 
-            if (update.message?.text && this.messageHandler) {
+            if (update.message) {
               const chatId = update.message.chat.id;
               if (chatId.toString() === this.chatId) {
                 try {
-                  await this.messageHandler(update.message.text, chatId);
+                  // Handle voice messages
+                  const voiceFileId = 
+                    update.message.voice?.file_id ||
+                    update.message.audio?.file_id ||
+                    update.message.video_note?.file_id;
+                  
+                  if (voiceFileId && this.voiceHandler) {
+                    await this.voiceHandler(voiceFileId, chatId);
+                  } else if (update.message.text && this.messageHandler) {
+                    await this.messageHandler(update.message.text, chatId);
+                  }
                 } catch (error) {
                   logError('Message handler error', error as Error);
                 }

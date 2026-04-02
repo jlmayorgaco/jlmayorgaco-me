@@ -1,4 +1,4 @@
-/"**
+/**
  * Analytics API Controller
  * Provides endpoints for dashboard
  */
