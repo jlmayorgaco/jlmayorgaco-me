@@ -7,7 +7,7 @@ import { SessionState } from '../enums/SessionState';
 import { StateTransitionError } from '../../shared/errors/AppError';
 import { CONSTANTS } from '../../shared/constants';
 import type { Paper, NewsItem, BlogPost } from '../value-objects';
-import type { BatchReviewSession, PaperReaction } from '../value-objects/BatchReview';
+import type { BatchReviewSession, PaperReaction, ReactionEmoji, SerializedBatchReviewSession } from '../value-objects/BatchReview';
 
 export interface SessionData {
   chatId: number;
@@ -20,7 +20,7 @@ export interface SessionData {
   imageQuery: string;
   createdAt: Date;
   lastActivity: Date;
-  batchReview?: BatchReviewSession;
+  batchReview?: SerializedBatchReviewSession;
 }
 
 export class Session {
@@ -60,14 +60,16 @@ export class Session {
     session._userComment = data.userComment;
     session._pendingPost = data.pendingPost;
     session._imageQuery = data.imageQuery;
-    session._batchReview = data.batchReview ? {
-      ...data.batchReview,
-      reactions: new Map(
-        Array.isArray(data.batchReview.reactions) 
-          ? data.batchReview.reactions 
-          : []
-      ),
-    } : null;
+    if (data.batchReview) {
+      session._batchReview = {
+        items: [...data.batchReview.items],
+        currentIndex: data.batchReview.currentIndex,
+        reactions: new Map(data.batchReview.reactions),
+        submitted: data.batchReview.submitted,
+      };
+    } else {
+      session._batchReview = null;
+    }
     session._createdAt = new Date(data.createdAt);
     session._lastActivity = new Date(data.lastActivity);
     return session;
@@ -292,10 +294,11 @@ export class Session {
       // Move to collecting comment for selected papers
       this._state = SessionState.COLLECTING_COMMENT;
       
-      // Build selected items from reactions
+      // Build selected items from reactions (exclude skipped)
+      const skipEmoji = '⏭️' as ReactionEmoji;
       this._selectedItems = Array.from(this._batchReview.reactions.entries())
-        .filter(([, r]) => r.reaction !== '⏭️') // Exclude skipped papers
-        .map(([paperId]) => paperId);
+        .filter(([, r]) => r.reaction !== skipEmoji)
+        .map(([id]) => id);
     }
 
     this.touch();

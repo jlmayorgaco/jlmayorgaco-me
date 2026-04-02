@@ -181,3 +181,67 @@ export class TimeoutError extends AppError {
     super(message, { ...details, timeoutMs });
   }
 }
+
+/**
+ * Session not found errors
+ */
+export class SessionNotFoundError extends AppError {
+  readonly code = 'SESSION_NOT_FOUND';
+  readonly isOperational = true;
+  
+  constructor(
+    message: string = 'Session not found',
+    public readonly chatId?: number,
+    details?: Record<string, unknown>
+  ) {
+    super(message, { ...details, chatId });
+  }
+}
+
+/**
+ * Post generation errors
+ */
+export class PostGenerationError extends AppError {
+  readonly code = 'POST_GENERATION_ERROR';
+  readonly isOperational = true;
+  
+  constructor(
+    message: string,
+    public readonly step?: string,
+    details?: Record<string, unknown>
+  ) {
+    super(message, { ...details, step });
+  }
+}
+
+/**
+ * Paper scanning errors
+ */
+export class PaperScanningError extends AppError {
+  readonly code = 'PAPER_SCANNING_ERROR';
+  readonly isOperational = true;
+  
+  constructor(
+    message: string,
+    public readonly source?: string,
+    details?: Record<string, unknown>
+  ) {
+    super(message, { ...details, source });
+  }
+}
+
+/**
+ * Configuration errors
+ */
+export class ConfigurationError extends AppError {
+  readonly code = 'CONFIGURATION_ERROR';
+  readonly isOperational = false; // Not operational - should fail fast
+  
+  constructor(
+    message: string,
+    public readonly missingKeys?: string[],
+    details?: Record<string, unknown>
+  ) {
+    super(message, { ...details, missingKeys });
+  }
+}

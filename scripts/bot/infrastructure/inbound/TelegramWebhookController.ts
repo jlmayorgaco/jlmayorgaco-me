@@ -4,9 +4,8 @@
  */
 
 import type { Request, Response } from 'express';
-import { ICommandBus } from '../../application/ports';
-import { ISessionRepository } from '../../application/ports';
-import { BotConfig } from '../../config';
+import type { IEventBus, DomainEvent, ISessionRepository } from '../../application/ports';
+import type { BotConfig } from '../../config';
 import { logDebug, logError, logInfo } from '../../logger';
 import { SessionState } from '../../domain/enums/SessionState';
 
@@ -29,7 +28,7 @@ export class TelegramWebhookController {
   private webhookSecret?: string;
 
   constructor(
-    private commandBus: ICommandBus,
+    private eventBus: IEventBus,
     private sessionRepo: ISessionRepository,
     private config: BotConfig,
     webhookSecret?: string
@@ -88,7 +87,7 @@ export class TelegramWebhookController {
     // Handle state machine
     if (session.state === SessionState.COLLECTING_COMMENT && !text.startsWith('/')) {
       // Emit event for comment handling
-      await this.commandBus.emit({
+      await this.eventBus.emit({
         type: 'USER_COMMENT_RECEIVED',
         timestamp: new Date(),
         payload: { chatId, comment: text },
@@ -99,7 +98,7 @@ export class TelegramWebhookController {
     if (session.state === SessionState.CONFIRMING_PUBLISH) {
       const cmd = text.toLowerCase().trim();
       if (cmd === 'yes' || cmd === 'si') {
-        await this.commandBus.emit({
+        await this.eventBus.emit({
           type: 'PUBLISH_CONFIRMED',
           timestamp: new Date(),
           payload: { chatId },
@@ -111,7 +110,7 @@ export class TelegramWebhookController {
     // Handle commands
     if (text.startsWith('/')) {
       const commandName = text.slice(1).split(' ')[0];
-      await this.commandBus.emit({
+      await this.eventBus.emit({
         type: 'COMMAND_RECEIVED',
         timestamp: new Date(),
         payload: { chatId, command: commandName, args: text },

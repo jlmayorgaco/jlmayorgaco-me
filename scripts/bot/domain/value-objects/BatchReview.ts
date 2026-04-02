@@ -17,7 +17,14 @@ export interface BatchReviewItem {
 export interface BatchReviewSession {
   items: BatchReviewItem[];
   currentIndex: number;
-  reactions: Map<string, PaperReaction> | Array<[string, PaperReaction]>;
+  reactions: Map<string, PaperReaction>;
+  submitted: boolean;
+}
+
+export interface SerializedBatchReviewSession {
+  items: BatchReviewItem[];
+  currentIndex: number;
+  reactions: Array<[string, PaperReaction]>;
   submitted: boolean;
 }
 
