@@ -1,7 +1,11 @@
 /**
- * Enhanced Main Bot - Full Integration
- * Connects Clean Architecture enhancements with Telegram bot
- * Supports: Voice, Batch Review, Paper History, Research Context
+ * @deprecated This file is deprecated.
+ * Use main.ts for the active bot entry point.
+ * Enhanced features (voice, batch review, paper history) are not yet integrated
+ * into the main entry point and should be implemented via the new architecture
+ * (see REFACTOR_NOTES.md).
+ *
+ * DO NOT USE THIS FILE FOR PRODUCTION.
  */
 
 import { loadConfig, validateEnvironment } from './config';
