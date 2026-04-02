@@ -1,0 +1,290 @@
+---
+interface Props {
+  title: string;
+  type: 'movie' | 'series' | 'documentary' | 'anime';
+  year: number;
+  status: 'watching' | 'watched' | 'want' | 'rewatching';
+  rating?: number;
+  genres: string[];
+  director?: string;
+  creator?: string;
+  seasons?: number;
+  where?: string;
+  review?: string;
+  featured?: boolean;
+}
+
+const { title, type, year, status, rating, genres, director, creator, seasons, where, review, featured } = Astro.props;
+
+const statusIcons = {
+  watching: '▶',
+  watched: '✓',
+  want: '○',
+  rewatching: '↻',
+};
+
+const statusLabels = {
+  watching: 'Watching',
+  watched: 'Watched',
+  want: 'Want to Watch',
+  rewatching: 'Rewatching',
+};
+
+const typeLabels = {
+  movie: 'MOV',
+  series: 'SER',
+  documentary: 'DOC',
+  anime: 'ANI',
+};
+
+const typeColors = {
+  movie: 'var(--accent-cyan)',
+  series: 'var(--accent-amber)',
+  documentary: 'var(--accent-green)',
+  anime: 'var(--accent-magenta)',
+};
+---
+
+<article class={`media-card ${featured ? 'featured' : ''} status-${status}`} data-status={status} data-type={type}>
+  <div class="card-header">
+    <div class="type-badge" style={`background: ${typeColors[type]}20; color: ${typeColors[type]}`}>
+      {typeLabels[type]}
+    </div>
+    <div class="status-indicator" title={statusLabels[status]}>
+      <span class="status-icon">{statusIcons[status]}</span>
+      <span class="status-text">{statusLabels[status]}</span>
+    </div>
+  </div>
+  
+  <div class="card-content">
+    <h3 class="media-title">{title}</h3>
+    <div class="meta-row">
+      <span class="year">{year}</span>
+      {seasons && <span class="seasons">{seasons} Season{seasons > 1 ? 's' : ''}</span>}
+      {where && <span class="platform">{where}</span>}
+    </div>
+    
+    <div class="genres">
+      {genres.map(genre => (
+        <span class="genre-tag">{genre}</span>
+      ))}
+    </div>
+    
+    {(director || creator) && (
+      <div class="creator">
+        {director ? `Dir: ${director}` : `Created by: ${creator}`}
+      </div>
+    )}
+    
+    {rating && (
+      <div class="rating">
+        <span class="rating-value">{rating}</span>
+        <span class="rating-max">/10</span>
+        <div class="rating-bar">
+          <div class="rating-fill" style={`width: ${rating * 10}%`}></div>
+        </div>
+      </div>
+    )}
+  </div>
+  
+  {review && (
+    <div class="review-section">
+      <div class="review-content">
+        <p>{review.slice(0, 200)}{review.length > 200 ? '...' : ''}</p>
+      </div>
+    </div>
+  )}
+</article>
+
+<style>
+  .media-card {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .media-card:hover {
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+  }
+  
+  .media-card.featured {
+    border-color: var(--accent-amber);
+    box-shadow: 0 0 20px var(--accent-amber)10;
+  }
+  
+  .media-card.status-watching {
+    border-left: 3px solid var(--accent-green);
+  }
+  
+  .media-card.status-rewatching {
+    border-left: 3px solid var(--accent-magenta);
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border-bottom: 1px solid var(--panel-border);
+  }
+  
+  .type-badge {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--radius-sm);
+    letter-spacing: 0.05em;
+  }
+  
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.6875rem;
+    color: var(--lab-text-muted);
+  }
+  
+  .status-icon {
+    font-size: 0.75rem;
+  }
+  
+  .status-text {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .card-content {
+    padding: var(--space-md);
+    flex: 1;
+  }
+  
+  .media-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--lab-text-primary);
+    margin: 0 0 var(--space-sm);
+    line-height: 1.3;
+  }
+  
+  .meta-row {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--lab-text-secondary);
+  }
+  
+  .year {
+    font-family: var(--font-mono);
+    color: var(--accent-cyan);
+  }
+  
+  .seasons,
+  .platform {
+    color: var(--lab-text-muted);
+  }
+  
+  .platform::before {
+    content: '@ ';
+    opacity: 0.5;
+  }
+  
+  .genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-sm);
+  }
+  
+  .genre-tag {
+    font-size: 0.625rem;
+    color: var(--lab-text-muted);
+    background: var(--lab-bg-dark);
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  
+  .creator {
+    font-size: var(--text-sm);
+    color: var(--lab-text-secondary);
+    font-style: italic;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .rating {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--panel-border);
+  }
+  
+  .rating-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--accent-amber);
+  }
+  
+  .rating-max {
+    font-size: var(--text-sm);
+    color: var(--lab-text-muted);
+  }
+  
+  .rating-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--lab-bg-dark);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-left: var(--space-sm);
+  }
+  
+  .rating-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-amber), var(--accent-green));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+  
+  .review-section {
+    padding: 0 var(--space-md) var(--space-md);
+  }
+  
+  .review-content {
+    background: var(--lab-bg-dark);
+    border-left: 2px solid var(--accent-cyan);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+    color: var(--lab-text-secondary);
+    line-height: 1.6;
+  }
+  
+  .review-content p {
+    margin: 0;
+  }
+  
+  @media (max-width: 768px) {
+    .media-title {
+      font-size: var(--text-base);
+    }
+    
+    .meta-row {
+      flex-wrap: wrap;
+    }
+    
+    .status-text {
+      display: none;
+    }
+  }
+</style>

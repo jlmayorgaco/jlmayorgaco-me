@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MediaGrid from '../../components/media/MediaGrid.astro';
+import SectionTitle from '../../components/ui/SectionTitle.astro';
+import { getCollection } from 'astro:content';
+
+const mediaItems = await getCollection('media');
+const sortedMedia = mediaItems.sort((a, b) => {
+  // Sort by status priority: watching > rewatching > watched > want
+  const statusOrder = { watching: 0, rewatching: 1, watched: 2, want: 3 };
+  const statusDiff = statusOrder[a.data.status] - statusOrder[b.data.status];
+  if (statusDiff !== 0) return statusDiff;
+  
+  // Then by rating (highest first)
+  if (a.data.rating && b.data.rating) {
+    return b.data.rating - a.data.rating;
+  }
+  
+  // Then by year (newest first)
+  return b.data.year - a.data.year;
+});
+
+// Calculate stats for header
+const watchingCount = sortedMedia.filter(m => m.data.status === 'watching' || m.data.status === 'rewatching').length;
+const watchedCount = sortedMedia.filter(m => m.data.status === 'watched').length;
+---
+
+<BaseLayout title="Media Tracker" description="Movies, series, anime, and documentaries I'm watching or have watched">
+  <div class="page-header">
+    <div class="header-bar">
+      <div class="bar-screws">
+        <span class="screw">⚡</span>
+        <span class="screw">⚡</span>
+      </div>
+      <div class="bar-label">MEDIA_DATABASE_V1</div>
+      <div class="bar-leds">
+        <span class="led led-green led-pulse"></span>
+        <span class="led led-amber"></span>
+      </div>
+    </div>
+    
+    <div class="header-content">
+      <SectionTitle as="h1">Media Tracker</SectionTitle>
+      <p class="page-description">
+        A running log of movies, series, anime, and documentaries. 
+        Currently watching {watchingCount} shows, {watchedCount} completed. 
+        Ratings are subjective and mood-dependent.
+      </p>
+    </div>
+  </div>
+
+  <MediaGrid items={sortedMedia} />
+</BaseLayout>
+
+<style>
+  .page-header {
+    margin-bottom: var(--space-2xl);
+  }
+  
+  .header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-dark);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin-bottom: -1px;
+  }
+  
+  .bar-screws {
+    display: flex;
+    gap: var(--space-md);
+    color: var(--lab-text-muted);
+    font-size: 0.625rem;
+  }
+  
+  .bar-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  
+  .bar-leds {
+    display: flex;
+    gap: var(--space-xs);
+  }
+  
+  .led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  
+  .led-green {
+    background: var(--led-green);
+    box-shadow: 0 0 4px var(--led-green);
+  }
+  
+  .led-amber {
+    background: var(--led-amber);
+  }
+  
+  .led-pulse {
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  
+  .header-content {
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    padding: var(--space-lg);
+  }
+
+  .page-description {
+    font-size: var(--text-lg);
+    color: var(--lab-text-secondary);
+    max-width: 600px;
+    margin-top: var(--space-md);
+    line-height: 1.7;
+  }
+  
+  @media (max-width: 768px) {
+    .header-content {
+      padding: var(--space-md);
+    }
+    
+    .page-description {
+      font-size: var(--text-base);
+    }
+  }
+</style>

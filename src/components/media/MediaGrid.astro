@@ -1,0 +1,302 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import MediaCard from './MediaCard.astro';
+
+interface Props {
+  items: CollectionEntry<'media'>[];
+}
+
+const { items } = Astro.props;
+
+// Group by status
+const watching = items.filter(i => i.data.status === 'watching' || i.data.status === 'rewatching');
+const watched = items.filter(i => i.data.status === 'watched');
+const want = items.filter(i => i.data.status === 'want');
+
+// Calculate stats
+const totalItems = items.length;
+const totalWatched = watched.length;
+const totalWatching = watching.length;
+const avgRating = watched.length > 0 
+  ? (watched.reduce((acc, i) => acc + (i.data.rating || 0), 0) / watched.length).toFixed(1)
+  : '-';
+---
+
+<div class="media-tracker">
+  <!-- Stats Panel -->
+  <div class="stats-panel">
+    <div class="stat-item">
+      <span class="stat-value">{totalItems}</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value watching">{totalWatching}</span>
+      <span class="stat-label">Watching</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value watched">{totalWatched}</span>
+      <span class="stat-label">Watched</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">{avgRating}</span>
+      <span class="stat-label">Avg Rating</span>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button class="tab active" data-filter="all">All</button>
+    <button class="tab" data-filter="watching">Watching ({watching.length})</button>
+    <button class="tab" data-filter="watched">Watched ({watched.length})</button>
+    <button class="tab" data-filter="want">Want ({want.length})</button>
+  </div>
+
+  <!-- Filter by Type -->
+  <div class="type-filters">
+    <span class="filter-label">Type:</span>
+    <button class="type-btn active" data-type="all">All</button>
+    <button class="type-btn" data-type="movie">Movies</button>
+    <button class="type-btn" data-type="series">Series</button>
+    <button class="type-btn" data-type="documentary">Documentaries</button>
+    <button class="type-btn" data-type="anime">Anime</button>
+  </div>
+
+  <!-- Media Grid -->
+  <div class="media-grid" id="mediaGrid">
+    {items.map(item => (
+      <MediaCard
+        title={item.data.title}
+        type={item.data.type}
+        year={item.data.year}
+        status={item.data.status}
+        rating={item.data.rating}
+        genres={item.data.genres}
+        director={item.data.director}
+        creator={item.data.creator}
+        seasons={item.data.seasons}
+        where={item.data.where}
+        review={item.body?.slice(0, 300)}
+        featured={item.data.featured}
+      />
+    ))}
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" id="emptyState" style="display: none;">
+    <div class="empty-icon">📺</div>
+    <p>No media found matching your filters.</p>
+  </div>
+</div>
+
+<script>
+  // Filter functionality
+  const tabs = document.querySelectorAll('.tab');
+  const typeBtns = document.querySelectorAll('.type-btn');
+  const grid = document.getElementById('mediaGrid');
+  const emptyState = document.getElementById('emptyState');
+  const cards = grid?.querySelectorAll('.media-card') || [];
+  
+  let currentStatus = 'all';
+  let currentType = 'all';
+  
+  function applyFilters() {
+    let visibleCount = 0;
+    
+    cards.forEach(card => {
+      const status = card.getAttribute('data-status');
+      const type = card.getAttribute('data-type');
+      
+      const statusMatch = currentStatus === 'all' || 
+        (currentStatus === 'watching' && (status === 'watching' || status === 'rewatching')) ||
+        status === currentStatus;
+      const typeMatch = currentType === 'all' || type === currentType;
+      
+      if (statusMatch && typeMatch) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+    
+    if (visibleCount === 0) {
+      grid?.style.setProperty('display', 'none');
+      emptyState?.style.setProperty('display', 'flex');
+    } else {
+      grid?.style.setProperty('display', 'grid');
+      emptyState?.style.setProperty('display', 'none');
+    }
+  }
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentStatus = tab.getAttribute('data-filter') || 'all';
+      applyFilters();
+    });
+  });
+  
+  typeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      typeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentType = btn.getAttribute('data-type') || 'all';
+      applyFilters();
+    });
+  });
+</script>
+
+<style>
+  .media-tracker {
+    max-width: var(--container-lg);
+    margin: 0 auto;
+  }
+  
+  .stats-panel {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-lg);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+  }
+  
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--accent-cyan);
+  }
+  
+  .stat-value.watching {
+    color: var(--accent-green);
+  }
+  
+  .stat-value.watched {
+    color: var(--accent-amber);
+  }
+  
+  .stat-label {
+    font-size: 0.6875rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .filter-tabs {
+    display: flex;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
+  }
+  
+  .tab {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-panel);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    color: var(--lab-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .tab:hover {
+    border-color: var(--accent-cyan);
+    color: var(--lab-text-primary);
+  }
+  
+  .tab.active {
+    background: var(--accent-cyan);
+    border-color: var(--accent-cyan);
+    color: var(--lab-bg-dark);
+  }
+  
+  .type-filters {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    flex-wrap: wrap;
+  }
+  
+  .filter-label {
+    font-size: 0.6875rem;
+    color: var(--lab-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .type-btn {
+    padding: 0.25rem 0.75rem;
+    background: transparent;
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    color: var(--lab-text-muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .type-btn:hover {
+    border-color: var(--accent-cyan);
+    color: var(--lab-text-primary);
+  }
+  
+  .type-btn.active {
+    background: var(--accent-cyan)20;
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+  }
+  
+  .media-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+  }
+  
+  .empty-state {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3xl);
+    color: var(--lab-text-muted);
+    text-align: center;
+  }
+  
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-md);
+    opacity: 0.5;
+  }
+  
+  @media (max-width: 768px) {
+    .stats-panel {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .media-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .filter-tabs {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .tab {
+      white-space: nowrap;
+    }
+  }
+</style>

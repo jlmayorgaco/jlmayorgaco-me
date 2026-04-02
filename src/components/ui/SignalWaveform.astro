@@ -1,0 +1,206 @@
+---
+/**
+ * SignalWaveform.astro
+ * Animated oscilloscope-style waveform visualization
+ * Part of the main display enhancement for JLMT LAB
+ */
+---
+
+<div class="signal-waveform" aria-hidden="true">
+  <div class="waveform-header">
+    <span class="signal-label">SIGNAL</span>
+    <span class="signal-freq">FREQ: <span class="freq-value">60Hz</span></span>
+  </div>
+  
+  <div class="waveform-display">
+    <svg class="waveform-svg" viewBox="0 0 200 60" preserveAspectRatio="none">
+      <!-- Grid lines -->
+      <defs>
+        <pattern id="grid-small" width="20" height="12" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 12" fill="none" stroke="rgba(63,185,167,0.1)" stroke-width="0.5"/>
+        </pattern>
+        <pattern id="grid-large" width="40" height="24" patternUnits="userSpaceOnUse">
+          <rect width="40" height="24" fill="url(#grid-small)"/>
+          <path d="M 40 0 L 0 0 0 24" fill="none" stroke="rgba(63,185,167,0.2)" stroke-width="0.5"/>
+        </pattern>
+      </defs>
+      
+      <rect class="waveform-bg" width="200" height="60" fill="url(#grid-large)"/>
+      
+      <!-- Center baseline -->
+      <line x1="0" y1="30" x2="200" y2="30" stroke="rgba(63,185,167,0.3)" stroke-width="0.5" stroke-dasharray="2,2"/>
+      
+      <!-- Primary waveform -->
+      <path 
+        class="waveform-primary"
+        d="M 0,30 Q 10,10 20,30 T 40,30 T 60,30 T 80,30 T 100,30 T 120,30 T 140,30 T 160,30 T 180,30 T 200,30"
+        fill="none"
+        stroke="var(--accent-cyan)"
+        stroke-width="1.5"
+      />
+      
+      <!-- Secondary waveform (phase shifted) -->
+      <path 
+        class="waveform-secondary"
+        d="M 0,30 Q 10,50 20,30 T 40,30 T 60,30 T 80,30 T 100,30 T 120,30 T 140,30 T 160,30 T 180,30 T 200,30"
+        fill="none"
+        stroke="var(--accent-copper)"
+        stroke-width="1"
+        stroke-opacity="0.5"
+      />
+    </svg>
+  </div>
+  
+  <div class="signal-meters">
+    <div class="meter">
+      <span class="meter-label">AMP</span>
+      <div class="meter-bar">
+        <div class="meter-fill" style="--fill: 75%"></div>
+      </div>
+    </div>
+    <div class="meter">
+      <span class="meter-label">S/N</span>
+      <div class="meter-bar">
+        <div class="meter-fill meter-fill-good" style="--fill: 92%"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .signal-waveform {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
+    background: var(--screen-inner);
+    border: 1px solid var(--screen-border);
+    border-radius: var(--radius-md);
+  }
+
+  .waveform-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .signal-label {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    color: var(--accent-cyan);
+    letter-spacing: 0.1em;
+  }
+
+  .signal-freq {
+    font-family: var(--font-mono);
+    font-size: 0.4375rem;
+    color: var(--lab-text-muted);
+  }
+
+  .freq-value {
+    color: var(--accent-cyan);
+  }
+
+  .waveform-display {
+    position: relative;
+    background: var(--screen-bg);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .waveform-svg {
+    width: 100%;
+    height: 60px;
+    display: block;
+  }
+
+  .waveform-primary {
+    stroke-dasharray: 400;
+    stroke-dashoffset: 0;
+    animation: waveform-sweep 2s linear infinite, waveform-pulse 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 3px var(--accent-cyan-glow));
+  }
+
+  .waveform-secondary {
+    stroke-dasharray: 400;
+    stroke-dashoffset: 0;
+    animation: waveform-sweep 2.5s linear infinite;
+  }
+
+  @keyframes waveform-sweep {
+    0% {
+      stroke-dashoffset: 400;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes waveform-pulse {
+    0%, 100% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .signal-meters {
+    display: flex;
+    gap: var(--space-sm);
+  }
+
+  .meter {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    flex: 1;
+  }
+
+  .meter-label {
+    font-family: var(--font-mono);
+    font-size: 0.4375rem;
+    color: var(--lab-text-muted);
+    min-width: 24px;
+  }
+
+  .meter-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--lab-bg-dark);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .meter-fill {
+    height: 100%;
+    width: var(--fill);
+    background: var(--led-amber);
+    border-radius: 2px;
+    animation: meter-breathe 2s ease-in-out infinite;
+  }
+
+  .meter-fill-good {
+    background: var(--led-green);
+  }
+
+  @keyframes meter-breathe {
+    0%, 100% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .waveform-svg {
+      height: 50px;
+    }
+
+    .signal-meters {
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+  }
+</style>

@@ -3,6 +3,8 @@ import type { CollectionEntry } from 'astro:content';
 import type { TerminalData } from '../../lib/terminal/terminalTypes';
 import Icon from '../ui/Icon.astro';
 import HomeTerminal from './HomeTerminal';
+import SignalWaveform from '../ui/SignalWaveform.astro';
+import SystemMetricsStrip from '../ui/SystemMetricsStrip.astro';
 
 interface Props {
   projects: CollectionEntry<'projects'>[];
@@ -96,25 +98,44 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
       </div>
     </div>
 
-    <!-- Center: Main Monitor/Hero -->
-    <div class="panel monitor-panel panel-reveal-delay-1">
-      <div class="panel-header">
+    <!-- Center: Main Monitor/Hero (ENHANCED) -->
+    <div class="panel monitor-panel monitor-enhanced-frame panel-reveal-delay-1">
+      <!-- Hardware mounts / corner decorations -->
+      <div class="monitor-mounts">
+        <span class="mount mount-tl"></span>
+        <span class="mount mount-tr"></span>
+        <span class="mount mount-bl"></span>
+        <span class="mount mount-br"></span>
+      </div>
+      
+      <div class="panel-header monitor-header">
         <div class="header-left">
           <span class="label-tag">MAIN DISPLAY</span>
-          <span class="screen-mode">LIVE</span>
+          <span class="screen-mode led-blink">LIVE</span>
         </div>
         <div class="panel-leds">
-          <span class="led led-green led-pulse"></span>
-          <span class="led led-amber" style="opacity: 0.3"></span>
+          <span class="led led-green led-pulse" title="System Active"></span>
+          <span class="led led-amber" title="Signal Lock" style="opacity: 0.6; animation: led-pulse-amber 1.5s ease-in-out infinite"></span>
+          <span class="led led-green signal-active" style="width: 4px; height: 4px;" title="Data Flow"></span>
         </div>
       </div>
+      
       <div class="panel-content monitor-content">
+        <!-- Signal Waveform Section -->
+        <div class="monitor-signal">
+          <SignalWaveform />
+        </div>
+        
+        <!-- Main Terminal Display -->
         <div class="hero-monitor">
           {terminalData && (
             <HomeTerminal client:load data={terminalData} />
           )}
         </div>
       </div>
+      
+      <!-- System Metrics Strip -->
+      <SystemMetricsStrip />
     </div>
 
     <!-- Right Panel: Quick Info -->
@@ -1348,6 +1369,140 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
 
     .module-desc {
       font-size: 0.5625rem;
+    }
+  }
+
+  /* === ENHANCED MONITOR PANEL === */
+  .monitor-enhanced-frame {
+    position: relative;
+    border-width: 3px;
+    box-shadow: 
+      0 0 40px var(--screen-glow),
+      0 6px 16px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .monitor-enhanced-frame::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    border: 1px solid var(--panel-frame);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  /* Hardware corner mounts */
+  .monitor-mounts {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .mount {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(135deg, #999 0%, #777 50%, #888 100%);
+    border-radius: 50%;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  .mount::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 1px;
+    background: #555;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .mount::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 1px;
+    background: #555;
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .mount-tl { top: -3px; left: -3px; }
+  .mount-tr { top: -3px; right: -3px; }
+  .mount-bl { bottom: -3px; left: -3px; }
+  .mount-br { bottom: -3px; right: -3px; }
+
+  .monitor-header {
+    background: linear-gradient(180deg, var(--lab-bg-dark) 0%, var(--lab-bg-elevated) 100%);
+    border-bottom: 2px solid var(--screen-border);
+  }
+
+  .screen-mode.led-blink {
+    animation: led-blink 1.5s step-end infinite;
+  }
+
+  .monitor-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .monitor-signal {
+    flex-shrink: 0;
+  }
+
+  .hero-monitor {
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    min-height: 200px;
+  }
+
+  /* Signal active animation */
+  .signal-active {
+    animation: signal-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* Enhanced monitor responsive */
+  @media (max-width: 1024px) {
+    .monitor-enhanced-frame {
+      border-width: 2px;
+    }
+
+    .mount {
+      width: 10px;
+      height: 10px;
+    }
+
+    .mount-tl { top: -2px; left: -2px; }
+    .mount-tr { top: -2px; right: -2px; }
+    .mount-bl { bottom: -2px; left: -2px; }
+    .mount-br { bottom: -2px; right: -2px; }
+  }
+
+  @media (max-width: 768px) {
+    .monitor-enhanced-frame {
+      border-width: 2px;
+    }
+
+    .mount {
+      display: none;
+    }
+
+    .monitor-signal {
+      order: 1;
+    }
+
+    .hero-monitor {
+      order: 2;
+      min-height: 180px;
     }
   }
 </style>

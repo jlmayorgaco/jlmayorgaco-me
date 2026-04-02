@@ -117,4 +117,37 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { portfolio, projects, research, papers, tutorials, blog };
+const media = defineCollection({
+  loader: glob({ base: './src/content/media', pattern: '**/*.{md,mdx}' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      type: z.enum(['movie', 'series', 'documentary', 'anime']),
+      year: z.number(),
+      status: z.enum(['watching', 'watched', 'want', 'rewatching']).default('want'),
+      rating: z.number().min(1).max(10).optional(),
+      genres: z.array(z.string()),
+      director: z.string().optional(),
+      creator: z.string().optional(),
+      seasons: z.number().optional(),
+      episodes: z.number().optional(),
+      where: z.string().optional(),
+      watchDate: z.coerce.date().optional(),
+      review: z.string().optional(),
+      tags: z.array(z.string()).optional(),
+      poster: image().optional(),
+      featured: z.boolean().default(false),
+    }),
+});
+
+const now = defineCollection({
+  loader: glob({ base: './src/content/now', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    status: z.enum(['active', 'archived']).default('active'),
+    lastUpdated: z.coerce.date(),
+  }),
+});
+
+export const collections = { portfolio, projects, research, papers, tutorials, blog, media, now };

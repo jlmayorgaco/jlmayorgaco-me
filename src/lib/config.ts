@@ -19,8 +19,10 @@ export const NAV_ITEMS = [
 
 // Secondary Navigation (dropdown)
 export const NAV_SECONDARY = [
+  { href: '/now', label: 'Now' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/papers', label: 'Papers' },
+  { href: '/media', label: 'Media' },
   { href: '/tutorials', label: 'Tutorials' },
   { href: '/contact', label: 'Contact' },
 ] as const;
