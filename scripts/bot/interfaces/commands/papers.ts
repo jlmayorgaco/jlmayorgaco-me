@@ -6,6 +6,7 @@ import type { CommandHandler, CommandContext } from '../types/commands';
 import { runScanner } from '../../../../src/lib/pipeline/arxiv-scanner.js';
 import { classifyAndSummarizePapers } from '../../infrastructure/external/GeminiService';
 import { logError } from '../../infrastructure/logging/Logger';
+import { withCommandError } from './CommandWrapper';
 
 export const papersCommand: CommandHandler = {
   name: 'papers',
@@ -18,11 +19,10 @@ export const papersCommand: CommandHandler = {
     await bot.sendTyping();
     await bot.sendMessage('_Scanning ArXiv..._');
     
-    try {
+    await withCommandError('papers', async () => {
       const papers = await runScanner();
       const session = sessionManager.getSession(chatId);
       
-      // Store papers in session
       session.papers = papers.slice(0, config.maxPapersToScan);
       
       await bot.sendTyping();
@@ -30,13 +30,11 @@ export const papersCommand: CommandHandler = {
       
       const classified = await classifyAndSummarizePapers(config, session.papers);
       
-      // Merge classification into papers
       const enriched = classified.map(c => {
         const original = session.papers.find(p => p.id === c.paperId);
         return { ...original, ...c };
       });
       
-      // Sort by relevance
       enriched.sort((a: any, b: any) => {
         const order: Record<string, number> = { high: 0, medium: 1, low: 2 };
         return (order[a.relevance] ?? 2) - (order[b.relevance] ?? 2);
@@ -57,13 +55,8 @@ export const papersCommand: CommandHandler = {
       
       await bot.sendMessage(msg);
       
-      // Update session
       session.selectedItems = top.map((p: any) => p.title || p.paperId);
       sessionManager.updateSession(chatId, session);
-      
-    } catch (e: any) {
-      logError('Papers command failed', e);
-      await bot.sendMessage(`❌ Scan error: ${e.message}`);
-    }
+    }, bot);
   },
 };

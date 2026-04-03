@@ -14,8 +14,6 @@
 
 import { z } from 'zod';
 import dotenv from 'dotenv';
-import { promises as fs } from 'fs';
-import path from 'path';
 
 // Load .env file if it exists (for local development)
 dotenv.config();
@@ -80,30 +78,21 @@ export async function loadConfig(): Promise<BotConfig> {
     return validateConfig(envConfig);
   }
 
-  const fileConfig = await loadFromFile();
-
-  const mergedConfig = {
-    telegram: {
-      botToken: envConfig.telegram.botToken || fileConfig.telegram?.botToken,
-      chatId: envConfig.telegram.chatId || fileConfig.telegram?.chatId,
-    },
-    gemini: {
-      apiKey: envConfig.gemini.apiKey || fileConfig.gemini?.apiKey,
-      model: envConfig.gemini.model || fileConfig.gemini?.model || 'gemini-2.0-flash',
-    },
-    topics: envConfig.topics || fileConfig.topics,
-    sources: envConfig.sources || fileConfig.sources,
-    sessionTtlMinutes: envConfig.sessionTtlMinutes || fileConfig.sessionTtlMinutes,
-    maxPapersToScan: envConfig.maxPapersToScan || fileConfig.maxPapersToScan,
-    topPapersToShow: envConfig.topPapersToShow || fileConfig.topPapersToShow,
-    maxNewsItems: envConfig.maxNewsItems || fileConfig.maxNewsItems,
-    telegramRateLimit: envConfig.telegramRateLimit || fileConfig.telegramRateLimit,
-    geminiTimeoutMs: envConfig.geminiTimeoutMs || fileConfig.geminiTimeoutMs,
-    retryAttempts: envConfig.retryAttempts || fileConfig.retryAttempts,
-    retryBaseDelayMs: envConfig.retryBaseDelayMs || fileConfig.retryBaseDelayMs,
-  };
-
-  return validateConfig(mergedConfig);
+  const missing = validateEnvironment();
+  throw new Error(
+    `Configuration validation failed: Missing required environment variables\n\n` +
+      `Missing: ${missing.missing.join(', ')}\n\n` +
+      `Required environment variables:\n` +
+      `- TELEGRAM_BOT_TOKEN\n` +
+      `- GEMINI_API_KEY\n` +
+      `- TELEGRAM_CHAT_ID\n\n` +
+      `Optional:\n` +
+      `- GEMINI_MODEL (default: gemini-2.0-flash)\n` +
+      `- BOT_TOPICS (comma-separated)\n` +
+      `- SESSION_TTL_MINUTES (default: 30)\n` +
+      `- MAX_PAPERS_SCAN (default: 10)\n` +
+      `- TELEGRAM_RATE_LIMIT (default: 30)`,
+  );
 }
 
 function loadFromEnvironment(): Partial<BotConfig> {
@@ -126,23 +115,6 @@ function loadFromEnvironment(): Partial<BotConfig> {
     retryAttempts: process.env.RETRY_ATTEMPTS ? parseInt(process.env.RETRY_ATTEMPTS, 10) : undefined,
     retryBaseDelayMs: process.env.RETRY_BASE_DELAY_MS ? parseInt(process.env.RETRY_BASE_DELAY_MS, 10) : undefined,
   };
-}
-
-/** @deprecated Use environment variables instead. */
-async function loadFromFile(): Promise<Partial<BotConfig>> {
-  const configPath = path.join(process.cwd(), '.env.json');
-
-  try {
-    const raw = await fs.readFile(configPath, 'utf-8');
-    const parsed = JSON.parse(raw);
-
-    console.warn('⚠️  DEPRECATED: Using .env.json. Migrate to environment variables.');
-    console.warn('   Set TELEGRAM_BOT_TOKEN, GEMINI_API_KEY, TELEGRAM_CHAT_ID as env vars.');
-
-    return parsed;
-  } catch {
-    return {};
-  }
 }
 
 function validateConfig(config: Partial<BotConfig>): BotConfig {

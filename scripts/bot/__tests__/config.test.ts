@@ -80,7 +80,7 @@ describe('Config Module (Production)', () => {
     process.env.GEMINI_API_KEY = 'valid';
     process.env.TELEGRAM_CHAT_ID = 'valid';
 
-    await expect(loadConfig()).rejects.toThrow('botToken');
+    await expect(loadConfig()).rejects.toThrow('TELEGRAM_BOT_TOKEN');
   });
 });
 

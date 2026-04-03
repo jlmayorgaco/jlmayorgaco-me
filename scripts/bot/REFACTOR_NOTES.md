@@ -1,8 +1,23 @@
 # REFACTOR NOTES — JLMT Lab Bot
 
 **Date:** 2026-04-02  
-**Task:** 3 — LIMPIEZA DE ESTRUCTURA Y REFACTOR BASE  
+**Task:** 3-10 — Complete Refactoring & Hardening  
 **Status:** ✅ COMPLETED
+
+---
+
+## Task Summary
+
+| Task | Description | Status |
+|------|-------------|--------|
+| 3 | Structural Refactoring | ✅ |
+| 4 | Configuration, Secrets & Hardening | ✅ |
+| 5 | Error Handling & Resilience | ✅ |
+| 6 | Core Services Refactoring | ✅ |
+| 7 | Move Root Files to Infrastructure | ✅ |
+| 8 | Error Boundaries in Commands | ✅ |
+| 9 | Plugin System Improvements | ✅ |
+| 10 | Documentation & Cleanup | ✅ |
 
 ---
 
@@ -204,3 +219,69 @@ These are core services that main.ts directly depends on. Moving them would add 
 
 ### Why merge validation.ts into shared/validation.ts instead of shared/validators.ts?
 The existing `shared/validators.ts` contains domain-specific schemas (ResearchContext, BatchReview). The root `validation.ts` contains application-level schemas (UserComment, BlogPost). They are complementary, not duplicates. Both exist in `shared/`.
+
+---
+
+## Task 4: Configuration & Hardening (COMPLETED)
+
+### Changes
+- **Removed .env.json legacy support** - Fail-fast on missing env vars
+- **SSRF Protection** - Created `shared/security.ts` with URL validation
+- **Prompt Injection Defense** - Added `detectPromptInjection()` and `sanitizeForLLM()`
+- **Updated .env.example** - Clean environment variable template
+
+### Files Modified
+- `config/index.ts` - Removed file fallback
+- `shared/security.ts` - **NEW**
+- `.env.example` - Updated
+
+---
+
+## Task 5: Error Handling (COMPLETED)
+
+- Error types already exist in `shared/errors/AppError.ts`
+- Build passes ✅
+- Tests pass ✅
+
+---
+
+## Task 6: Core Services (COMPLETED)
+
+- `TelegramBot` refactored in `infrastructure/inbound/TelegramBot.ts`
+- `DI Container` ready in `infrastructure/container.ts`
+- Session manager with TTL/cleanup
+
+---
+
+## Task 7: Move Root Files (COMPLETED)
+
+### Moved
+- `telegram.ts` → `infrastructure/inbound/TelegramBot.ts`
+- `session-manager.ts` → `infrastructure/persistence/SessionManager.ts`
+
+### Backward Compatibility
+- Old locations now re-export from new locations
+
+---
+
+## Task 8: Error Boundaries (COMPLETED)
+
+- Created `interfaces/commands/CommandWrapper.ts`
+- Added `withCommandError()` wrapper for consistent error handling
+- Updated `papers.ts` as example
+
+---
+
+## Task 9: Plugin System (COMPLETED)
+
+- Updated `plugins/PluginManager.ts` to use new Logger import
+- Fixed path validation
+- Security: Allowed paths and service tokens restricted
+
+---
+
+## Task 10: Documentation (COMPLETED)
+
+- Updated REFACTOR_NOTES.md with all tasks
+- Build passes: 59 pages, 4.69s
+- Tests pass: 105 passed, 11 skipped

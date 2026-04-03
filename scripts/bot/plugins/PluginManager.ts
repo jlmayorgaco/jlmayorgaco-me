@@ -1,10 +1,12 @@
 /**
  * Plugin System
  * Allows extending bot with custom commands
+ *
+ * @module plugins/PluginManager
  */
 
 import { CommandHandler } from '../application/ports';
-import { logDebug, logError, logInfo } from '../logger';
+import { logDebug, logError, logInfo, logWarn } from '../infrastructure/logging/Logger';
 import { Result } from '../shared/Result';
 
 export interface PluginContext {

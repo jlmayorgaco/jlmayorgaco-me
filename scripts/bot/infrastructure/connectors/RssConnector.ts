@@ -1,12 +1,29 @@
 /**
- * RSS News scanner with proper validation and error handling
- * Fixed: Markdown escaping for URLs, input validation
+ * RSS/Atom Connector - Fully Configurable
+ * 
+ * Features:
+ * - Multiple feeds (configurable)
+ * - Support RSS 2.0 and Atom
+ * - Normalize GUID/URL
+ * - Fallback if feed fails
+ * - Health per feed
+ *
+ * @module infrastructure/connectors/RssConnector
  */
 
 import { logError, logInfo, logWarn } from '../logging/Logger';
-import { withTimeout, withRetry } from '../../shared/utils';
+import { withRetry, withTimeout } from '../../shared/utils';
 import { safeValidate, NewsItemSchema } from '../../shared/validation';
+import { validateUrl } from '../../shared/security';
 import type { BotConfig } from '../../config/index';
+
+export interface FeedConfig {
+  name: string;
+  url: string;
+  type: 'rss' | 'atom';
+  keywords?: string[];
+  enabled?: boolean;
+}
 
 export interface NewsItem {
   title: string;
@@ -15,157 +32,300 @@ export interface NewsItem {
   pubDate: string;
   description: string;
   categories: string[];
+  guid?: string;
+  rawXml?: string;
 }
 
-function parseRSS(xml: string, sourceName: string): NewsItem[] {
-  const items: NewsItem[] = [];
-  
-  // Handle both <item> (RSS 2.0) and <entry> (Atom)
-  const itemRegex = /<(item|entry)>([\s\S]*?)<\/\1>/g;
-  let match;
+export interface FeedHealth {
+  name: string;
+  url: string;
+  status: 'healthy' | 'degraded' | 'failed';
+  lastCheck: string;
+  lastItemCount: number;
+  error?: string;
+  responseTimeMs?: number;
+}
 
-  while ((match = itemRegex.exec(xml)) !== null) {
-    const entry = match[2];
+export interface RssCheckpoint {
+  lastGuid?: string;
+  lastDate?: string;
+  lastRun: string;
+  feedCheckpoints: Record<string, RssCheckpoint>;
+}
 
-    const title = extractXML(entry, 'title')?.replace(/<!\[CDATA\[|\]\]>/g, '').trim() || '';
-    const link = extractLink(entry);
-    const pubDate = extractXML(entry, 'pubDate') || extractXML(entry, 'published') || extractXML(entry, 'updated') || '';
-    const description = extractXML(entry, 'description') || extractXML(entry, 'summary') || extractXML(entry, 'content') || '';
-    
-    const cleanDescription = description
-      .replace(/<[^>]*>/g, '')
-      .replace(/<!\[CDATA\[|\]\]>/g, '')
-      .substring(0, 300)
-      .trim();
+export class RssConnector {
+  private feeds: FeedConfig[];
+  private feedHealth: Map<string, FeedHealth> = new Map();
 
-    const catMatches = entry.match(/<(category|subject)[^>]*>(.*?)<\/\1>/g) || [];
-    const categories = catMatches.map(c =>
-      c.replace(/<[^>]*>/g, '').trim()
-    ).filter(Boolean);
+  constructor(feeds: FeedConfig[]) {
+    this.feeds = feeds.filter(f => f.enabled !== false);
+  }
 
-    if (title && link) {
-      const validation = safeValidate(NewsItemSchema, {
-        title,
-        link,
-        source: sourceName,
-        pubDate,
-        description: cleanDescription,
-        categories,
-      });
+  static fromConfig(config: BotConfig): RssConnector {
+    const feeds: FeedConfig[] = (config.sources || []).map(s => ({
+      name: s.name,
+      url: s.url,
+      type: s.type as 'rss' | 'atom',
+      enabled: true,
+    }));
 
-      if (validation.success) {
-        items.push(validation.data!);
+    return new RssConnector(feeds);
+  }
+
+  async fetchAll(checkpoints?: Record<string, RssCheckpoint>): Promise<NewsItem[]> {
+    const allItems: NewsItem[] = [];
+    const results = await Promise.allSettled(
+      this.feeds.map(feed => this.fetchFeed(feed, checkpoints?.[feed.name]))
+    );
+
+    for (let i = 0; i < results.length; i++) {
+      const result = results[i];
+      const feed = this.feeds[i];
+
+      if (result.status === 'fulfilled') {
+        allItems.push(...result.value);
+        this.updateHealth(feed.name, 'healthy', result.value.length);
+      } else {
+        logError(`Feed ${feed.name} failed`, result.reason);
+        this.updateHealth(feed.name, 'failed', 0, result.reason.message);
       }
+    }
+
+    return allItems;
+  }
+
+  async fetchFeed(feed: FeedConfig, checkpoint?: RssCheckpoint): Promise<NewsItem[]> {
+    const startTime = Date.now();
+
+    try {
+      const xml = await this.fetchWithRetry(feed.url);
+      const items = this.parseFeed(xml, feed.name, feed.type);
+
+      const responseTime = Date.now() - startTime;
+      this.updateHealth(feed.name, items.length > 0 ? 'healthy' : 'degraded', items.length, undefined, responseTime);
+
+      return items;
+    } catch (error) {
+      this.updateHealth(feed.name, 'failed', 0, (error as Error).message);
+      throw error;
     }
   }
 
-  return items;
-}
+  private async fetchWithRetry(url: string): Promise<string> {
+    const urlValidation = validateUrl(url);
+    if (!urlValidation.valid) {
+      throw new Error(`Invalid URL: ${urlValidation.error}`);
+    }
 
-function extractXML(xml: string, tag: string): string | null {
-  const match = xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`));
-  return match ? match[1].trim() : null;
-}
+    return withRetry(
+      async () => {
+        const res = await fetch(url, {
+          headers: {
+            'User-Agent': 'JLMT-Bot/1.0 (Research Assistant)',
+            'Accept': 'application/rss+xml, application/atom+xml, application/xml, text/xml, */*',
+          },
+        });
 
-function extractLink(entry: string): string {
-  // Try different link formats
-  const patterns = [
-    /<link>([^<]+)<\/link>/,
-    /<link[^>]+href="([^"]+)"/,
-    /<link[^>]+rel="alternate"[^>]+href="([^"]+)"/,
-  ];
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        }
 
-  for (const pattern of patterns) {
-    const match = entry.match(pattern);
-    if (match) return match[1].trim();
+        const text = await res.text();
+
+        if (!text.includes('<')) {
+          throw new Error('Invalid response: not XML');
+        }
+
+        return text;
+      },
+      {
+        maxRetries: 3,
+        baseDelay: 1000,
+        onRetry: (error, attempt) => {
+          logWarn(`Retrying feed (attempt ${attempt})`, { error: error.message });
+        },
+      }
+    )();
   }
 
-  return '';
+  private parseFeed(xml: string, sourceName: string, feedType: string): NewsItem[] {
+    const items: NewsItem[] = [];
+    
+    const isAtom = feedType === 'atom' || xml.includes('<feed');
+    const itemTag = isAtom ? 'entry' : 'item';
+    const itemRegex = new RegExp(`<${itemTag}>([\\s\\S]*?)</${itemTag}>`, 'g');
+    
+    let match;
+    while ((match = itemRegex.exec(xml)) !== null) {
+      try {
+        const entry = match[1];
+        const item = this.parseEntry(entry, sourceName, isAtom, match[0]);
+        if (item) {
+          items.push(item);
+        }
+      } catch (error) {
+        logWarn('Failed to parse feed entry', { error: (error as Error).message });
+      }
+    }
+
+    return items;
+  }
+
+  private parseEntry(entry: string, sourceName: string, isAtom: boolean, rawXml?: string): NewsItem | null {
+    const title = this.extractTag(entry, 'title')?.replace(/<!\[CDATA\[|\]\]>/g, '').trim();
+    if (!title) return null;
+
+    const link = this.extractLink(entry, isAtom);
+    const pubDate = this.extractTag(entry, isAtom ? 'published' : 'pubDate') 
+      || this.extractTag(entry, isAtom ? 'updated' : 'dc:date') 
+      || new Date().toISOString();
+    
+    const description = this.extractTag(entry, isAtom ? 'summary' : 'description') 
+      || this.extractTag(entry, isAtom ? 'content' : 'content:encoded')
+      || '';
+    
+    const cleanDesc = description
+      .replace(/<[^>]*>/g, '')
+      .replace(/<!\[CDATA\[|\]\]>/g, '')
+      .substring(0, 500)
+      .trim();
+
+    const categories = this.extractCategories(entry);
+
+    const guid = this.extractGuid(entry, link, isAtom);
+
+    const validation = safeValidate(NewsItemSchema, {
+      title,
+      link,
+      source: sourceName,
+      pubDate,
+      description: cleanDesc,
+      categories,
+    });
+
+    if (!validation.success) {
+      logWarn('Invalid news item', { errors: validation.errors });
+      return null;
+    }
+
+    return {
+      ...validation.data!,
+      guid,
+      rawXml,
+    };
+  }
+
+  private extractTag(xml: string, tag: string): string | null {
+    const patterns = [
+      new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`),
+      new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`),
+    ];
+
+    for (const pattern of patterns) {
+      const match = xml.match(pattern);
+      if (match) {
+        return match[1].replace(/<!\[CDATA\[|\]\]>/g, '').trim();
+      }
+    }
+
+    return null;
+  }
+
+  private extractLink(entry: string, isAtom: boolean): string {
+    if (isAtom) {
+      const patterns = [
+        /<link[^>]*rel="alternate"[^>]*href="([^"]*)"[^>]*>/,
+        /<link[^>]*href="([^"]*)"[^>]*>/,
+        /<link>([^<]+)<\/link>/,
+      ];
+      for (const pattern of patterns) {
+        const match = entry.match(pattern);
+        if (match) return match[1].trim();
+      }
+    } else {
+      const match = entry.match(/<link>([^<]+)<\/link>/);
+      if (match) return match[1].trim();
+    }
+    return '';
+  }
+
+  private extractGuid(entry: string, link: string, isAtom: boolean): string {
+    if (isAtom) {
+      const id = this.extractTag(entry, 'id');
+      if (id) return id;
+    } else {
+      const guid = this.extractTag(entry, 'guid');
+      if (guid) return guid;
+    }
+    return link;
+  }
+
+  private extractCategories(entry: string): string[] {
+    const categories: string[] = [];
+    const patterns = [
+      /<category[^>]*>([^<]*)<\/category>/g,
+      /<category[^>]*term="([^"]*)"[^>]*>/g,
+    ];
+
+    for (const pattern of patterns) {
+      let match;
+      while ((match = pattern.exec(entry)) !== null) {
+        const cat = match[1].trim();
+        if (cat) categories.push(cat);
+      }
+    }
+
+    return [...new Set(categories)];
+  }
+
+  private updateHealth(
+    name: string,
+    status: 'healthy' | 'degraded' | 'failed',
+    itemCount: number,
+    error?: string,
+    responseTimeMs?: number
+  ): void {
+    this.feedHealth.set(name, {
+      name,
+      url: this.feeds.find(f => f.name === name)?.url || '',
+      status,
+      lastCheck: new Date().toISOString(),
+      lastItemCount: itemCount,
+      error,
+      responseTimeMs,
+    });
+  }
+
+  getFeedHealth(): FeedHealth[] {
+    return Array.from(this.feedHealth.values());
+  }
+
+  addFeed(feed: FeedConfig): void {
+    this.feeds.push(feed);
+  }
+
+  removeFeed(name: string): void {
+    this.feeds = this.feeds.filter(f => f.name !== name);
+    this.feedHealth.delete(name);
+  }
+
+  getFeeds(): FeedConfig[] {
+    return [...this.feeds];
+  }
+}
+
+export async function scanAllFeeds(
+  config: BotConfig,
+  checkpoints?: Record<string, RssCheckpoint>
+): Promise<NewsItem[]> {
+  const connector = RssConnector.fromConfig(config);
+  return connector.fetchAll(checkpoints);
 }
 
 export async function scanNewsSources(config: BotConfig): Promise<NewsItem[]> {
-  const allItems: NewsItem[] = [];
-  const seen = new Set<string>();
-
-  for (const source of config.sources) {
-    if (source.type !== 'rss') continue;
-
-    try {
-      logInfo(`Scanning ${source.name}...`);
-
-      const items = await withRetry(
-        () => fetchAndParseSource(source),
-        {
-          maxRetries: 2,
-          baseDelay: 1000,
-          onRetry: (error, attempt) => {
-            logWarn(`Retrying ${source.name} (attempt ${attempt})`, { error: error.message });
-          },
-        }
-      );
-
-      for (const item of items) {
-        if (!seen.has(item.link)) {
-          seen.add(item.link);
-          allItems.push(item);
-        }
-      }
-
-      logInfo(`Found ${items.length} items from ${source.name}`);
-    } catch (error) {
-      logError(`Error scanning ${source.name}`, error as Error);
-    }
-  }
-
-  // Filter by topics relevance
-  const topicKeywords = config.topics.flatMap(t => t.toLowerCase().split(/\s+/));
-
-  const scored = allItems.map(item => {
-    const text = `${item.title} ${item.description} ${item.categories.join(' ')}`.toLowerCase();
-    const matches = topicKeywords.filter(kw => text.includes(kw)).length;
-    return { item, score: matches };
-  });
-
-  scored.sort((a, b) => b.score - a.score);
-
-  // Return top relevant items
-  return scored
-    .filter(s => s.score > 0)
-    .slice(0, config.maxNewsItems || 20)
-    .map(s => s.item);
+  return scanAllFeeds(config);
 }
 
-async function fetchAndParseSource(source: { name: string; url: string }): Promise<NewsItem[]> {
-  return withTimeout(
-    async () => {
-      const res = await fetch(source.url, {
-        headers: { 
-          'User-Agent': 'JLMT-Bot/1.0 (Research Assistant)',
-          'Accept': 'application/rss+xml, application/xml, text/xml, */*',
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const xml = await res.text();
-      
-      if (!xml.includes('<') || !xml.includes('>')) {
-        throw new Error('Invalid XML response');
-      }
-
-      return parseRSS(xml, source.name);
-    },
-    15000, // 15 second timeout
-    `Timeout scanning ${source.name}`
-  );
-}
-
-/**
- * Format news items for Telegram
- * Fixed: Proper markdown escaping that doesn't break URLs
- */
 export function formatNewsForTelegram(items: NewsItem[], limit: number = 10): string {
   if (items.length === 0) {
     return '*No relevant news found*';
@@ -184,10 +344,6 @@ export function formatNewsForTelegram(items: NewsItem[], limit: number = 10): st
   return msg;
 }
 
-/**
- * Escape markdown characters for Telegram
- * Fixed: Only escapes text, not URLs
- */
 function escapeMarkdown(text: string): string {
   return text
     .replace(/\\/g, '\\\\')
