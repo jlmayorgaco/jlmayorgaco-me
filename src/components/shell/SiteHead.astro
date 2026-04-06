@@ -1,5 +1,5 @@
 ---
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL } from '../../lib/config';
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL, GA_MEASUREMENT_ID } from '../../lib/config';
 
 interface Props {
   title?: string;
@@ -89,3 +89,13 @@ const schemaOrg = type === 'article' ? {
 <meta name="keywords" content="control systems, robotics, FPGA, embedded systems, distributed control, research engineer, power electronics, signal processing" />
 
 <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
+
+{GA_MEASUREMENT_ID && (
+  <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+  <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', GA_MEASUREMENT_ID);
+  </script>
+)}

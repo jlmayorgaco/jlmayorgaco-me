@@ -61,6 +61,43 @@ a:hover {
   color: var(--accent-cyan-dim);
 }
 
+/* Focus visible for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+/* Remove default focus for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Button focus styles */
+button:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+}
+
+/* Enhanced button hover effects */
+button, .btn, button[type="button"] {
+  transition: all 0.2s ease;
+}
+
+button:hover, .btn:hover, button[type="button"]:hover {
+  transform: translateY(-1px);
+}
+
+/* Card hover effects */
+.card, [class*="card"] {
+  transition: all 0.2s ease;
+}
+
+.card:hover, [class*="card"]:hover {
+  border-color: var(--accent-cyan);
+  transform: translateY(-2px);
+}
+
 ul, ol {
   padding-left: var(--space-lg);
   margin-bottom: var(--space-md);

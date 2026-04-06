@@ -8,6 +8,9 @@ export const SITE_TITLE = 'jlmayorga.co';
 export const SITE_DESCRIPTION = 'Research Engineer | Robotics, Distributed Control & Full-Stack Systems';
 export const SITE_URL = 'https://jlmayorga.co';
 
+// Analytics - set your GA4 measurement ID here
+export const GA_MEASUREMENT_ID = '';
+
 // Primary Navigation (always visible)
 export const NAV_ITEMS = [
   { href: '/projects', label: 'Projects' },

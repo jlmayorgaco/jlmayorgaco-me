@@ -117,7 +117,7 @@ Real-time state estimation on Xilinx Zynq.
 ## Personal
 
 ### Location
-Lima, Peru 🇵🇪
+Bogotá, Colombia 🇨🇴
 
 ### Time
 Last updated: April 2026

@@ -5,13 +5,14 @@ import Badge from '../ui/Badge.astro';
 interface Props {
   project: CollectionEntry<'projects'>;
   variant?: 'default' | 'featured' | 'compact';
+  dataTags?: string;
 }
 
-const { project, variant = 'default' } = Astro.props;
+const { project, variant = 'default', dataTags = '' } = Astro.props;
 const { data } = project;
 ---
 
-<a href={`/projects/${project.id}`} class:list={['project-card', `card-${variant}`]}>
+<a href={`/projects/${project.id}`} class:list={['project-card', `card-${variant}`]} data-tags={dataTags}>
   {data.cover && (
     <div class="card-cover">
       <img 

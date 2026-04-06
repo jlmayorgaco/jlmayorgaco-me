@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import ProjectMetaPanel from '../components/projects/ProjectMetaPanel.astro';
 import ProjectRoadmap from '../components/projects/ProjectRoadmap.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
 import Icon from '../components/ui/Icon.astro';
 
 interface Phase {
@@ -39,6 +40,10 @@ const { title, summary, year, status = 'published', tags, stack, cover, links, r
 ---
 
 <BaseLayout title={title} description={summary}>
+  <Breadcrumbs items={[
+    { label: 'Projects', href: '/projects' },
+    { label: title }
+  ]} />
   <article class="project-panel">
     <div class="panel-header-bar">
       <div class="bar-screws">

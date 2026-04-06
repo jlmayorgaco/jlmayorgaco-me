@@ -6,6 +6,8 @@ import { getCollection } from 'astro:content';
 
 const projects = await getCollection('projects');
 const sortedProjects = projects.sort((a, b) => b.data.order - a.data.order);
+
+const allTags = [...new Set(projects.flatMap(p => p.data.tags || []))].sort();
 ---
 
 <BaseLayout title="Projects" description="Projects in robotics, embedded systems, and software development">
@@ -17,12 +19,19 @@ const sortedProjects = projects.sort((a, b) => b.data.order - a.data.order);
     </p>
   </div>
 
+  <div class="project-filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    {allTags.map(tag => (
+      <button class="filter-btn" data-filter={tag}>{tag}</button>
+    ))}
+  </div>
+
   <ProjectGrid projects={sortedProjects} />
 </BaseLayout>
 
 <style>
   .page-header {
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-lg);
   }
 
   .page-description {
@@ -31,4 +40,59 @@ const sortedProjects = projects.sort((a, b) => b.data.order - a.data.order);
     max-width: 600px;
     margin-top: var(--space-md);
   }
+
+  .project-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  .filter-btn {
+    padding: var(--space-xs) var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--lab-text-secondary);
+    background: var(--lab-bg-elevated);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+  }
+
+  .filter-btn.active {
+    background: var(--accent-cyan);
+    color: var(--lab-bg-dark);
+    border-color: var(--accent-cyan);
+  }
 </style>
+
+<script>
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projectCards = document.querySelectorAll('.project-card');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter');
+      
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      projectCards.forEach(card => {
+        const tags = card.getAttribute('data-tags')?.split(',') || [];
+        if (filter === 'all' || tags.includes(filter)) {
+          (card as HTMLElement).style.display = 'block';
+        } else {
+          (card as HTMLElement).style.display = 'none';
+        }
+      });
+    });
+  });
+</script>

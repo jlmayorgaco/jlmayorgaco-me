@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
 import { getCollection } from 'astro:content';
 import Icon from '../../components/ui/Icon.astro';
 
@@ -13,9 +14,29 @@ export async function getStaticPaths() {
 
 const { paper } = Astro.props;
 const { data } = paper;
+
+const schemaOrg = {
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": data.title,
+  "datePublished": `${data.year}-01-01`,
+  "author": data.authors.map(author => ({ "@type": "Person", "name": author })),
+  "description": data.abstract,
+  "url": `https://jlmayorga.com.co/papers/${paper.id}`,
+  "doi": data.doi,
+  "publication": {
+    "@type": "PublicationEvent",
+    "name": data.venue
+  }
+};
 ---
 
 <BaseLayout title={data.title} description={data.abstract}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
+  <Breadcrumbs items={[
+    { label: 'Papers', href: '/papers' },
+    { label: data.title }
+  ]} />
   <article class="paper-detail">
     <header class="paper-header">
       <div class="card-header-bar">

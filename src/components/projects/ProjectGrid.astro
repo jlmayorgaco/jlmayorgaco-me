@@ -23,7 +23,7 @@ const { projects, variant = 'default' } = Astro.props;
     </div>
   </div>
   {projects.map((project) => (
-    <ProjectCard {project} variant={variant === 'featured' ? 'featured' : 'default'} />
+    <ProjectCard {project} variant={variant === 'featured' ? 'featured' : 'default'} dataTags={project.data.tags?.join(',') || ''} />
   ))}
   <div class="grid-footer-stripe"></div>
 </div>
