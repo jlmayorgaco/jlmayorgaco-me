@@ -34,6 +34,7 @@ async function searchArxiv(query: SearchQuery): Promise<ArxivPaper[]> {
   try {
     const response = await fetch(url);
     const xml = await response.text();
+    console.log(xml)
     return parseArxivXml(xml);
   } catch (error) {
     console.error('Error fetching from ArXiv:', error);
@@ -43,19 +44,19 @@ async function searchArxiv(query: SearchQuery): Promise<ArxivPaper[]> {
 
 function parseArxivXml(xml: string): ArxivPaper[] {
   const papers: ArxivPaper[] = [];
-  
+
   const entryRegex = /<entry>([\s\S]*?)<\/entry>/g;
   let match;
 
   while ((match = entryRegex.exec(xml)) !== null) {
     const entry = match[1];
-    
+
     const id = extractTag(entry, 'id')?.split('/').pop() || '';
     const title = extractTag(entry, 'title')?.replace(/\s+/g, ' ').trim() || '';
     const summary = extractTag(entry, 'summary')?.replace(/\s+/g, ' ').trim() || '';
     const published = extractTag(entry, 'published') || '';
     const updated = extractTag(entry, 'updated') || '';
-    
+
     const authorMatches = entry.match(/<author>[\s\S]*?<name>(.*?)<\/name>[\s\S]*?<\/author>/g) || [];
     const authors = authorMatches.map(a => {
       const nameMatch = a.match(/<name>(.*?)<\/name>/);
@@ -68,10 +69,10 @@ function parseArxivXml(xml: string): ArxivPaper[] {
       return match ? match[1] : '';
     }).filter(Boolean);
 
-    const pdfUrl = entry.includes('<link title="pdf"') 
+    const pdfUrl = entry.includes('<link title="pdf"')
       ? entry.match(/<link[^>]*title="pdf"[^>]*href="([^"]*)"[^>]*>/)?.[1] || ''
       : `https://arxiv.org/pdf/${id}.pdf`;
-    
+
     const absUrl = `https://arxiv.org/abs/${id}`;
 
     papers.push({
@@ -124,7 +125,7 @@ async function runScanner(queries: SearchQuery[] = DEFAULT_QUERIES): Promise<Arx
 
   for (const query of queries) {
     const papers = await searchArxiv(query);
-    
+
     for (const paper of papers) {
       if (!seen.has(paper.id)) {
         seen.add(paper.id);
@@ -134,7 +135,7 @@ async function runScanner(queries: SearchQuery[] = DEFAULT_QUERIES): Promise<Arx
   }
 
   // Sort by date
-  allPapers.sort((a, b) => 
+  allPapers.sort((a, b) =>
     new Date(b.published).getTime() - new Date(a.published).getTime()
   );
 
@@ -161,13 +162,13 @@ async function saveResults(papers: ArxivPaper[], outputPath: string) {
 
 async function main() {
   const outputPath = path.join(process.cwd(), 'data', 'arxiv-papers.json');
-  
+
   // Ensure data directory exists
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
 
   console.log('Starting ArXiv scanner...\n');
   const papers = await runScanner();
-  
+
   if (papers.length > 0) {
     await saveResults(papers, outputPath);
     console.log('\nScan complete!');

@@ -112,6 +112,11 @@ export interface PaperClassification {
   relevance: 'high' | 'medium' | 'low';
   summary: string;
   classification: string;
+  pros?: string;
+  cons?: string;
+  methods?: string;
+  limitations?: string;
+  importance?: string;
 }
 
 export async function classifyAndSummarizePapers(
@@ -128,7 +133,7 @@ export async function classifyAndSummarizePapers(
   }
 
   const systemPrompt = `Research assistant. Analyze papers. Return JSON array:
-[{ "paperId": "id", "relevance": "high|medium|low", "summary": "short summary", "classification": "control-theory|robotics|embedded|power-systems|ml-ai|signal-processing|other" }]
+[{ "paperId": "id", "relevance": "high|medium|low", "summary": "short summary", "classification": "control-theory|robotics|embedded|power-systems|ml-ai|signal-processing|other", "pros": "key advantages", "cons": "limitations", "methods": "technical approach", "limitations": "scope limitations", "importance": "why this matters" }]
 Relevance based on: distributed control, robotics, FPGA, power systems, embedded systems.
 Return ONLY JSON array.`;
 

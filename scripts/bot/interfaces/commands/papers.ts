@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Papers command - scan ArXiv for relevant papers
  */
 
@@ -44,13 +44,42 @@ export const papersCommand: CommandHandler = {
       const topPapers = enriched.filter((p: any) => p.relevance === 'high').slice(0, topCount);
       const top = topPapers.length > 0 ? topPapers : enriched.slice(0, topCount);
       
-      let msg = `*Top ${top.length} Papers*\n\n`;
-      for (const p of top) {
-        const emoji = p.relevance === 'high' ? 'ðŸ”´' : 'ðŸŸ¡';
-        msg += `${emoji} *${(p.title || 'Untitled').substring(0, 80)}*\n`;
-        msg += `_${p.classification || 'other'}_ \\| Score: ${p.relevanceScore ?? '?'}\n`;
-        msg += `${p.summaryShort || p.summary?.substring(0, 200) || 'No summary'}\n`;
-        msg += `[ArXiv](${p.absUrl || p.url})\n\n`;
+      if (top.length === 0) {
+        await bot.sendMessage('No papers found.');
+        return;
+      }
+      
+      let msg = `*Top ${top.length} Papers*\n${'─'.repeat(18)}\n\n`;
+      
+      for (let i = 0; i < top.length; i++) {
+        const p = top[i] as any;
+        const num = i + 1;
+        const title = (p.title || 'Untitled').substring(0, 70);
+        
+        msg += `${num}. *${title}*\n`;
+        msg += `   _${p.classification || 'other'}_ | ${p.relevance?.toUpperCase()}\n`;
+        
+        const summary = p.summaryShort || p.summary?.substring(0, 250) || 'No summary';
+        msg += `   ${summary}\n`;
+        
+        if (p.methods) {
+          msg += `   *Method:* ${p.methods.substring(0, 150)}\n`;
+        }
+        if (p.pros) {
+          msg += `   *Pros:* ${p.pros.substring(0, 150)}\n`;
+        }
+        if (p.cons || p.limitations) {
+          msg += `   *Limits:* ${(p.cons || p.limitations || '').substring(0, 150)}\n`;
+        }
+        if (p.importance) {
+          msg += `   *Why:* ${p.importance.substring(0, 150)}\n`;
+        }
+        
+        const url = p.absUrl || p.url || '';
+        if (url) {
+          msg += `   [ArXiv](${url})\n`;
+        }
+        msg += '\n';
       }
       
       await bot.sendMessage(msg);
@@ -60,4 +89,3 @@ export const papersCommand: CommandHandler = {
     }, bot);
   },
 };
-

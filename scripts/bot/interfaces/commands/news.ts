@@ -1,10 +1,10 @@
-﻿/**
+/**
  * News command - scan RSS feeds for relevant news
  */
 
 import type { CommandHandler, CommandContext } from '../types/commands';
 import { scanNewsSources, formatNewsForTelegram } from '../../infrastructure/connectors/RssConnector';
-import { logError } from '../../infrastructure/logging/Logger';
+import { logError, logWarn } from '../../infrastructure/logging/Logger';
 
 export const newsCommand: CommandHandler = {
   name: 'news',
@@ -21,6 +21,13 @@ export const newsCommand: CommandHandler = {
       const news = await scanNewsSources(config);
       const session = sessionManager.getSession(chatId);
       
+      if (news.length === 0) {
+        await bot.sendMessage(
+          '_No news found with current topics. Try /daily for broader scan or /status to check feed health._'
+        );
+        return;
+      }
+      
       session.news = news.slice(0, 10);
       session.state = 'collecting_comment';
       
@@ -35,8 +42,7 @@ export const newsCommand: CommandHandler = {
       
     } catch (e: any) {
       logError('News command failed', e);
-      await bot.sendMessage(`âŒ News scan error: ${e.message}`);
+      await bot.sendMessage(`❌ News scan error: ${e.message}`);
     }
   },
 };
-

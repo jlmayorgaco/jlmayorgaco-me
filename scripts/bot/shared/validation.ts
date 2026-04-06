@@ -83,6 +83,11 @@ export const GeminiClassificationSchema = z.array(
       'signal-processing',
       'other',
     ]),
+    pros: z.string().optional(),
+    cons: z.string().optional(),
+    methods: z.string().optional(),
+    limitations: z.string().optional(),
+    importance: z.string().optional(),
   }),
 );
 

@@ -25,7 +25,7 @@ export async function withCommandError<T>(
     logError(`Command '${commandName}' failed`, error as Error);
 
     const userMessage = formatUserMessage(error as Error);
-    await bot.sendMessage(`âŒ ${userMessage}`);
+    await bot.sendMessage(`❌ ${userMessage}`);
 
     throw error;
   }
