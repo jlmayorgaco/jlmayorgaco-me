@@ -74,7 +74,10 @@ export type GeminiConfig = z.infer<typeof GeminiConfigSchema>;
 export async function loadConfig(): Promise<BotConfig> {
   const envConfig = loadFromEnvironment();
 
-  if (envConfig.telegram.botToken && envConfig.gemini.apiKey) {
+  const telegramToken = envConfig.telegram?.botToken;
+  const geminiKey = envConfig.gemini?.apiKey;
+
+  if (telegramToken && geminiKey) {
     return validateConfig(envConfig);
   }
 

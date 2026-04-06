@@ -1,254 +1,386 @@
+// src/infrastructure/external/prompts/geminiPrompts.ts
+
 /**
- * Gemini AI integration with retry logic and circuit breaker
+ * Centralized prompt builders for Gemini.
  *
- * @module infrastructure/external/GeminiService
+ * Goals:
+ * - deterministic, JSON-first prompts
+ * - low-hallucination behavior
+ * - strict relevance filtering for noisy paper feeds
+ * - reusable prompt construction for papers and blog generation
+ *
+ * Notes:
+ * - Keep model temperature low for structured JSON tasks (recommended: 0.2-0.3)
+ * - Validate all outputs with Zod or an equivalent schema before use
+ * - Prefer batching 5-10 papers per request to reduce truncation risk
  */
 
-import { logError, logInfo, logWarn } from '../logging/Logger';
-import { withRetry, withTimeout, CircuitBreaker } from '../../shared/utils';
-import {
-  safeValidate,
-  GeminiClassificationSchema,
-  GeminiBlogPostSchema,
-  sanitizeUserInput,
-} from '../../shared/validation';
-import type { BotConfig } from '../../config/index';
+export const PAPER_CLASSIFICATIONS = [
+  'control-theory',
+  'robotics',
+  'embedded',
+  'power-systems',
+  'ml-ai',
+  'signal-processing',
+  'other',
+] as const;
 
-interface GeminiResponse {
-  candidates: Array<{
-    content: {
-      parts: Array<{ text: string }>;
-    };
-    finishReason?: string;
-  }>;
-  promptFeedback?: {
-    blockReason?: string;
-  };
-}
+export const PAPER_RELEVANCE = ['high', 'medium', 'low'] as const;
 
-// Circuit breaker for Gemini API
-const geminiCircuitBreaker = new CircuitBreaker({
-  failureThreshold: 5,
-  resetTimeout: 60000, // 1 minute
-});
+export const PAPER_ACTIONABILITY = ['read-now', 'skim', 'ignore'] as const;
 
-export async function callGemini(
-  config: BotConfig,
-  prompt: string,
-  systemInstruction?: string,
-): Promise<string> {
-  return withTimeout(
-    () => geminiCircuitBreaker.execute(() => makeGeminiCall(config, prompt, systemInstruction)),
-    config.geminiTimeoutMs,
-    'Gemini API call timed out',
-  );
-}
+export type PaperClassificationType = (typeof PAPER_CLASSIFICATIONS)[number];
+export type PaperRelevance = (typeof PAPER_RELEVANCE)[number];
+export type PaperActionability = (typeof PAPER_ACTIONABILITY)[number];
 
-async function makeGeminiCall(
-  config: BotConfig,
-  prompt: string,
-  systemInstruction?: string,
-): Promise<string> {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${config.gemini.model}:generateContent?key=${config.gemini.apiKey}`;
-
-  const body: {
-    contents: Array<{ parts: Array<{ text: string }> }>;
-    systemInstruction?: { parts: Array<{ text: string }> };
-    generationConfig: {
-      temperature: number;
-      maxOutputTokens: number;
-      topP: number;
-      topK: number;
-    };
-  } = {
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: {
-      temperature: 0.7,
-      maxOutputTokens: 4096,
-      topP: 0.95,
-      topK: 40,
-    },
-  };
-
-  if (systemInstruction) {
-    body.systemInstruction = { parts: [{ text: systemInstruction }] };
-  }
-
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    const errText = await res.text();
-    logError('Gemini API error', new Error(errText), { status: res.status });
-    throw new Error(`Gemini API error ${res.status}: ${errText}`);
-  }
-
-  const data: GeminiResponse = await res.json();
-
-  if (data.promptFeedback?.blockReason) {
-    throw new Error(`Content blocked: ${data.promptFeedback.blockReason}`);
-  }
-
-  if (!data.candidates || data.candidates.length === 0) {
-    throw new Error('Empty response from Gemini');
-  }
-
-  const candidate = data.candidates[0];
-
-  if (candidate.finishReason && candidate.finishReason !== 'STOP') {
-    logWarn('Gemini response incomplete', { reason: candidate.finishReason });
-  }
-
-  return candidate.content?.parts?.[0]?.text ?? '';
-}
-
-// --- Paper Classification ---
-
-export interface PaperClassification {
-  paperId: string;
-  relevance: 'high' | 'medium' | 'low';
-  summary: string;
-  classification: string;
-  pros?: string;
-  cons?: string;
-  methods?: string;
-  limitations?: string;
-  importance?: string;
-}
-
-export async function classifyAndSummarizePapers(
-  config: BotConfig,
-  papers: Array<{
-    id: string;
-    title: string;
-    summary?: string;
-    categories?: string[];
-  }>,
-): Promise<PaperClassification[]> {
-  if (papers.length === 0) {
-    return [];
-  }
-
-  const systemPrompt = `Research assistant. Analyze papers. Return JSON array:
-[{ "paperId": "id", "relevance": "high|medium|low", "summary": "short summary", "classification": "control-theory|robotics|embedded|power-systems|ml-ai|signal-processing|other", "pros": "key advantages", "cons": "limitations", "methods": "technical approach", "limitations": "scope limitations", "importance": "why this matters" }]
-Relevance based on: distributed control, robotics, FPGA, power systems, embedded systems.
-Return ONLY JSON array.`;
-
-  const papersText = papers
-    .map(
-      (p, i) =>
-        `ID:${p.id}\nTitle:${sanitizeUserInput(p.title)}\nAbstract:${sanitizeUserInput(p.summary?.substring(0, 1500) || '')}\nCat:${p.categories?.join(',') || ''}`,
-    )
-    .join('\n---\n');
-
-  const prompt = `Classify:\n${papersText}`;
-
-  try {
-    const response = await withRetry(() => callGemini(config, prompt, systemPrompt), {
-      maxRetries: config.retryAttempts,
-      baseDelay: config.retryBaseDelayMs,
-      onRetry: (error, attempt) => {
-        logWarn(`Retrying paper classification (attempt ${attempt})`, { error: error.message });
-      },
-    });
-
-    const cleaned = response
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
-      .trim();
-
-    const parsed = JSON.parse(cleaned);
-    const validation = safeValidate(GeminiClassificationSchema, parsed);
-
-    if (!validation.success) {
-      throw new Error(`Invalid classification format: ${validation.errors?.join(', ')}`);
-    }
-
-    return validation.data!;
-  } catch (error) {
-    logError('Failed to classify papers', error as Error);
-
-    return papers.map(p => ({
-      paperId: p.id,
-      relevance: 'medium' as const,
-      summary: p.summary?.substring(0, 200) || 'No summary available',
-      classification: 'other',
-    }));
-  }
-}
-
-// --- Blog Post Generation ---
-
-export interface GeneratedBlogPost {
+export interface PaperCandidate {
+  id: string;
   title: string;
-  description: string;
-  category: string;
-  tags: string[];
-  content: string;
-  imageQuery: string;
+  summary?: string;
+  categories?: string[];
+  authors?: string[];
+  published?: string;
+  url?: string;
 }
 
-export async function generateBlogPost(
-  config: BotConfig,
-  data: {
-    title: string;
-    newsItems: string[];
-    userComment: string;
-    context: string;
-  },
-): Promise<GeneratedBlogPost> {
-  const systemPrompt = `Tech blog writer. Generate JSON:
-{ "title": "5-100 chars", "description": "1-2 sentences", "category": "Research|Tutorial|Lab Notes|Industry", "tags": ["tag1", "tag2"], "content": "markdown post 300 words", "imageQuery": "2-4 words" }
-Based on news & context. No emojis. Professional. Return ONLY JSON object.`;
+export interface PaperClassificationOutput {
+  paperId: string;
+  relevance: PaperRelevance;
+  score: number;
+  classification: PaperClassificationType;
+  summary: string;
+  pros: string[];
+  cons: string[];
+  methods: string[];
+  limitations: string[];
+  importance: string;
+  actionability: PaperActionability;
+}
 
-  const prompt = `Generate post from:
-NEWS:
-${data.newsItems.slice(0, 5).map(item => sanitizeUserInput(item)).join('\n')}
+export interface BlogGenerationInput {
+  title: string;
+  newsItems: string[];
+  userComment: string;
+  context: string;
+}
 
-INSIGHT:
-${sanitizeUserInput(data.userComment)}
+const MAX_TITLE_CHARS = 300;
+const MAX_ABSTRACT_CHARS = 1800;
+const MAX_CONTEXT_CHARS = 3000;
+const MAX_NEWS_ITEM_CHARS = 700;
+const MAX_USER_COMMENT_CHARS = 1200;
 
-CONTEXT:
-${data.context}`;
+function compactWhitespace(text: string): string {
+  return text.replace(/\s+/g, ' ').trim();
+}
 
-  try {
-    const response = await withRetry(() => callGemini(config, prompt, systemPrompt), {
-      maxRetries: config.retryAttempts,
-      baseDelay: config.retryBaseDelayMs,
-      onRetry: (error, attempt) => {
-        logWarn(`Retrying blog post generation (attempt ${attempt})`, { error: error.message });
-      },
-    });
+function stripControlChars(text: string): string {
+  return text.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
+}
 
-    const cleaned = response
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
-      .trim();
+function truncate(text: string, maxChars: number): string {
+  if (text.length <= maxChars) return text;
+  return `${text.slice(0, maxChars - 1).trim()}…`;
+}
 
-    const parsed = JSON.parse(cleaned);
-    const validation = safeValidate(GeminiBlogPostSchema, parsed);
+function cleanForPrompt(text: string, maxChars: number): string {
+  return truncate(compactWhitespace(stripControlChars(text)), maxChars);
+}
 
-    if (!validation.success) {
-      throw new Error(`Invalid blog post format: ${validation.errors?.join(', ')}`);
-    }
+function formatList(items: string[]): string {
+  return items.map(item => `- ${item}`).join('\n');
+}
 
-    return validation.data!;
-  } catch (error) {
-    logError('Failed to generate blog post', error as Error);
-    throw error;
+/**
+ * Primary system prompt for paper classification.
+ * Strict, JSON-only, and tuned for noisy academic search results.
+ */
+export function buildPaperClassificationSystemPrompt(): string {
+  return compactWhitespace(`
+You are a rigorous technical research assistant.
+
+Your job is to analyze candidate research papers for a user focused on:
+- distributed control
+- control theory
+- robotics
+- multi-agent systems
+- embedded systems
+- FPGA
+- real-time systems
+- power systems
+- inverter-based resources
+- frequency estimation
+- RoCoF
+- signal processing
+- applied machine learning for estimation, control, perception, optimization, or forecasting
+
+You will receive only paper metadata such as title, abstract, categories, authors, publication date, and URL.
+Use ONLY the provided metadata.
+Do NOT invent experiments, equations, datasets, benchmarks, implementation details, or results that are not supported by the input.
+
+Main goal:
+Filter noisy search results and rank papers by actual usefulness for this user.
+
+Return ONLY a valid JSON array.
+Do NOT use markdown.
+Do NOT wrap the JSON in code fences.
+Do NOT include commentary before or after the JSON.
+Do NOT omit any paper.
+Return exactly one object per input paper.
+Return the objects in the same order as the input papers.
+
+Required output schema for each paper:
+{
+  "paperId": "string",
+  "relevance": "high|medium|low",
+  "score": 0,
+  "classification": "control-theory|robotics|embedded|power-systems|ml-ai|signal-processing|other",
+  "summary": "1-2 sentence plain technical summary",
+  "pros": ["string"],
+  "cons": ["string"],
+  "methods": ["string"],
+  "limitations": ["string"],
+  "importance": "1 sentence explaining why this matters for this specific user",
+  "actionability": "read-now|skim|ignore"
+}
+
+Scoring guide:
+- 90-100 = extremely relevant to the user's core research or engineering interests
+- 70-89 = clearly useful and worth reading
+- 40-69 = adjacent or partially useful
+- 0-39 = mostly noise, weak match, or off-topic
+
+Relevance rules:
+- high = direct fit in topic, method, or application domain
+- medium = adjacent but still potentially useful
+- low = weak fit, generic match, or keyword noise
+
+Actionability rules:
+- read-now = strong fit and worth deeper reading soon
+- skim = maybe useful, but not a priority
+- ignore = mostly noise or too far from the user's goals
+
+Classification rules: choose exactly ONE primary classification.
+Definitions:
+- control-theory = control design, stability, observers, MPC, estimation tightly tied to system dynamics, distributed control, consensus, multi-agent dynamics
+- robotics = planning, navigation, manipulation, autonomy, HRI, robot perception, robot estimation, robot coordination
+- embedded = FPGA, MCU, DSP hardware, real-time implementation, hardware/software co-design, edge deployment
+- power-systems = grids, inverters, PMU, RoCoF, frequency estimation, power electronics, protection, energy systems
+- ml-ai = machine learning is the main methodological contribution and the paper is not better classified by a stronger domain label above
+- signal-processing = filtering, spectral estimation, time-frequency analysis, transforms, detection, denoising
+- other = not meaningfully covered by the categories above
+
+Tie-break rules for choosing the single primary classification:
+- Prefer the application domain when it is central:
+  - robot planning + learning => robotics
+  - PMU/frequency/RoCoF + estimation => power-systems
+  - FPGA/DSP implementation + estimation => embedded
+- Use ml-ai only when the main novelty is primarily machine learning and no stronger domain label dominates
+- Use signal-processing for method-centric estimation/filtering papers without a stronger robotics, power-systems, or embedded anchor
+
+Important filtering behavior:
+- Do NOT overrate papers just because they contain keywords like "frequency", "control", "filter", "robotics", or "Kalman"
+- If a paper appears due to noisy keyword search but is not truly relevant, mark it low
+- Be strict on topical fit
+- Prefer papers with technical depth and practical relevance to the user's actual domains
+
+Writing rules:
+- summary must be <= 45 words
+- importance must be tailored to this user's interests, not generic academic importance
+- If metadata is vague or insufficient, say so in cons or limitations
+- Do not repeat the same idea across pros, cons, methods, and limitations
+- Each array should usually contain 1 to 3 concise items
+- Do not use marketing language
+- Be precise, technical, and restrained
+`);
+}
+
+/**
+ * User prompt for paper classification.
+ * Keeps paper blocks structured and predictable.
+ */
+export function buildPaperClassificationUserPrompt(papers: PaperCandidate[]): string {
+  if (!papers.length) {
+    throw new Error('buildPaperClassificationUserPrompt requires at least one paper');
   }
+
+  const header = [
+    'Analyze the following research papers.',
+    'Return exactly one JSON object per paper.',
+    'Preserve the same paper order as given below.',
+    'Do not invent missing details.',
+    '',
+  ].join('\n');
+
+  const paperBlocks = papers
+    .map((paper, index) => {
+      const id = cleanForPrompt(paper.id, 120);
+      const title = cleanForPrompt(paper.title || 'Untitled', MAX_TITLE_CHARS);
+      const abstract = cleanForPrompt(paper.summary || 'No abstract provided.', MAX_ABSTRACT_CHARS);
+      const categories = (paper.categories ?? []).map(c => cleanForPrompt(c, 80));
+      const authors = (paper.authors ?? []).slice(0, 12).map(a => cleanForPrompt(a, 80));
+      const published = paper.published ? cleanForPrompt(paper.published, 50) : 'Unknown';
+      const url = paper.url ? cleanForPrompt(paper.url, 300) : 'Unknown';
+
+      return [
+        `PAPER ${index + 1}`,
+        `paperId: ${id}`,
+        `title: ${title}`,
+        `abstract: ${abstract}`,
+        `categories: ${categories.length ? categories.join(', ') : 'Unknown'}`,
+        `authors: ${authors.length ? authors.join(', ') : 'Unknown'}`,
+        `published: ${published}`,
+        `url: ${url}`,
+      ].join('\n');
+    })
+    .join('\n\n---\n\n');
+
+  return `${header}${paperBlocks}`;
 }
 
-// --- Circuit Breaker Status ---
+/**
+ * Optional lighter-weight filter prompt.
+ * Useful as stage 1 if you want a cheaper pre-filter before full analysis.
+ */
+export function buildPaperFilterSystemPrompt(): string {
+  return compactWhitespace(`
+You are a strict technical paper triage assistant.
 
-export function getGeminiCircuitStatus(): {
-  state: string;
-  failureCount: number;
-  lastFailureTime?: number;
-} {
-  return geminiCircuitBreaker.metrics;
+Use ONLY the provided metadata.
+Do NOT invent missing details.
+
+Return ONLY a valid JSON array.
+Do NOT use markdown.
+Do NOT include any extra text.
+
+Return one object per input paper in the same order:
+{
+  "paperId": "string",
+  "relevance": "high|medium|low",
+  "score": 0,
+  "reason": "one short technical reason",
+  "actionability": "read-now|skim|ignore"
 }
 
+Judge relevance for:
+distributed control, control theory, robotics, multi-agent systems, embedded systems, FPGA, power systems, inverter-based resources, frequency estimation, RoCoF, signal processing, and applied ML.
+
+Be strict.
+Ignore keyword noise.
+Do not overrate generic ML or unrelated physics papers.
+`);
+}
+
+export function buildPaperFilterUserPrompt(papers: PaperCandidate[]): string {
+  if (!papers.length) {
+    throw new Error('buildPaperFilterUserPrompt requires at least one paper');
+  }
+
+  return buildPaperClassificationUserPrompt(papers);
+}
+
+/**
+ * System prompt for generating a blog post from news plus user insight.
+ * JSON-only, professional, concise, and deploy-friendly.
+ */
+export function buildBlogPostSystemPrompt(): string {
+  return compactWhitespace(`
+You are a disciplined technical blog writer for a professional engineering and research site.
+
+You will receive:
+- a working title or theme
+- a list of news items or research items
+- a user comment or opinion
+- additional context
+
+Your task:
+Create a coherent blog post that is technically credible, readable, and grounded in the provided material.
+
+Use ONLY the provided input.
+Do NOT invent external facts, benchmarks, quotes, company statements, or citations.
+If the input is limited, write conservatively and synthesize only what is supported.
+
+Return ONLY a valid JSON object.
+Do NOT use markdown code fences.
+Do NOT include extra commentary.
+
+Required JSON schema:
+{
+  "title": "string",
+  "description": "string",
+  "category": "Research|Tutorial|Lab Notes|Industry",
+  "tags": ["string"],
+  "content": "markdown string",
+  "imageQuery": "string"
+}
+
+Writing requirements:
+- title: 5 to 100 characters
+- description: 1 to 2 sentences, clear and specific
+- tags: 3 to 8 relevant tags, lowercase preferred, no duplicates
+- imageQuery: 2 to 6 words, visually concrete, safe for image search
+- content: 450 to 900 words in markdown
+- no emojis
+- no clickbait
+- no hype language
+- professional but readable tone
+- explain the technical point clearly
+- integrate the user's comment naturally
+- prefer clean structure with:
+  - brief introduction
+  - 2 to 4 short sections
+  - concise conclusion
+- if uncertainty exists, state it carefully instead of overstating claims
+
+Category selection:
+- Research = paper analysis, scientific insight, method discussion
+- Tutorial = practical how-to, implementation, debugging, workflow
+- Lab Notes = engineering reflections, experiments, lessons learned
+- Industry = product, tooling, ecosystem, applied trends
+
+Do not mention that you are an AI.
+Do not mention the prompt.
+`);
+}
+
+/**
+ * User prompt for blog generation.
+ */
+export function buildBlogPostUserPrompt(data: BlogGenerationInput): string {
+  const title = cleanForPrompt(data.title, MAX_TITLE_CHARS);
+
+  const newsItems = (data.newsItems ?? [])
+    .slice(0, 8)
+    .map(item => cleanForPrompt(item, MAX_NEWS_ITEM_CHARS));
+
+  const userComment = cleanForPrompt(data.userComment || '', MAX_USER_COMMENT_CHARS);
+  const context = cleanForPrompt(data.context || '', MAX_CONTEXT_CHARS);
+
+  const sections = [
+    `TITLE/THEME:\n${title}`,
+    `NEWS ITEMS:\n${newsItems.length ? formatList(newsItems) : '- None provided'}`,
+    `USER INSIGHT:\n${userComment || 'No user comment provided.'}`,
+    `CONTEXT:\n${context || 'No extra context provided.'}`,
+    '',
+    'Generate the JSON object now.',
+  ];
+
+  return sections.join('\n\n');
+}
+
+/**
+ * Small helper if you want to centralize the recommended model settings
+ * for this prompt module.
+ */
+export function getRecommendedGeminiGenerationConfig() {
+  return {
+    temperature: 0.25,
+    topP: 0.9,
+    topK: 40,
+    maxOutputTokens: 4096,
+  };
+}
+
+export function getGeminiCircuitStatus(): { state: 'closed' | 'open' | 'half-open'; failures: number } {
+  return { state: 'closed', failures: 0 };
+}

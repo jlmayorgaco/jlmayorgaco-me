@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ArXiv Connector - Production-ready
  * 
  * Features:
@@ -135,7 +135,7 @@ export class ArxivConnector {
           logWarn(`Retrying ArXiv request (attempt ${attempt})`, { error: error.message });
         },
       }
-    )();
+    );
   }
 
   private parseArxivXml(xml: string, storeRaw = false): ArxivPaper[] {

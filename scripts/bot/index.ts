@@ -48,20 +48,29 @@ export {
   BlogPostDataSchema,
   GeminiClassificationSchema,
   GeminiBlogPostSchema,
-  sanitizeForTelegram,
   sanitizeUserInput,
   generateSlug,
   type ValidationResult,
 } from './shared/validation';
 
-// Gemini / LLM
+// Gemini / LLM - Prompt builders and types only (actual API calls via external service)
 export {
-  callGemini,
-  generateBlogPost,
-  classifyAndSummarizePapers,
-  getGeminiCircuitStatus,
-  type PaperClassification,
-  type GeneratedBlogPost,
+  buildPaperClassificationSystemPrompt,
+  buildPaperClassificationUserPrompt,
+  buildPaperFilterSystemPrompt,
+  buildPaperFilterUserPrompt,
+  buildBlogPostSystemPrompt,
+  buildBlogPostUserPrompt,
+  getRecommendedGeminiGenerationConfig,
+  PAPER_CLASSIFICATIONS,
+  PAPER_RELEVANCE,
+  PAPER_ACTIONABILITY,
+  type PaperClassificationType,
+  type PaperRelevance,
+  type PaperActionability,
+  type PaperCandidate,
+  type PaperClassificationOutput,
+  type BlogGenerationInput,
 } from './infrastructure/external/GeminiService';
 
 // Blog Generator
