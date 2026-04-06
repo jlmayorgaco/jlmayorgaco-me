@@ -7,7 +7,7 @@
  */
 
 import { loadConfig, validateEnvironment } from '../../config/index';
-import { TelegramBot } from '../../telegram';
+import { TelegramBot } from '../inbound/TelegramBot';
 import { getGeminiCircuitStatus } from '../external/GeminiService';
 import { validateGitSetup } from '../external/GitPublisher';
 import { logError } from '../logging/Logger';

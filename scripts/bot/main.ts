@@ -3,15 +3,15 @@
  * Production-ready: proper lifecycle management, health checks, error recovery
  */
 
-import { loadConfig, validateEnvironment } from './config';
-import { TelegramBot } from './telegram';
-import { initializeSessionManager, destroySessionManager } from './session-manager';
-import { getCommandRegistry } from './command-registry';
-import { logError, logInfo } from './logger';
-import { safeValidate, UserCommentSchema, EditInstructionSchema } from './validation';
-import { generateBlogPost } from './gemini';
-import { saveBlogPost, previewBlogPost } from './blog-generator';
-import { publishPost, validateGitSetup } from './publisher';
+import { loadConfig, validateEnvironment } from './config/index';
+import { TelegramBot } from './infrastructure/inbound/TelegramBot';
+import { initializeSessionManager, destroySessionManager } from './infrastructure/persistence/SessionManager';
+import { getCommandRegistry } from './interfaces/CommandRegistry';
+import { logError, logInfo } from './infrastructure/logging/Logger';
+import { safeValidate, UserCommentSchema, EditInstructionSchema } from './shared/validation';
+import { generateBlogPost } from './infrastructure/external/GeminiService';
+import { saveBlogPost, previewBlogPost } from './infrastructure/formatting/BlogGenerator';
+import { publishPost, validateGitSetup } from './infrastructure/external/GitPublisher';
 
 // Import commands
 import { helpCommand } from './commands/help';
@@ -65,8 +65,9 @@ async function main() {
     process.exit(1);
   }
 
+  const activeBot = bot; // Closure-safe reference
   logInfo('Connected to Telegram');
-  await bot.sendMessage('*JLMT Lab Bot Online* ✅\nType /help to see commands');
+  await activeBot.sendMessage('*JLMT Lab Bot Online* ✅\nType /help to see commands');
 
   // Register commands
   const registry = getCommandRegistry();
@@ -78,7 +79,7 @@ async function main() {
   registry.register(cancelCommand);
 
   // Handle messages
-  bot.onMessage(async (text: string, chatId: number) => {
+  activeBot.onMessage(async (text: string, chatId: number) => {
     if (shuttingDown) return;
 
     const session = sessionManager.getSession(chatId);
@@ -86,12 +87,12 @@ async function main() {
 
     // State machine for multi-step flows
     if (session.state === 'collecting_comment' && !cmd.startsWith('/')) {
-      await handleUserComment(text, chatId, config, sessionManager, bot);
+      await handleUserComment(text, chatId, config, sessionManager, activeBot);
       return;
     }
 
     if (session.state === 'confirming_publish') {
-      await handleConfirmation(cmd, text, chatId, config, sessionManager, bot);
+      await handleConfirmation(cmd, text, chatId, config, sessionManager, activeBot);
       return;
     }
 
@@ -99,14 +100,14 @@ async function main() {
     if (cmd.startsWith('/')) {
       const commandName = cmd.slice(1).split(' ')[0];
       await registry.execute(commandName, {
-        bot,
+        bot: activeBot,
         config,
         sessionManager,
         chatId,
       });
     } else {
       // Unknown text
-      await bot.sendMessage(
+      await activeBot.sendMessage(
         'I didn\'t understand that. Use /help to see available commands.'
       );
     }
@@ -308,7 +309,7 @@ function setupShutdownHandlers(
 
     try {
       // Stop accepting new messages
-      bot.stop();
+      if (bot) bot.stop();
 
       // Cleanup
       destroySessionManager();

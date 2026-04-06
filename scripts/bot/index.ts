@@ -17,16 +17,16 @@
  */
 
 // Config
-export { loadConfig, validateEnvironment, getSafeConfig, type BotConfig } from './config';
+export { loadConfig, validateEnvironment, getSafeConfig, type BotConfig } from './config/index';
 
 // Telegram
-export { TelegramBot } from './telegram';
+export { TelegramBot } from './infrastructure/inbound/TelegramBot';
 
 // Session
-export { SessionManager, initializeSessionManager, destroySessionManager, type UserSession } from './session-manager';
+export { SessionManager, initializeSessionManager, destroySessionManager, type UserSession } from './infrastructure/persistence/SessionManager';
 
 // Logging
-export { logger, logInfo, logError, logWarn, logDebug } from './logger';
+export { logger, logInfo, logError, logWarn, logDebug } from './infrastructure/logging/Logger';
 
 // Utilities
 export {
@@ -39,7 +39,7 @@ export {
   type RetryOptions,
   type CircuitBreakerOptions,
   type RateLimiterOptions,
-} from './utils';
+} from './shared/utils';
 
 // Validation
 export {
@@ -52,7 +52,7 @@ export {
   sanitizeUserInput,
   generateSlug,
   type ValidationResult,
-} from './validation';
+} from './shared/validation';
 
 // Gemini / LLM
 export {
@@ -62,7 +62,7 @@ export {
   getGeminiCircuitStatus,
   type PaperClassification,
   type GeneratedBlogPost,
-} from './gemini';
+} from './infrastructure/external/GeminiService';
 
 // Blog Generator
 export {
@@ -70,7 +70,7 @@ export {
   generateFrontmatter,
   previewBlogPost,
   type BlogPostData,
-} from './blog-generator';
+} from './infrastructure/formatting/BlogGenerator';
 
 // Publisher
 export {
@@ -79,10 +79,10 @@ export {
   checkGitStatus,
   type PublishResult,
   type GitStatus,
-} from './publisher';
+} from './infrastructure/external/GitPublisher';
 
 // News Scanner
-export { scanNewsSources, formatNewsForTelegram, type NewsItem } from './news-scanner';
+export { scanNewsSources, formatNewsForTelegram, type NewsItem } from './infrastructure/connectors/RssConnector';
 
 // Command Registry
-export { getCommandRegistry, BotCommandRegistry } from './command-registry';
+export { getCommandRegistry, BotCommandRegistry } from './interfaces/CommandRegistry';

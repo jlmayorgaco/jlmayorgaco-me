@@ -5,13 +5,13 @@
  */
 
 import { loadConfig } from '../config/index';
-import { TelegramBot } from '../telegram';
+import { TelegramBot } from '../infrastructure/inbound/TelegramBot';
 import { classifyAndSummarizePapers, generateBlogPost } from '../infrastructure/external/GeminiService';
 import { scanNewsSources } from '../infrastructure/connectors/RssConnector';
 import { saveBlogPost } from '../infrastructure/formatting/BlogGenerator';
 import { validateGitSetup } from '../infrastructure/external/GitPublisher';
 import { logError, logInfo } from '../infrastructure/logging/Logger';
-import { runScanner } from '../../../src/lib/pipeline/arxiv-scanner.js';
+import { runScanner } from '../../../src/lib/pipeline/arxiv-scanner';
 
 async function autoDigest() {
   const startTime = Date.now();
