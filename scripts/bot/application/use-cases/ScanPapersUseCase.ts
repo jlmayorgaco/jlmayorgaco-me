@@ -112,13 +112,12 @@ export class ScanPapersUseCase {
     
     for (const p of papers) {
       const emoji = p.relevance === 'high' ? '🔴' : '🟨';
-      const title = MarkdownFormatter.escape(MarkdownFormatter.truncate(p.title || 'Untitled', 80), 'v2');
+      const title = MarkdownFormatter.escape(MarkdownFormatter.truncate(p.title || 'Untitled', 80), 'v1');
       const summary = MarkdownFormatter.escape(MarkdownFormatter.truncate(
         p.summaryShort || p.summary || '', 
         250
-      ), 'v2');
-      const classification = MarkdownFormatter.escape(p.classification || 'other', 'v2');
-      const score = MarkdownFormatter.escape(String(p.relevanceScore ?? '?'), 'v2');
+      ), 'v1');
+      const classification = MarkdownFormatter.escape(p.classification || 'other', 'v1');
       
       const pUrl = p.absUrl || p.url || '';
       // Raw string URL construction to avoid escaping breaking the actual link parsing
@@ -126,7 +125,7 @@ export class ScanPapersUseCase {
       const cleanUrl = pUrl.replace(/\\/g, '\\\\').replace(/\)/g, '\\)');
       
       msg += `${emoji} *${title}*\n`;
-      msg += `_${classification}_ \\| Score: ${score}\n`;
+      msg += `_${classification}_\n`;
       msg += `${summary}\n`;
       msg += `[Read on ArXiv](${cleanUrl})\n\n`;
     }

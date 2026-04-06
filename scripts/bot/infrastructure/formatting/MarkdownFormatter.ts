@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Markdown Formatter - Single source of truth for markdown operations
  * Consolidates all markdown escaping and formatting
  */
@@ -12,20 +12,7 @@ export class MarkdownFormatter {
     '*': '\\*',
     '[': '\\[',
     ']': '\\]',
-    '(': '\\(',
-    ')': '\\)',
-    '~': '\\~',
     '`': '\\`',
-    '>': '\\>',
-    '#': '\\#',
-    '+': '\\+',
-    '-': '\\-',
-    '=': '\\=',
-    '|': '\\|',
-    '{': '\\{',
-    '}': '\\}',
-    '.': '\\.',
-    '!': '\\!',
   };
 
   private static readonly TELEGRAM_V2_ESCAPE_CHARS: Record<string, string> = {
@@ -52,16 +39,45 @@ export class MarkdownFormatter {
 
   /**
    * Escape markdown characters for Telegram
+   * Automatically bypasses URLs inside standard []() markdown links
    * @param text - Text to escape
-   * @param mode - 'v1' (legacy) or 'v2' (MarkdownV2)
+   * @param mode - 'v1' (legacy) or 'v2' (MarkdownV2) defaults to 'v2'
    * @returns Escaped text safe for Telegram
    */
   static escape(text: string, mode: 'v1' | 'v2' = 'v1'): string {
     const escapeMap = mode === 'v2' 
       ? this.TELEGRAM_V2_ESCAPE_CHARS 
       : this.TELEGRAM_ESCAPE_CHARS;
-    
-    return text.replace(/[\_*\[\]()~`>#+=|{}.!\\-]/g, char => escapeMap[char] || char);
+
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    let lastIndex = 0;
+    let result = '';
+    let match;
+
+    while ((match = linkRegex.exec(text)) !== null) {
+      // Escape the text before the link
+      const preText = text.substring(lastIndex, match.index);
+      result += preText.replace(/[\_*\[\]`]/g, char => escapeMap[char] || char);
+
+      // Add the link. The label is escaped, but the url is preserved.
+      const label = match[1];
+      const url = match[2];
+      
+      const escapedLabel = label.replace(/[\_*\[\]`]/g, char => escapeMap[char] || char);
+      
+      // We only escape ) and \ in the URL to prevent breaking the Markdown parser, everything else stays clean
+      const safeUrl = url.replace(/\\/g, '\\\\').replace(/\)/g, '\\)');
+      
+      result += `[${escapedLabel}](${safeUrl})`;
+      
+      lastIndex = linkRegex.lastIndex;
+    }
+
+    // Escape the remaining text
+    const remainingText = text.substring(lastIndex);
+    result += remainingText.replace(/[\_*\[\]`]/g, char => escapeMap[char] || char);
+
+    return result;
   }
 
   /**
@@ -224,21 +240,6 @@ export class MarkdownFormatter {
   static header(text: string, level: number = 1): string {
     const hashes = '#'.repeat(Math.min(Math.max(level, 1), 6));
     return `${hashes} ${text}`;
-  }
-
-  /**
-   * Escape only text content, not URLs
-   * Use when you have URLs that shouldn't be escaped
-   */
-  static escapeTextOnly(text: string): string {
-    // Match markdown link pattern [text](url)
-    const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
-    
-    return text.replace(linkPattern, (match, linkText, url) => {
-      // Escape only the link text, not the URL
-      const escapedText = this.escape(linkText);
-      return `[${escapedText}](${url})`;
-    });
   }
 }
 

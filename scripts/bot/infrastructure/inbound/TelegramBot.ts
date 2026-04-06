@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Telegram Bot client with rate limiting and retry logic
  *
  * @module infrastructure/inbound/TelegramBot
@@ -6,7 +6,6 @@
 
 import { logError, logInfo, logWarn } from '../logging/Logger';
 import { TokenBucket } from '../../shared/utils';
-import { sanitizeForTelegram } from '../../shared/validation';
 import type { BotConfig } from '../../config/index';
 
 interface TelegramUpdate {
@@ -81,14 +80,12 @@ export class TelegramBot {
         return this.sendChunkedMessage(text, parseMode);
       }
 
-      const safeText = parseMode === 'Markdown' ? sanitizeForTelegram(text) : text;
-
       const res = await fetch(this.url('sendMessage'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: this.chatId,
-          text: safeText,
+          text: text,
           parse_mode: parseMode,
           disable_web_page_preview: false,
         }),
@@ -162,14 +159,12 @@ export class TelegramBot {
     await this.rateLimiter.consume();
 
     try {
-      const safeText = parseMode === 'Markdown' ? sanitizeForTelegram(text) : text;
-      
       const res = await fetch(this.url('sendMessage'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: this.chatId,
-          text: safeText,
+          text: text,
           parse_mode: parseMode,
           disable_web_page_preview: !isLast,
         }),
@@ -192,7 +187,7 @@ export class TelegramBot {
         body: JSON.stringify({
           chat_id: this.chatId,
           photo: photoUrl,
-          caption: caption ? sanitizeForTelegram(caption) : undefined,
+          caption: caption,
           parse_mode: 'Markdown',
         }),
       });
@@ -215,7 +210,7 @@ export class TelegramBot {
         body: JSON.stringify({
           chat_id: this.chatId,
           message_id: messageId,
-          text: sanitizeForTelegram(text),
+          text: text,
           parse_mode: 'Markdown',
           reply_markup: keyboard,
         }),

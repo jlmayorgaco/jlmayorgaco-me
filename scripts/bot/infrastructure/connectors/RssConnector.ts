@@ -15,6 +15,7 @@ import { logError, logInfo, logWarn } from '../logging/Logger';
 import { withRetry, withTimeout } from '../../shared/utils';
 import { safeValidate, NewsItemSchema } from '../../shared/validation';
 import { validateUrl } from '../../shared/security';
+import { MarkdownFormatter } from '../formatting/MarkdownFormatter';
 import type { BotConfig } from '../../config/index';
 
 export interface FeedConfig {
@@ -345,42 +346,26 @@ export async function scanNewsSources(config: BotConfig): Promise<NewsItem[]> {
 
 export function formatNewsForTelegram(items: NewsItem[], limit: number = 10): string {
   if (items.length === 0) {
-    return '*No relevant news found*';
+    return 'No relevant news found.';
   }
 
   let msg = `*Recent Tech News*\n_Found ${items.length} relevant items_\n\n`;
 
   for (const item of items.slice(0, limit)) {
-    msg += `*${escapeMarkdown(item.source)}*\\: ${escapeMarkdown(item.title)}\n`;
+    const source = MarkdownFormatter.escape(item.source, 'v1');
+    const title = MarkdownFormatter.escape(item.title, 'v1');
+    msg += `*${source}*: ${title}\n`;
+    
     if (item.description) {
-      msg += `_${escapeMarkdown(item.description.substring(0, 120))}..._\n`;
+      const truncated = MarkdownFormatter.truncate(item.description, 150);
+      const desc = MarkdownFormatter.escape(truncated, 'v1');
+      msg += `_${desc}_\n`;
     }
-    msg += `[Read more](${item.link})\n\n`;
+    
+    const safeUrl = item.link.replace(/\\/g, '\\\\').replace(/\)/g, '\\)');
+    msg += `[Read more](${safeUrl})\n\n`;
   }
 
   return msg;
-}
-
-function escapeMarkdown(text: string): string {
-  return text
-    .replace(/\\/g, '\\\\')
-    .replace(/_/g, '\\_')
-    .replace(/\*/g, '\\*')
-    .replace(/\[/g, '\\[')
-    .replace(/\]/g, '\\]')
-    .replace(/\(/g, '\\(')
-    .replace(/\)/g, '\\)')
-    .replace(/~/g, '\\~')
-    .replace(/`/g, '\\`')
-    .replace(/>/g, '\\>')
-    .replace(/#/g, '\\#')
-    .replace(/\+/g, '\\+')
-    .replace(/-/g, '\\-')
-    .replace(/=/g, '\\=')
-    .replace(/\|/g, '\\|')
-    .replace(/{/g, '\\{')
-    .replace(/}/g, '\\}')
-    .replace(/\./g, '\\.')
-    .replace(/!/g, '\\!');
 }
 

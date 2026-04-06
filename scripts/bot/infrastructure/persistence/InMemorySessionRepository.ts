@@ -1,5 +1,6 @@
-﻿import { Session, SessionData } from '../../domain/entities/Session';
-import { ISessionRepository, SessionMetrics } from '../../application/ports';
+import { Session } from '../../domain/entities/Session';
+import type { SessionData } from '../../domain/entities/Session';
+import type { ISessionRepository, SessionMetrics } from '../../application/ports';
 import { logDebug, logWarn } from '../../infrastructure/logging/Logger';
 import { CONSTANTS } from '../../shared/constants';
 
@@ -10,10 +11,12 @@ import { CONSTANTS } from '../../shared/constants';
 export class InMemorySessionRepository implements ISessionRepository {
   private sessions: Map<number, Session> = new Map();
   private readonly ttlMs: number;
+  private readonly maxSessions: number;
   private cleanupInterval: NodeJS.Timeout | null = null;
 
-  constructor(ttlMinutes: number = CONSTANTS.SESSION.DEFAULT_TTL_MINUTES) {
+  constructor(ttlMinutes: number = CONSTANTS.SESSION.DEFAULT_TTL_MINUTES, maxSessions: number = 1000) {
     this.ttlMs = ttlMinutes * 60 * 1000;
+    this.maxSessions = maxSessions;
     this.startCleanupJob();
   }
 
@@ -114,6 +117,18 @@ export class InMemorySessionRepository implements ISessionRepository {
     for (const [chatId, session] of this.sessions.entries()) {
       if (now - session.lastActivity.getTime() > this.ttlMs) {
         this.sessions.delete(chatId);
+        cleanedCount++;
+      }
+    }
+
+    // Evict oldest if we still exceed max limits
+    if (this.sessions.size > this.maxSessions) {
+      const sortedKeys = Array.from(this.sessions.entries())
+        .sort((a, b) => a[1].lastActivity.getTime() - b[1].lastActivity.getTime());
+      
+      const toRemove = sortedKeys.slice(0, this.sessions.size - this.maxSessions);
+      for (const [key] of toRemove) {
+        this.sessions.delete(key);
         cleanedCount++;
       }
     }

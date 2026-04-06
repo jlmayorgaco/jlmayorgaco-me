@@ -144,53 +144,7 @@ export function sanitizeUserInput(input: string): string {
 
 import { slugify } from 'transliteration';
 
-export function sanitizeForTelegram(text: string): string {
-  // Telegram MarkdownV2 requires escaping: _ * [ ] ( ) ~ ` > # + - = | { } . !
-  // But we must NOT escape characters inside a URL [text](url)
-  
-  // First, find and preserve markdown links
-  const links: string[] = [];
-  const preserved = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, label, url) => {
-    const id = `__LINK_${links.length}__`;
-    // Label still needs escaping, but URL doesn't (mostly)
-    const escapedLabel = escapeMarkdownV2(label);
-    links.push(`[${escapedLabel}](${url})`);
-    return id;
-  });
-
-  // Escapeeverything else
-  let escaped = escapeMarkdownV2(preserved);
-
-  // Restore links
-  links.forEach((link, i) => {
-    escaped = escaped.replace(`__LINK_${i}__`, link);
-  });
-
-  return escaped;
-}
-
-function escapeMarkdownV2(text: string): string {
-  return text
-    .replace(/\\/g, '\\\\')
-    .replace(/_/g, '\\_')
-    .replace(/\*/g, '\\*')
-    .replace(/\[/g, '\\[')
-    .replace(/\]/g, '\\]')
-    .replace(/\(/g, '\\(')
-    .replace(/\)/g, '\\)')
-    .replace(/~/g, '\\~')
-    .replace(/`/g, '\\`')
-    .replace(/>/g, '\\>')
-    .replace(/#/g, '\\#')
-    .replace(/\+/g, '\\+')
-    .replace(/-/g, '\\-')
-    .replace(/=/g, '\\=')
-    .replace(/\|/g, '\\|')
-    .replace(/{/g, '\\{')
-    .replace(/}/g, '\\}')
-    .replace(/\./g, '\\.')
-    .replace(/!/g, '\\!');
-}
+// Removed sanitizeForTelegram and escapeMarkdownV2 -> centralized to MarkdownFormatter.ts
 
 export function sanitizeSlug(input: string): string {
   return slugify(input, { lowercase: true, separator: '-', trim: true }).substring(0, 60);
