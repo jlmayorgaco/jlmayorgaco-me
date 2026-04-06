@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Batch Review Command
  * Shows papers in batch for efficient review with emoji reactions
  */
@@ -30,7 +30,7 @@ export const batchCommand = {
     // Check if we have papers to review
     if (!session.papers || session.papers.length === 0) {
       await bot.sendMessage(
-        '❌ No papers to review. Run /daily first to scan papers.'
+        'âŒ No papers to review. Run /daily first to scan papers.'
       );
       return;
     }
@@ -48,11 +48,11 @@ export const batchCommand = {
     }));
     
     // Build batch review message
-    let msg = `*📋 Batch Review: ${batchItems.length} Papers*\n\n`;
+    let msg = `*ðŸ“‹ Batch Review: ${batchItems.length} Papers*\n\n`;
     msg += `React with:\n`;
-    msg += `⭐ Must Read | 👍 Interesting | ✓ Acknowledge\n`;
-    msg += `🔖 Save Later | ⏭️ Skip\n\n`;
-    msg += `Format: \`1⭐ 2👍 3⏭️\`\n\n`;
+    msg += `â­ Must Read | ðŸ‘ Interesting | âœ“ Acknowledge\n`;
+    msg += `ðŸ”– Save Later | â­ï¸ Skip\n\n`;
+    msg += `Format: \`1â­ 2ðŸ‘ 3â­ï¸\`\n\n`;
     
     for (const item of batchItems) {
       const title = MarkdownFormatter.truncate(item.title, 70);
@@ -89,7 +89,7 @@ export const batchStatusCommand = {
     const session = sessionManager.getSession(chatId);
     
     if (session.state !== 'batch_reviewing') {
-      await bot.sendMessage('❌ Not in batch review mode. Run /batch first.');
+      await bot.sendMessage('âŒ Not in batch review mode. Run /batch first.');
       return;
     }
     
@@ -98,11 +98,12 @@ export const batchStatusCommand = {
     const reviewed = Object.keys(reactions).length;
     
     await bot.sendMessage(
-      `📊 *Batch Review Progress*\n\n` +
+      `ðŸ“Š *Batch Review Progress*\n\n` +
       `Total papers: ${batchItems.length}\n` +
       `Reviewed: ${reviewed}\n` +
       `Remaining: ${batchItems.length - reviewed}\n\n` +
-      `Continue reacting with: \`1⭐ 2👍 ...\``
+      `Continue reacting with: \`1â­ 2ðŸ‘ ...\``
     );
   }
 };
+

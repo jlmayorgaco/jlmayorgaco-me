@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { loadConfig, validateEnvironment, type BotConfig } from '../config';
+﻿import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { loadConfig, validateEnvironment, type BotConfig } from '../config/index';
 
 describe('Config Module (Production)', () => {
   const originalEnv = { ...process.env };
@@ -130,3 +130,4 @@ describe('validateEnvironment', () => {
     expect(result.missing).toContain('GEMINI_API_KEY');
   });
 });
+

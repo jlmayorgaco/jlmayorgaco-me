@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Type definitions for the bot command system
  */
 
-import type { TelegramBot } from '../../telegram';
-import type { BotConfig } from '../../config';
-import type { SessionManager, UserSession } from '../../session-manager';
+import type { TelegramBot } from '../../infrastructure/inbound/TelegramBot';
+import type { BotConfig } from '../../config/index';
+import type { SessionManager, UserSession } from '../../infrastructure/persistence/SessionManager';
 
 export interface CommandContext {
   bot: TelegramBot;
@@ -26,3 +26,4 @@ export interface CommandRegistry {
   getAll(): CommandHandler[];
   execute(command: string, context: CommandContext): Promise<void>;
 }
+

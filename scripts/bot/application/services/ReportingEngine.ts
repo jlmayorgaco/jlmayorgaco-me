@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Reporting and DataLab
  * 
  * - Daily report artifact
@@ -255,7 +255,7 @@ export class ReportingEngine {
   }
 
   formatDailyForTelegram(report: DailyReport): string {
-    let msg = `📊 *Daily Report* — ${report.date}\n\n`;
+    let msg = `ðŸ“Š *Daily Report* â€” ${report.date}\n\n`;
     msg += `Items scanned: ${report.totalItemsScanned}\n`;
     msg += `Drafts: ${report.draftsCreated} created, ${report.draftsApproved} approved, ${report.draftsRejected} rejected\n`;
     msg += `Noise rejected: ${report.rejectedNoise}\n\n`;
@@ -263,7 +263,7 @@ export class ReportingEngine {
     if (report.topItems.length > 0) {
       msg += '*Top Items:*\n';
       for (const item of report.topItems.slice(0, 5)) {
-        msg += `• ${item.title.substring(0, 50)}... (${item.score.toFixed(0)})\n`;
+        msg += `â€¢ ${item.title.substring(0, 50)}... (${item.score.toFixed(0)})\n`;
       }
     }
 
@@ -271,14 +271,14 @@ export class ReportingEngine {
   }
 
   formatWeeklyForTelegram(report: WeeklyTrendsReport): string {
-    let msg = `📈 *Weekly Trends* — Week ${report.week}\n\n`;
+    let msg = `ðŸ“ˆ *Weekly Trends* â€” Week ${report.week}\n\n`;
     msg += `Published: ${report.totalPublished}\n`;
     msg += `Avg Score: ${report.avgScore.toFixed(1)}\n\n`;
 
     if (report.topTopics.length > 0) {
       msg += '*Top Topics:*\n';
       for (const t of report.topTopics.slice(0, 5)) {
-        msg += `• ${t.topic}: ${t.count}\n`;
+        msg += `â€¢ ${t.topic}: ${t.count}\n`;
       }
     }
 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Cancel command - reset current session
  */
 
@@ -20,6 +20,7 @@ export const cancelCommand: CommandHandler = {
     
     sessionManager.updateSession(chatId, session);
     
-    await bot.sendMessage('✅ Session reset. You can start fresh with /daily or /papers');
+    await bot.sendMessage('âœ… Session reset. You can start fresh with /daily or /papers');
   },
 };
+

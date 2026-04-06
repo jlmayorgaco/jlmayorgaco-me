@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Basic Memory & Content Clustering
  * 
  * - Store content embeddings (simple hash-based for now)
@@ -212,7 +212,7 @@ export class ContentMemory {
   formatForTelegram(): string {
     const stats = this.getStats();
 
-    let msg = `🧠 *Content Memory*\n\n`;
+    let msg = `ðŸ§  *Content Memory*\n\n`;
     msg += `Items: ${stats.totalItems}\n`;
     msg += `Clusters: ${stats.totalClusters}\n`;
     msg += `  Small: ${stats.clustersBySize.small}\n`;
@@ -226,7 +226,7 @@ export class ContentMemory {
     if (topClusters.length > 0) {
       msg += `*Top Clusters:*\n`;
       for (const cluster of topClusters) {
-        msg += `• ${cluster.name}: ${cluster.items.length} items\n`;
+        msg += `â€¢ ${cluster.name}: ${cluster.items.length} items\n`;
       }
     }
 
@@ -238,3 +238,4 @@ export class ContentMemory {
     this.clusters.clear();
   }
 }
+

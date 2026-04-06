@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Get Help Use Case
  * Returns list of available commands
  */
@@ -6,7 +6,7 @@
 import type { IMessagePort } from '../ports';
 import type { GetHelpInput, GetHelpOutput, CommandDTO } from '../dto';
 import { Result } from '../../shared/Result';
-import { logDebug } from '../../logger';
+import { logDebug } from '../../infrastructure/logging/Logger';
 
 export class GetHelpUseCase {
   constructor(private messagePort: IMessagePort) {}
@@ -24,7 +24,7 @@ export class GetHelpUseCase {
 
     } catch (error) {
       await this.messagePort.sendMessage(
-        `❌ Failed to get help: ${(error as Error).message}`
+        `âŒ Failed to get help: ${(error as Error).message}`
       );
 
       return Result.err(error as Error);
@@ -98,7 +98,7 @@ export class GetHelpUseCase {
   }
 
   private formatHelpMessage(commands: CommandDTO[]): string {
-    let msg = `*🤖 JLMT Lab Bot Commands*\n\n`;
+    let msg = `*ðŸ¤– JLMT Lab Bot Commands*\n\n`;
 
     for (const cmd of commands) {
       msg += `/${cmd.name}`;
@@ -109,10 +109,11 @@ export class GetHelpUseCase {
     }
 
     msg += `*Tips:*\n`;
-    msg += `• Send text or voice for commentary\n`;
-    msg += `• Reply "yes" to publish, "no" to cancel\n`;
-    msg += `• Use /edit to modify pending post\n`;
+    msg += `â€¢ Send text or voice for commentary\n`;
+    msg += `â€¢ Reply "yes" to publish, "no" to cancel\n`;
+    msg += `â€¢ Use /edit to modify pending post\n`;
 
     return msg;
   }
 }
+

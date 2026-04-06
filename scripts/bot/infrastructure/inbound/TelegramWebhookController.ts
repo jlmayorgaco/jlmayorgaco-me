@@ -1,12 +1,12 @@
-/**
+﻿/**
  * Webhook Controller for Telegram
  * Alternative to polling for serverless deployments
  */
 
 import type { Request, Response } from 'express';
 import type { IEventBus, DomainEvent, ISessionRepository } from '../../application/ports';
-import type { BotConfig } from '../../config';
-import { logDebug, logError, logInfo } from '../../logger';
+import type { BotConfig } from '../../config/index';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 import { SessionState } from '../../domain/enums/SessionState';
 
 export interface TelegramUpdate {
@@ -164,3 +164,4 @@ export class TelegramWebhookController {
     }
   }
 }
+

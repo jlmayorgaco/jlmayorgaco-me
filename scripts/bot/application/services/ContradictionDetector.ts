@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Contradiction Detector
  * 
  * Detects papers/posts with conflicting claims.
@@ -162,10 +162,10 @@ export class ContradictionDetector {
 
   formatForTelegram(contradictions: Contradiction[]): string {
     if (contradictions.length === 0) {
-      return '✅ No contradictions detected.';
+      return 'âœ… No contradictions detected.';
     }
 
-    let msg = '⚠️ *Contradictions Found*\n\n';
+    let msg = 'âš ï¸ *Contradictions Found*\n\n';
 
     const high = contradictions.filter(c => c.severity === 'high');
     const medium = contradictions.filter(c => c.severity === 'medium');
@@ -173,14 +173,14 @@ export class ContradictionDetector {
     if (high.length > 0) {
       msg += '*High Severity:*\n';
       for (const c of high.slice(0, 2)) {
-        msg += `• ${c.explanation.substring(0, 80)}...\n`;
+        msg += `â€¢ ${c.explanation.substring(0, 80)}...\n`;
       }
     }
 
     if (medium.length > 0) {
       msg += '*Medium:*\n';
       for (const c of medium.slice(0, 2)) {
-        msg += `• ${c.explanation.substring(0, 80)}...\n`;
+        msg += `â€¢ ${c.explanation.substring(0, 80)}...\n`;
       }
     }
 

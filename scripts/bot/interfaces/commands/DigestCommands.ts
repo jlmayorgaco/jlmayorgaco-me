@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Bot Commands - New Pipeline
  * 
  * - /digest: uses full pipeline
@@ -36,12 +36,12 @@ function createDraftKeyboard(draftId: string): any {
   return {
     inline_keyboard: [
       [
-        { text: '✅ Approve', callback_data: `${CALLBACK_PREFIX}approve_${draftId}` },
-        { text: '❌ Reject', callback_data: `${CALLBACK_PREFIX}reject_${draftId}` },
+        { text: 'âœ… Approve', callback_data: `${CALLBACK_PREFIX}approve_${draftId}` },
+        { text: 'âŒ Reject', callback_data: `${CALLBACK_PREFIX}reject_${draftId}` },
       ],
       [
-        { text: '📝 View Drafts', callback_data: `${CALLBACK_PREFIX}list` },
-        { text: '📊 Trends', callback_data: `${CALLBACK_PREFIX}trends` },
+        { text: 'ðŸ“ View Drafts', callback_data: `${CALLBACK_PREFIX}list` },
+        { text: 'ðŸ“Š Trends', callback_data: `${CALLBACK_PREFIX}trends` },
       ],
     ],
   };
@@ -52,17 +52,17 @@ export function handleDraftCallback(callbackData: string, bot: any, chatId: numb
   
   const draft = draftsStore.get(draftId);
   if (!draft) {
-    bot.sendMessage(chatId, '❌ Draft not found.');
+    bot.sendMessage(chatId, 'âŒ Draft not found.');
     return;
   }
 
   if (action === 'approve') {
     draft.status = 'approved';
-    bot.sendMessage(chatId, `✅ Draft approved!\n\n${draft.intelligence.insight.mainInsight}`);
+    bot.sendMessage(chatId, `âœ… Draft approved!\n\n${draft.intelligence.insight.mainInsight}`);
     logInfo('Draft approved via inline', { id: draft.id });
   } else if (action === 'reject') {
     draft.status = 'rejected';
-    bot.sendMessage(chatId, '❌ Draft rejected.');
+    bot.sendMessage(chatId, 'âŒ Draft rejected.');
     logInfo('Draft rejected via inline', { id: draft.id });
   } else if (action === 'list') {
     listDraftsInline(bot, chatId);
@@ -73,7 +73,7 @@ async function listDraftsInline(bot: any, chatId: number): Promise<void> {
   const drafts = Array.from(draftsStore.values()).filter(d => d.status === 'pending');
 
   if (drafts.length === 0) {
-    await bot.sendMessage(chatId, '📝 No pending drafts.');
+    await bot.sendMessage(chatId, 'ðŸ“ No pending drafts.');
     return;
   }
 
@@ -149,7 +149,7 @@ export const digestCommand: CommandHandler = {
       }
 
       if (drafts.length === 0) {
-        await bot.sendMessage('❌ No quality content found. Try again later.');
+        await bot.sendMessage('âŒ No quality content found. Try again later.');
         return;
       }
 
@@ -178,7 +178,7 @@ export const digestCommand: CommandHandler = {
 
     } catch (error) {
       logError('Digest command failed', error as Error);
-      await bot.sendMessage(`❌ Pipeline error: ${(error as Error).message}`);
+      await bot.sendMessage(`âŒ Pipeline error: ${(error as Error).message}`);
     }
   },
 };
@@ -208,7 +208,7 @@ export const approveCommand: CommandHandler = {
       .filter(d => d.status === 'pending');
 
     if (num < 1 || num > drafts.length) {
-      await bot.sendMessage('❌ Invalid draft number. Use /drafts to see available.');
+      await bot.sendMessage('âŒ Invalid draft number. Use /drafts to see available.');
       return;
     }
 
@@ -220,7 +220,7 @@ export const approveCommand: CommandHandler = {
       draft.url
     );
 
-    await bot.sendMessage('✅ *Draft approved!*\n\n');
+    await bot.sendMessage('âœ… *Draft approved!*\n\n');
     await bot.sendMessage(content.linkedin.hook + '\n\n' + content.linkedin.body);
 
     logInfo('Draft approved', { id: draft.id });
@@ -240,15 +240,16 @@ export const rejectCommand: CommandHandler = {
       .filter(d => d.status === 'pending');
 
     if (num < 1 || num > drafts.length) {
-      await bot.sendMessage('❌ Invalid draft number. Use /drafts to see available.');
+      await bot.sendMessage('âŒ Invalid draft number. Use /drafts to see available.');
       return;
     }
 
     const draft = drafts[num - 1];
     draft.status = 'rejected';
 
-    await bot.sendMessage(`❌ Draft ${num} rejected.`);
+    await bot.sendMessage(`âŒ Draft ${num} rejected.`);
 
     logInfo('Draft rejected', { id: draft.id });
   },
 };
+

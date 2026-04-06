@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+﻿import { describe, it, expect } from 'vitest';
 import {
   safeValidate,
   UserCommentSchema,
@@ -6,7 +6,7 @@ import {
   FilePathSchema,
   sanitizeForTelegram,
   generateSlug,
-} from '../validation';
+} from '../shared/validation';
 
 describe('Validation Module', () => {
   describe('UserCommentSchema', () => {
@@ -158,3 +158,4 @@ describe('Validation Module', () => {
     });
   });
 });
+

@@ -193,7 +193,7 @@ function escapeMarkdownV2(text: string): string {
 }
 
 export function sanitizeSlug(input: string): string {
-  return slugify(input, { lowercase: true, separator: '-', trim: true });
+  return slugify(input, { lowercase: true, separator: '-', trim: true }).substring(0, 60);
 }
 
 export const generateSlug = sanitizeSlug;
@@ -218,3 +218,4 @@ export function safeValidate<T>(schema: z.ZodSchema<T>, data: unknown): Validati
     };
   }
 }
+

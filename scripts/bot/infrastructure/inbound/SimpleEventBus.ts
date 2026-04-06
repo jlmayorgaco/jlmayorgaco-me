@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Simple Event Bus Implementation
  * For decoupled communication between components
  */
 
 import { IEventBus, DomainEvent, EventHandler } from '../../application/ports';
-import { logError, logDebug } from '../../logger';
+import { logError, logDebug } from '../../infrastructure/logging/Logger';
 
 export class SimpleEventBus implements IEventBus {
   private handlers = new Map<string, Set<EventHandler<DomainEvent>>>();
@@ -50,3 +50,4 @@ export class SimpleEventBus implements IEventBus {
     this.handlers.clear();
   }
 }
+

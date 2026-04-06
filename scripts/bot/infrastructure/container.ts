@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Dependency Injection Container
  * Manages object lifecycle and dependencies
  * Replaces singleton anti-patterns
@@ -159,3 +159,4 @@ export function resetContainer(): void {
     globalContainer = null;
   }
 }
+

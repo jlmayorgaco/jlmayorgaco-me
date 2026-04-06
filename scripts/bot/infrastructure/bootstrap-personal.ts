@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Bootstrap for Personal Use
  * Wires together all enhanced services for single-user academic research
  */
@@ -135,3 +135,4 @@ export { EnhancedScanPapersUseCase } from '../application/use-cases/EnhancedScan
 export { EnhancedGenerateBlogPostUseCase } from '../application/use-cases/EnhancedGenerateBlogPostUseCase';
 export { RelevanceTier, TierEmojis, TierLabels } from '../domain/enums/RelevanceTier';
 export { ReactionEmoji, ReactionLabels } from '../domain/value-objects/BatchReview';
+

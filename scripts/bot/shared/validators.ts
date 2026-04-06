@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Domain and Application Validators
  * Zod schemas for all input/output types
  */
@@ -185,3 +185,4 @@ export function validateInput<T>(
     errors: result.error.issues.map(i => `${i.path.join('.')}: ${i.message}`),
   };
 }
+

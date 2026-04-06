@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Personal Research Context Port
  * Stores and retrieves user's research interests and preferences
  */
@@ -63,3 +63,4 @@ export interface ContextUpdate {
   addJournals?: string[];
   addResearchers?: string[];
 }
+

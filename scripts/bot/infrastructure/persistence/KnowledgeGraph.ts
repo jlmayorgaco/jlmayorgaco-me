@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Lightweight Knowledge Graph Store
  * 
  * Simple relational storage for entities and relations.
@@ -163,7 +163,7 @@ export class KnowledgeGraph {
   formatForTelegram(): string {
     const stats = this.getStats();
     
-    let msg = `🕸️ *Knowledge Graph*\n\n`;
+    let msg = `ðŸ•¸ï¸ *Knowledge Graph*\n\n`;
     msg += `Nodes: ${stats.nodes}\n`;
     msg += `Edges: ${stats.edges}\n\n`;
     msg += `*Types:*\n`;
@@ -175,3 +175,4 @@ export class KnowledgeGraph {
     return msg;
   }
 }
+

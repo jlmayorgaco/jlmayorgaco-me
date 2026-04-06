@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Health check endpoint for monitoring
@@ -121,3 +121,4 @@ healthCheck().catch(error => {
   );
   process.exit(1);
 });
+

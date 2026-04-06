@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Configuration management with environment variables and validation
  * @module config
  *
@@ -163,3 +163,4 @@ export function getSafeConfig(config: BotConfig): Omit<BotConfig, 'telegram' | '
     },
   };
 }
+

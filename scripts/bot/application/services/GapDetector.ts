@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Gap Detection Engine
  * 
  * Detects missing combinations:
@@ -142,10 +142,10 @@ export class GapDetector {
 
   formatForTelegram(gaps: Gap[]): string {
     if (gaps.length === 0) {
-      return '🎯 No significant research gaps identified.';
+      return 'ðŸŽ¯ No significant research gaps identified.';
     }
 
-    let msg = '🎯 *Research Gaps*\n\n';
+    let msg = 'ðŸŽ¯ *Research Gaps*\n\n';
 
     const high = gaps.filter(g => g.priority === 'high');
     const medium = gaps.filter(g => g.priority === 'medium');
@@ -153,14 +153,15 @@ export class GapDetector {
 
     if (high.length > 0) {
       msg += '*High Priority:*\n';
-      msg += high.map(g => `  • ${g.combination}`).join('\n') + '\n\n';
+      msg += high.map(g => `  â€¢ ${g.combination}`).join('\n') + '\n\n';
     }
 
     if (medium.length > 0) {
       msg += '*Medium:*\n';
-      msg += medium.slice(0, 3).map(g => `  • ${g.combination}`).join('\n') + '\n\n';
+      msg += medium.slice(0, 3).map(g => `  â€¢ ${g.combination}`).join('\n') + '\n\n';
     }
 
     return msg;
   }
 }
+

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { TelegramBot } from '../telegram';
-import type { BotConfig } from '../config';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { TelegramBot } from '../infrastructure/inbound/TelegramBot';
+import type { BotConfig } from '../config/index';
 
 vi.mock('../logger', () => ({
   logError: vi.fn(),
@@ -24,8 +24,15 @@ describe('Telegram Module (Production)', () => {
       },
       topics: ['test-topic'],
       sources: [],
+      sessionTtlMinutes: 30,
+      maxPapersToScan: 10,
+      topPapersToShow: 3,
+      maxNewsItems: 20,
       telegramRateLimit: 30,
-    } as BotConfig;
+      geminiTimeoutMs: 30000,
+      retryAttempts: 3,
+      retryBaseDelayMs: 1000
+    };
     bot = new TelegramBot(mockConfig);
   });
 
@@ -253,3 +260,4 @@ describe('Telegram Module (Production)', () => {
     });
   });
 });
+

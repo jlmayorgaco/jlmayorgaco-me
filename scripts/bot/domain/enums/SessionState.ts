@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Type-safe session states
  * Replaces string literals with enum
  */
@@ -25,3 +25,4 @@ export const getSessionStateLabel = (state: SessionState): string => {
   };
   return labels[state];
 };
+

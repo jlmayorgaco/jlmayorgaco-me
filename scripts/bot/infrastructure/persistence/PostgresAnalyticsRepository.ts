@@ -1,10 +1,10 @@
-/**
+﻿/**
  * PostgreSQL Analytics Repository
  * Stores analytics events and provides statistics
  */
 
 import { IAnalyticsRepository, AnalyticsStats, AnalyticsEvent, TimeRange, AnalyticsEventType } from '../../application/ports';
-import { logError } from '../../logger';
+import { logError } from '../../infrastructure/logging/Logger';
 
 export interface PostgresClient {
   query(text: string, params?: any[]): Promise<{ rows: any[] }>;
@@ -180,3 +180,4 @@ export class PostgresAnalyticsRepository implements IAnalyticsRepository {
     `);
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Papers command - scan ArXiv for relevant papers
  */
 
@@ -46,7 +46,7 @@ export const papersCommand: CommandHandler = {
       
       let msg = `*Top ${top.length} Papers*\n\n`;
       for (const p of top) {
-        const emoji = p.relevance === 'high' ? '🔴' : '🟡';
+        const emoji = p.relevance === 'high' ? 'ðŸ”´' : 'ðŸŸ¡';
         msg += `${emoji} *${(p.title || 'Untitled').substring(0, 80)}*\n`;
         msg += `_${p.classification || 'other'}_ \\| Score: ${p.relevanceScore ?? '?'}\n`;
         msg += `${p.summaryShort || p.summary?.substring(0, 200) || 'No summary'}\n`;
@@ -60,3 +60,4 @@ export const papersCommand: CommandHandler = {
     }, bot);
   },
 };
+

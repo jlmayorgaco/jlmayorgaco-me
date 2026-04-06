@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Core utilities for the JLMT Lab Bot
  * Implements: retry logic, circuit breaker, timeouts, rate limiting
  *
@@ -240,3 +240,4 @@ export class TokenBucket {
     return this.tokens;
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Source Poller - Orchestrates all connectors
  * 
  * Features:
@@ -208,3 +208,4 @@ export class SourcePoller {
     return new SourcePoller(config);
   }
 }
+

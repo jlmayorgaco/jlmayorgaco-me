@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Anti-Generic Filter
  * 
  * Blocks posts like:
@@ -108,15 +108,16 @@ export class AntiGenericFilter {
 
   formatResult(result: FilterResult): string {
     if (result.passed) {
-      return `✅ Content passed (score: ${result.score}/100)`;
+      return `âœ… Content passed (score: ${result.score}/100)`;
     }
 
-    let msg = `❌ Content rejected (score: ${result.score}/100)\n\n`;
+    let msg = `âŒ Content rejected (score: ${result.score}/100)\n\n`;
     msg += `*Reasons:*\n`;
     for (const reason of result.reasons) {
-      msg += `• ${reason}\n`;
+      msg += `â€¢ ${reason}\n`;
     }
 
     return msg;
   }
 }
+

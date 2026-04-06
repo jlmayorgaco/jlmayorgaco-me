@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Publish Queue & Feedback Loop
  * 
  * - Publish queue states (draft, review, approved, scheduled, published, failed)
@@ -209,7 +209,7 @@ export class PublishQueue {
     const approved = this.getByState('approved');
     const published = this.getByState('published');
 
-    let msg = '📋 *Publish Queue*\n\n';
+    let msg = 'ðŸ“‹ *Publish Queue*\n\n';
     msg += `Drafts: ${drafts.length}\n`;
     msg += `In Review: ${review.length}\n`;
     msg += `Approved: ${approved.length}\n`;
@@ -218,7 +218,7 @@ export class PublishQueue {
     if (drafts.length > 0) {
       msg += '\n*Recent Drafts:*\n';
       for (const d of drafts.slice(0, 3)) {
-        msg += `• ${d.content.title.substring(0, 40)}...\n`;
+        msg += `â€¢ ${d.content.title.substring(0, 40)}...\n`;
       }
     }
 

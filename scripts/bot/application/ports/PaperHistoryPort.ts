@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Paper History Repository Port
  * Tracks seen papers to prevent duplicates
  */
@@ -24,3 +24,4 @@ export interface IPaperHistoryRepository {
   recordAction(paperId: string, action: UserAction['action']): Promise<void>;
   deduplicate(papers: Array<{ id: string; title: string }>): Promise<Array<{ id: string; title: string }>>;
 }
+

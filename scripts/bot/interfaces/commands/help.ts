@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Help command - displays available commands
  */
 
@@ -14,7 +14,7 @@ export const helpCommand: CommandHandler = {
     const registry = getCommandRegistry();
     const commands = registry.getAll();
     
-    let helpText = `*JLMT Lab Bot Commands*\n━━━━━━━━━━━━━━━━━━━\n\n`;
+    let helpText = `*JLMT Lab Bot Commands*\nâ”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n\n`;
     
     for (const cmd of commands) {
       const aliases = cmd.aliases ? ` (${cmd.aliases.join(', ')})` : '';
@@ -26,3 +26,4 @@ export const helpCommand: CommandHandler = {
     await context.bot.sendMessage(helpText);
   },
 };
+

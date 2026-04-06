@@ -1,4 +1,4 @@
-/**
+﻿/**
  * HackerNews Connector
  * 
  * Features:
@@ -216,9 +216,9 @@ export class HackerNewsConnector {
     let msg = `*HackerNews Tech Stories*\n_Found ${items.length} relevant items_\n\n`;
 
     for (const item of items.slice(0, limit)) {
-      const scoreEmoji = item.score > 100 ? '🔥' : item.score > 50 ? '⬆️' : '📈';
+      const scoreEmoji = item.score > 100 ? 'ðŸ”¥' : item.score > 50 ? 'â¬†ï¸' : 'ðŸ“ˆ';
       msg += `${scoreEmoji} *${escapeMarkdown(item.title)}*\n`;
-      msg += `⬆️ ${item.score} points | 💬 ${item.descendants} comments\n`;
+      msg += `â¬†ï¸ ${item.score} points | ðŸ’¬ ${item.descendants} comments\n`;
       
       if (item.url) {
         msg += `[${new URL(item.url).hostname}](${item.url})\n`;
@@ -257,3 +257,4 @@ function escapeMarkdown(text: string): string {
     .replace(/\./g, '\\.')
     .replace(/!/g, '\\!');
 }
+

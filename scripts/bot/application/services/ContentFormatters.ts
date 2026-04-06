@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Content Formatters
  * 
  * - TelegramFormatter: short clean messages
@@ -41,7 +41,7 @@ export class TelegramFormatter {
   static format(intelligence: IntelligenceOutput, url: string): TelegramMessage {
     const { classification, summary, insight } = intelligence;
 
-    let text = `📄 *${classification.primary.toUpperCase()}*\n\n`;
+    let text = `ðŸ“„ *${classification.primary.toUpperCase()}*\n\n`;
     text += `*${this.escapeMd(insight.mainInsight)}*\n\n`;
     text += `_${this.escapeMd(summary.summary)}_\n\n`;
     text += `[Read more](${url})`;
@@ -54,11 +54,11 @@ export class TelegramFormatter {
       return { text: 'No content to display', parseMode: 'Markdown' };
     }
 
-    let text = `📚 *Daily Digest*\n_${items.length} items_\n\n`;
+    let text = `ðŸ“š *Daily Digest*\n_${items.length} items_\n\n`;
 
     for (const item of items.slice(0, 5)) {
       const { classification, insight } = item.intelligence;
-      text += `• *${this.escapeMd(insight.mainInsight.substring(0, 80))}...*\n`;
+      text += `â€¢ *${this.escapeMd(insight.mainInsight.substring(0, 80))}...*\n`;
       text += `[${classification.primary}](${item.url})\n\n`;
     }
 
@@ -84,7 +84,7 @@ export class LinkedInFormatter {
 
     const hook = this.generateHook(insight, classification);
     const body = this.generateBody(summary, engineering);
-    const cta = '🔗 Read the full paper: ' + url;
+    const cta = 'ðŸ”— Read the full paper: ' + url;
     const hashtags = this.generateHashtags(classification);
 
     return { hook, body, cta, hashtags };
@@ -104,11 +104,11 @@ export class LinkedInFormatter {
     let body = `${summary.summary}\n\n`;
     
     if (engineering.implementation && engineering.implementation !== 'Implementation details not available') {
-      body += `🔧 Implementation: ${engineering.implementation.substring(0, 150)}\n\n`;
+      body += `ðŸ”§ Implementation: ${engineering.implementation.substring(0, 150)}\n\n`;
     }
 
     if (engineering.productionIssues.length > 0) {
-      body += `⚠️ Challenges: ${engineering.productionIssues[0].substring(0, 100)}\n\n`;
+      body += `âš ï¸ Challenges: ${engineering.productionIssues[0].substring(0, 100)}\n\n`;
     }
 
     return body;
@@ -244,3 +244,4 @@ export class QualityGate {
     };
   }
 }
+

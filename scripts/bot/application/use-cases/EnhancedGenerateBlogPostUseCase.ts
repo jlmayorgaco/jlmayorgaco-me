@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Enhanced Generate Blog Post Use Case
  * Supports: voice transcription, personal context integration
  */
@@ -17,7 +17,7 @@ import {
   ICommentaryFormatter,
 } from '../ports/VoiceTranscriptionPort';
 import { IResearchContextRepository } from '../ports/ResearchContextPort';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 import { MarkdownFormatter } from '../../infrastructure/formatting/MarkdownFormatter';
 
 export interface GenerateBlogPostInput {
@@ -52,7 +52,7 @@ export class EnhancedGenerateBlogPostUseCase {
       // Validate state
       if (session.state !== SessionState.COLLECTING_COMMENT) {
         await this.messagePort.sendMessage(
-          '❌ Invalid state. Please start with /daily or /papers first.'
+          'âŒ Invalid state. Please start with /daily or /papers first.'
         );
         return Result.err(new Error('Invalid session state'));
       }
@@ -70,7 +70,7 @@ export class EnhancedGenerateBlogPostUseCase {
 
         if (!transcriptionResult.success) {
           await this.messagePort.sendMessage(
-            '⚠️ Voice transcription failed, using text only.'
+            'âš ï¸ Voice transcription failed, using text only.'
           );
         } else {
           const transcription = transcriptionResult.data;
@@ -92,7 +92,7 @@ export class EnhancedGenerateBlogPostUseCase {
 
       if (!finalComment.trim()) {
         await this.messagePort.sendMessage(
-          '❌ No commentary provided. Please send text or voice message.'
+          'âŒ No commentary provided. Please send text or voice message.'
         );
         return Result.err(new Error('No commentary provided'));
       }
@@ -160,7 +160,7 @@ Preferred Topics: ${researchContext.preferredTopics.slice(0, 5).join(', ')}`;
       logError('EnhancedGenerateBlogPostUseCase failed', error as Error);
       
       await this.messagePort.sendMessage(
-        `❌ Failed to generate blog post: ${(error as Error).message}`
+        `âŒ Failed to generate blog post: ${(error as Error).message}`
       );
 
       return Result.err(error as Error);
@@ -181,14 +181,14 @@ Session state: ${session.state}`;
     post: GeneratedBlogPost & { imagePath?: string }
   ): Promise<void> {
     let preview = `*Blog Post Preview*\n`;
-    preview += `━━━━━━━━━━━━━━━━━━━\n\n`;
+    preview += `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n\n`;
     preview += `*Title:* ${MarkdownFormatter.escape(post.title)}\n`;
     preview += `*Category:* ${post.category}\n`;
     preview += `*Tags:* ${post.tags.join(', ')}\n\n`;
     preview += `*Description:*\n${MarkdownFormatter.escape(post.description)}\n\n`;
     
     if (post.imagePath) {
-      preview += `*Cover Image:* Generated ✓\n\n`;
+      preview += `*Cover Image:* Generated âœ“\n\n`;
     }
     
     preview += `Reply "yes" to publish, "no" to cancel, or /edit to make changes.`;
@@ -196,3 +196,4 @@ Session state: ${session.state}`;
     await this.messagePort.sendMessage(preview);
   }
 }
+

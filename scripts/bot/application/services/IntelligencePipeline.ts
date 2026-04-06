@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Intelligence Pipeline
  * 
  * - Classification: categories (control, ML, distributed, robotics, etc.)
@@ -296,3 +296,4 @@ Return JSON with:
     }
   }
 }
+

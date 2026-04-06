@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Application Layer DTOs (Data Transfer Objects)
  * Input/Output contracts for all use cases
  */
@@ -267,3 +267,4 @@ export interface CommandDTO {
   usage?: string;
   aliases?: string[];
 }
+

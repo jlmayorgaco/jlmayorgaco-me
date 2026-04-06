@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Blog post generation with proper slug handling and frontmatter
  * Fixed: Date format, slug generation for Spanish chars, input validation
  */
@@ -49,7 +49,7 @@ ${data.content}`;
 
 /**
  * Generate SEO-friendly slug from title
- * Fixed: Proper handling of Spanish characters (á, é, í, ó, ú, ñ)
+ * Fixed: Proper handling of Spanish characters (Ã¡, Ã©, Ã­, Ã³, Ãº, Ã±)
  */
 export function generateSlug(title: string): string {
   // Transliterate Spanish chars to ASCII
@@ -139,7 +139,7 @@ export async function previewBlogPost(data: BlogPostData): Promise<string> {
     .replace(/\]/g, '\\]');
 
   let preview = `*Blog Post Preview*
-━━━━━━━━━━━━━━━━━━━
+â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
 
 `;
   preview += `*Title:* ${escape(data.title)}\n`;
@@ -148,7 +148,7 @@ export async function previewBlogPost(data: BlogPostData): Promise<string> {
   preview += `*Words:* ${wordCount} | *Reading time:* ~${readingTime} min\n\n`;
   preview += `*Description:*\n${escape(data.description)}\n\n`;
   preview += `*Content Preview:*\n${escape(data.content.substring(0, 250))}...\n\n`;
-  preview += `━━━━━━━━━━━━━━━━━━━`;
+  preview += `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”`;
 
   return preview;
 }
@@ -183,3 +183,4 @@ export async function validateBlogPost(data: BlogPostData): Promise<{
 
   return { valid: true, errors: [] };
 }
+

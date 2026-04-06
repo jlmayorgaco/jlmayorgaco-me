@@ -145,11 +145,12 @@ export class RssConnector {
           logWarn(`Retrying feed (attempt ${attempt})`, { error: error.message });
         },
       }
-    )();
+    );
   }
 
   private parseFeed(xml: string, sourceName: string, feedType: string): NewsItem[] {
     const items: NewsItem[] = [];
+    const seenLinks = new Set<string>();
     
     const isAtom = feedType === 'atom' || xml.includes('<feed');
     const itemTag = isAtom ? 'entry' : 'item';
@@ -160,7 +161,8 @@ export class RssConnector {
       try {
         const entry = match[1];
         const item = this.parseEntry(entry, sourceName, isAtom, match[0]);
-        if (item) {
+        if (item && !seenLinks.has(item.link)) {
+          seenLinks.add(item.link);
           items.push(item);
         }
       } catch (error) {
@@ -210,9 +212,11 @@ export class RssConnector {
 
     return {
       ...validation.data!,
+      pubDate: validation.data!.pubDate || pubDate, // Ensure it's not undefined
+      description: validation.data!.description || '',
       guid,
       rawXml,
-    };
+    } as NewsItem;
   }
 
   private extractTag(xml: string, tag: string): string | null {
@@ -323,7 +327,20 @@ export async function scanAllFeeds(
 }
 
 export async function scanNewsSources(config: BotConfig): Promise<NewsItem[]> {
-  return scanAllFeeds(config);
+  const connector = RssConnector.fromConfig(config);
+  const items = await connector.fetchAll();
+
+  // Filter by topics if topics exist in config
+  if (config.topics && config.topics.length > 0) {
+    const keywords = config.topics.map((t: string) => t.toLowerCase());
+    const filtered = items.filter((item: NewsItem) => {
+      const text = `${item.title} ${item.description || ''} ${item.categories.join(' ')}`.toLowerCase();
+      return keywords.some(kw => text.includes(kw));
+    });
+    return filtered.slice(0, config.maxNewsItems);
+  }
+
+  return items.slice(0, config.maxNewsItems);
 }
 
 export function formatNewsForTelegram(items: NewsItem[], limit: number = 10): string {
@@ -366,3 +383,4 @@ function escapeMarkdown(text: string): string {
     .replace(/\./g, '\\.')
     .replace(/!/g, '\\!');
 }
+

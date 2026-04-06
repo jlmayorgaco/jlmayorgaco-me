@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ArXiv Connector - Production-ready
  * 
  * Features:
@@ -298,3 +298,4 @@ export async function runArxivScanner(
 
   return allPapers;
 }
+

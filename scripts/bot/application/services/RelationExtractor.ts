@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Relation Extraction
  * 
  * Extracts relations like:
- * - method → fails_under → condition
- * - paper → uses → metric
- * - repo → implements → method
+ * - method â†’ fails_under â†’ condition
+ * - paper â†’ uses â†’ metric
+ * - repo â†’ implements â†’ method
  *
  * @module application/services/RelationExtractor
  */
@@ -153,7 +153,7 @@ export class RelationExtractor {
     for (const [pred, list] of byPredicate.entries()) {
       msg += `*${pred.replace('_', ' ')}:*\n`;
       for (const r of list.slice(0, 3)) {
-        msg += `  ${r.subject} → ${r.object}\n`;
+        msg += `  ${r.subject} â†’ ${r.object}\n`;
       }
       msg += '\n';
     }
@@ -161,3 +161,4 @@ export class RelationExtractor {
     return msg;
   }
 }
+

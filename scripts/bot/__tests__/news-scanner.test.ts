@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { scanNewsSources, formatNewsForTelegram, type NewsItem } from '../news-scanner';
-import type { BotConfig } from '../config';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { scanNewsSources, formatNewsForTelegram, type NewsItem } from '../infrastructure/connectors/RssConnector';
+import type { BotConfig } from '../config/index';
 
 describe('News Scanner Module', () => {
   let mockConfig: BotConfig;
@@ -12,7 +12,15 @@ describe('News Scanner Module', () => {
       topics: ['robotics', 'distributed control', 'FPGA'],
       sources: [
         { name: 'Test Source', url: 'https://example.com/feed', type: 'rss' }
-      ]
+      ],
+      sessionTtlMinutes: 30,
+      maxPapersToScan: 10,
+      topPapersToShow: 3,
+      maxNewsItems: 20,
+      telegramRateLimit: 30,
+      geminiTimeoutMs: 30000,
+      retryAttempts: 3,
+      retryBaseDelayMs: 1000
     };
 
     global.fetch = vi.fn();
@@ -250,3 +258,4 @@ describe('News Scanner Module', () => {
     });
   });
 });
+

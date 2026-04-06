@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Learning from Approvals/Rejections
  * 
  * Uses your decisions to adjust ranking and generation.
@@ -158,20 +158,20 @@ export class LearningSystem {
     const approved = this.getTopApprovedFeatures(5);
     const rejected = this.getTopRejectedFeatures(5);
 
-    let msg = '🧠 *Learning Patterns*\n\n';
+    let msg = 'ðŸ§  *Learning Patterns*\n\n';
 
     if (approved.length > 0) {
-      msg += '*✅ Top Approved Features:*\n';
+      msg += '*âœ… Top Approved Features:*\n';
       for (const p of approved) {
-        msg += `• ${p.feature} (+${p.netScore})\n`;
+        msg += `â€¢ ${p.feature} (+${p.netScore})\n`;
       }
       msg += '\n';
     }
 
     if (rejected.length > 0) {
-      msg += '*❌ Top Rejected Features:*\n';
+      msg += '*âŒ Top Rejected Features:*\n';
       for (const p of rejected) {
-        msg += `• ${p.feature} (${p.netScore})\n`;
+        msg += `â€¢ ${p.feature} (${p.netScore})\n`;
       }
     }
 

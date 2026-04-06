@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Scan News Use Case
  * Scans RSS feeds for relevant news items
  */
@@ -14,7 +14,7 @@ import type {
   NewsSummary 
 } from '../dto';
 import { Result } from '../../shared/Result';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 import { MarkdownFormatter } from '../../infrastructure/formatting/MarkdownFormatter';
 
 export class ScanNewsUseCase {
@@ -83,7 +83,7 @@ export class ScanNewsUseCase {
       logError('ScanNewsUseCase failed', error as Error);
       
       await this.messagePort.sendMessage(
-        `❌ Failed to scan news: ${(error as Error).message}`
+        `âŒ Failed to scan news: ${(error as Error).message}`
       );
 
       return Result.err(error as Error);
@@ -91,12 +91,12 @@ export class ScanNewsUseCase {
   }
 
   private async sendResults(news: any[]): Promise<void> {
-    let msg = `*📰 News (${news.length} items)*\n\n`;
+    let msg = `*ðŸ“° News (${news.length} items)*\n\n`;
 
     for (const item of news.slice(0, 5)) {
       const title = MarkdownFormatter.truncate(item.title, 60);
       const source = item.source || 'Unknown';
-      msg += `• ${MarkdownFormatter.escape(title)}\n`;
+      msg += `â€¢ ${MarkdownFormatter.escape(title)}\n`;
       msg += `  _${source}_ | [Link](${item.link})\n\n`;
     }
 
@@ -107,3 +107,4 @@ export class ScanNewsUseCase {
     await this.messagePort.sendMessage(msg);
   }
 }
+

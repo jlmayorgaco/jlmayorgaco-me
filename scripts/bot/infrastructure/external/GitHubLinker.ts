@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Paper to Repository Linking
  * 
  * - Simple GitHub search
@@ -161,12 +161,12 @@ export class GitHubLinker {
       return 'No related repositories found.';
     }
 
-    let msg = `🔗 *Related Repos*\n\n`;
+    let msg = `ðŸ”— *Related Repos*\n\n`;
 
     for (const repo of repos.slice(0, 5)) {
       const lang = repo.language !== 'Unknown' ? `(${repo.language})` : '';
       msg += `*[${repo.name}](${repo.url})* ${lang}\n`;
-      msg += `  ⭐ ${repo.stars} stars\n`;
+      msg += `  â­ ${repo.stars} stars\n`;
       if (repo.description) {
         msg += `  _${repo.description.substring(0, 80)}..._\n`;
       }
@@ -176,3 +176,4 @@ export class GitHubLinker {
     return msg;
   }
 }
+

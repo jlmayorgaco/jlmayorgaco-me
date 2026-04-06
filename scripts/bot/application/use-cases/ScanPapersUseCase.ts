@@ -4,8 +4,8 @@
 
 import { Result } from '../../shared/Result';
 import { Session } from '../../domain/entities/Session';
-import { ISessionRepository, IGeminiService, IMessagePort } from '../ports';
-import { logDebug, logError, logInfo } from '../../logger';
+import type { ISessionRepository, IGeminiService, IMessagePort } from '../ports';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 import { MarkdownFormatter } from '../../infrastructure/formatting/MarkdownFormatter';
 
 // Import from existing scanner
@@ -38,7 +38,7 @@ export class ScanPapersUseCase {
       await this.messagePort.sendMessage('_Classifying papers with AI..._');
 
       const classificationResult = await this.geminiService.classifyPapers(
-        selectedPapers.map(p => ({
+        selectedPapers.map((p: any) => ({
           id: p.id,
           title: p.title,
           summary: p.summary,
@@ -53,7 +53,7 @@ export class ScanPapersUseCase {
       const classified = classificationResult.data;
 
       // Merge classification with papers
-      const enrichedPapers = selectedPapers.map(paper => {
+      const enrichedPapers = selectedPapers.map((paper: any) => {
         const classification = classified.find(c => c.paperId === paper.id);
         return {
           ...paper,
@@ -64,14 +64,14 @@ export class ScanPapersUseCase {
       });
 
       // Sort by relevance
-      enrichedPapers.sort((a, b) => {
+      enrichedPapers.sort((a: any, b: any) => {
         const order: Record<string, number> = { high: 0, medium: 1, low: 2 };
         return (order[a.relevance || 'low'] || 2) - (order[b.relevance || 'low'] || 2);
       });
 
       // Get top papers
       const topPapers = enrichedPapers
-        .filter(p => p.relevance === 'high')
+        .filter((p: any) => p.relevance === 'high')
         .slice(0, 3);
 
       const displayPapers = topPapers.length > 0 ? topPapers : enrichedPapers.slice(0, 3);
@@ -79,7 +79,7 @@ export class ScanPapersUseCase {
       // Update session
       const session = await this.sessionRepo.get(input.chatId);
       session.setPapers(enrichedPapers);
-      session.setSelectedItems(displayPapers.map(p => p.title));
+      session.setSelectedItems(displayPapers.map((p: any) => p.title));
       await this.sessionRepo.save(input.chatId, session);
 
       // Send results
@@ -95,7 +95,7 @@ export class ScanPapersUseCase {
       logError('ScanPapersUseCase failed', error as Error);
       
       await this.messagePort.sendMessage(
-        `❌ Failed to scan papers: ${(error as Error).message}`
+        `âŒ Failed to scan papers: ${(error as Error).message}`
       );
 
       return Result.err(error as Error);
@@ -103,22 +103,42 @@ export class ScanPapersUseCase {
   }
 
   private async sendResults(papers: any[]): Promise<void> {
+    if (papers.length === 0) {
+      await this.messagePort.sendMessage('No relevant papers found.');
+      return;
+    }
+
     let msg = `*Top ${papers.length} Papers*\n\n`;
     
     for (const p of papers) {
-      const emoji = p.relevance === 'high' ? '🔴' : '🟡';
-      const title = MarkdownFormatter.truncate(p.title || 'Untitled', 80);
-      const summary = MarkdownFormatter.truncate(
+      const emoji = p.relevance === 'high' ? '🔴' : '🟨';
+      const title = MarkdownFormatter.escape(MarkdownFormatter.truncate(p.title || 'Untitled', 80), 'v2');
+      const summary = MarkdownFormatter.escape(MarkdownFormatter.truncate(
         p.summaryShort || p.summary || '', 
-        200
-      );
+        250
+      ), 'v2');
+      const classification = MarkdownFormatter.escape(p.classification || 'other', 'v2');
+      const score = MarkdownFormatter.escape(String(p.relevanceScore ?? '?'), 'v2');
       
-      msg += `${emoji} *${MarkdownFormatter.escape(title)}*\n`;
-      msg += `_${p.classification || 'other'}_ | Score: ${p.relevanceScore ?? '?'}\n`;
-      msg += `${MarkdownFormatter.escape(summary)}\n`;
-      msg += `[ArXiv](${p.absUrl || p.url})\n\n`;
+      const pUrl = p.absUrl || p.url || '';
+      // Raw string URL construction to avoid escaping breaking the actual link parsing
+      // In MarkdownV2, URLs inside () should only escape ) and \ if necessary, but typically standard URLs are safe
+      const cleanUrl = pUrl.replace(/\\/g, '\\\\').replace(/\)/g, '\\)');
+      
+      msg += `${emoji} *${title}*\n`;
+      msg += `_${classification}_ \\| Score: ${score}\n`;
+      msg += `${summary}\n`;
+      msg += `[Read on ArXiv](${cleanUrl})\n\n`;
     }
 
-    await this.messagePort.sendMessage(msg);
+    try {
+      await this.messagePort.sendMessage(msg);
+    } catch (e) {
+      logError('Failed to send MarkdownV2 message, fallback to plain text', e as Error);
+      // Fallback
+      const plainMsg = msg.replace(/\\/g, '').replace(/\*/g, '').replace(/_/g, '');
+      await this.messagePort.sendMessage(plainMsg);
+    }
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Context Command
  * Manages personal research context and interests
  */
@@ -25,7 +25,7 @@ export const contextCommand = {
     const { bot, researchContext, userId } = ctx;
     
     if (!researchContext || !userId) {
-      await bot.sendMessage('❌ Research context not configured.');
+      await bot.sendMessage('âŒ Research context not configured.');
       return;
     }
     
@@ -34,12 +34,12 @@ export const contextCommand = {
       const interests = await researchContext.getInterests(userId);
       const stats = researchContext.getLearningStats(userId);
       
-      let msg = `*🧠 Your Research Context*\n\n`;
+      let msg = `*ðŸ§  Your Research Context*\n\n`;
       
       // Research areas
       msg += `*Research Areas:*\n`;
       for (const area of context.researchAreas.slice(0, 5)) {
-        msg += `• ${area}\n`;
+        msg += `â€¢ ${area}\n`;
       }
       msg += '\n';
       
@@ -48,17 +48,17 @@ export const contextCommand = {
         msg += `*Top Interests (learned):*\n`;
         for (const interest of interests.slice(0, 5)) {
           const percentage = Math.round(interest.weight * 100);
-          msg += `• ${interest.term}: ${percentage}%\n`;
+          msg += `â€¢ ${interest.term}: ${percentage}%\n`;
         }
         msg += '\n';
       }
       
       // Learning stats
       msg += `*Learning Stats:*\n`;
-      msg += `• Interactions: ${stats.interactions}\n`;
+      msg += `â€¢ Interactions: ${stats.interactions}\n`;
       
       if (stats.topInterests.length > 0) {
-        msg += `• Top learned: ${stats.topInterests.slice(0, 3).join(', ')}\n`;
+        msg += `â€¢ Top learned: ${stats.topInterests.slice(0, 3).join(', ')}\n`;
       }
       
       await bot.sendMessage(msg);
@@ -67,7 +67,7 @@ export const contextCommand = {
       
     } catch (e: any) {
       logError('Context command failed', e);
-      await bot.sendMessage(`❌ Error: ${e.message}`);
+      await bot.sendMessage(`âŒ Error: ${e.message}`);
     }
   }
 };
@@ -81,14 +81,14 @@ export const historyCommand = {
     const { bot, paperHistory } = ctx;
     
     if (!paperHistory) {
-      await bot.sendMessage('❌ Paper history not configured.');
+      await bot.sendMessage('âŒ Paper history not configured.');
       return;
     }
     
     try {
       const stats = paperHistory.getStats();
       
-      let msg = `*📚 Paper History*\n\n`;
+      let msg = `*ðŸ“š Paper History*\n\n`;
       msg += `Total papers seen: ${stats.total}\n`;
       msg += `Papers with actions: ${stats.withActions}\n`;
       
@@ -96,7 +96,8 @@ export const historyCommand = {
       
     } catch (e: any) {
       logError('History command failed', e);
-      await bot.sendMessage(`❌ Error: ${e.message}`);
+      await bot.sendMessage(`âŒ Error: ${e.message}`);
     }
   }
 };
+

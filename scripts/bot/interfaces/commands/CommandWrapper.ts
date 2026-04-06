@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Command error wrapper with consistent error handling
  *
  * @module interfaces/commands/CommandWrapper
@@ -25,7 +25,7 @@ export async function withCommandError<T>(
     logError(`Command '${commandName}' failed`, error as Error);
 
     const userMessage = formatUserMessage(error as Error);
-    await bot.sendMessage(`❌ ${userMessage}`);
+    await bot.sendMessage(`âŒ ${userMessage}`);
 
     throw error;
   }
@@ -90,3 +90,4 @@ export async function withRetryCommand<T>(
 
   throw lastError!;
 }
+

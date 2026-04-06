@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Voice Transcription Port
  * For converting voice messages to text commentary
  */
@@ -42,3 +42,4 @@ export interface StructuredCommentary {
   suggestedTags: string[];
   confidence: number;
 }
+

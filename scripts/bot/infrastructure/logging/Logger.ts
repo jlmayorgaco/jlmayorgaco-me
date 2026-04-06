@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Structured logging with Winston
  *
  * @module infrastructure/logging/Logger
@@ -155,3 +155,4 @@ export function logAudit(
     ...sanitizeForLogging(details || {}),
   });
 }
+

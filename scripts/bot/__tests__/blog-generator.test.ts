@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+﻿import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { 
@@ -7,7 +7,7 @@ import {
   previewBlogPost, 
   generateSlug,
   type BlogPostData 
-} from '../blog-generator';
+} from '../infrastructure/formatting/BlogGenerator';
 
 describe('Blog Generator Module (Production)', () => {
   const testDir = path.join(process.cwd(), 'test-content', 'blog');
@@ -254,3 +254,4 @@ it('should generate valid frontmatter', () => {
     });
   });
 });
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Batch Review Types
  * For presenting multiple papers at once with emoji reactions
  */
@@ -35,11 +35,11 @@ export interface PaperReaction {
 }
 
 export enum ReactionEmoji {
-  STAR = '⭐',      // Must read / Save
-  THUMBS_UP = '👍', // Worth scanning
-  CHECK = '✓',     // Read/acknowledged
-  BOOKMARK = '🔖', // Save for later
-  SKIP = '⏭️',     // Skip this one
+  STAR = 'â­',      // Must read / Save
+  THUMBS_UP = 'ðŸ‘', // Worth scanning
+  CHECK = 'âœ“',     // Read/acknowledged
+  BOOKMARK = 'ðŸ”–', // Save for later
+  SKIP = 'â­ï¸',     // Skip this one
 }
 
 export const ReactionLabels: Record<ReactionEmoji, string> = {
@@ -49,3 +49,4 @@ export const ReactionLabels: Record<ReactionEmoji, string> = {
   [ReactionEmoji.BOOKMARK]: 'Save for Later',
   [ReactionEmoji.SKIP]: 'Skip',
 };
+

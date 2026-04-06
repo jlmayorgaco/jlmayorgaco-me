@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Base application error class
  * All domain/application errors should extend this
  */
@@ -245,3 +245,4 @@ export class ConfigurationError extends AppError {
     super(message, { ...details, missingKeys });
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * GitHub/Code Intelligence
  * 
  * - Repo relevance scorer
@@ -120,12 +120,12 @@ export class RepoRelevanceScorer {
       return 'No relevant repositories found.';
     }
 
-    let msg = '⭐ *Top Repositories*\n\n';
+    let msg = 'â­ *Top Repositories*\n\n';
 
     for (const s of scored.slice(0, 5)) {
       msg += `*[${s.repo.name}](${s.repo.url})* (${s.repo.language})\n`;
       msg += `  Score: ${s.finalScore}/100\n`;
-      msg += `  ⭐ ${s.repo.stars} stars\n`;
+      msg += `  â­ ${s.repo.stars} stars\n`;
       if (s.repo.description) {
         msg += `  _${s.repo.description.substring(0, 60)}..._\n`;
       }
@@ -180,7 +180,7 @@ export class PaperCodeLinker {
       return `No code link found for: ${link.paperTitle}`;
     }
 
-    const emoji = link.linkType === 'implements' ? '🛠️' : link.linkType === 'extends' ? '📦' : '🔗';
+    const emoji = link.linkType === 'implements' ? 'ðŸ› ï¸' : link.linkType === 'extends' ? 'ðŸ“¦' : 'ðŸ”—';
     
     let msg = `${emoji} *Code Link*\n\n`;
     msg += `Paper: ${link.paperTitle}\n`;
@@ -188,7 +188,7 @@ export class PaperCodeLinker {
     
     if (link.repo) {
       msg += `\n[*${link.repo.name}*](${link.repo.url})\n`;
-      msg += `⭐ ${link.repo.stars} stars | ${link.repo.language}`;
+      msg += `â­ ${link.repo.stars} stars | ${link.repo.language}`;
     }
 
     return msg;
@@ -226,3 +226,4 @@ export class ReleaseWatcher {
     return Array.from(this.watchedRepos);
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Trend Tracking
  * 
  * - Top topics of the week
@@ -134,10 +134,10 @@ export class TrendTracker {
       return '*No trends yet. Run /digest to start tracking.*';
     }
 
-    let msg = `📊 *Weekly Trends*\n\n`;
+    let msg = `ðŸ“Š *Weekly Trends*\n\n`;
 
     for (const trend of trends) {
-      const emoji = trend.trend === 'up' ? '📈' : trend.trend === 'down' ? '📉' : '➡️';
+      const emoji = trend.trend === 'up' ? 'ðŸ“ˆ' : trend.trend === 'down' ? 'ðŸ“‰' : 'âž¡ï¸';
       msg += `${emoji} *${trend.topic}* (${trend.count} mentions)\n`;
     }
 
@@ -151,3 +151,4 @@ function getWeekString(date: Date): string {
   d.setDate(d.getDate() - d.getDay());
   return d.toISOString().split('T')[0];
 }
+

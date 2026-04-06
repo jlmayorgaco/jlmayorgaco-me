@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Daily command - full digest with papers and news
  */
 
@@ -44,13 +44,13 @@ export const dailyCommand: CommandHandler = {
       
       msg += `*TOP PAPERS:*\n\n`;
       for (const p of topPapers) {
-        msg += `📄 *${p.summary?.substring(0, 80) || p.paperId}*\n`;
+        msg += `ðŸ“„ *${p.summary?.substring(0, 80) || p.paperId}*\n`;
         msg += `   ${p.summary?.substring(0, 150) || 'No summary'}...\n\n`;
       }
       
       msg += `*TOP NEWS:*\n\n`;
       for (const n of session.news.slice(0, 3)) {
-        msg += `📰 *${n.source}*: ${n.title.substring(0, 60)}\n`;
+        msg += `ðŸ“° *${n.source}*: ${n.title.substring(0, 60)}\n`;
         msg += `   ${n.description.substring(0, 100) || 'No description'}...\n\n`;
       }
       
@@ -68,7 +68,8 @@ export const dailyCommand: CommandHandler = {
       
     } catch (e: any) {
       logError('Daily command failed', e);
-      await bot.sendMessage(`❌ Digest error: ${e.message}`);
+      await bot.sendMessage(`âŒ Digest error: ${e.message}`);
     }
   },
 };
+

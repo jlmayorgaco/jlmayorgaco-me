@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Dedup Engine - Multi-layer deduplication
  * 
  * Layer 1: Exact match (DOI, arXiv ID, URL exact)
@@ -139,7 +139,7 @@ export class DedupEngine {
       variations.push(words.slice(0, 3).join(' '));
     }
 
-    variations.push(normalized.replace(/[-–—]/g, ' '));
+    variations.push(normalized.replace(/[-â€“â€”]/g, ' '));
 
     variations.push(normalized.replace(/\s+(v|version|rev)\s*\d+/gi, ''));
 
@@ -182,3 +182,4 @@ export function deduplicate<T extends { id?: string; url?: string; title?: strin
 
   return unique;
 }
+

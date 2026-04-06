@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Markdown Formatter - Single source of truth for markdown operations
  * Consolidates all markdown escaping and formatting
  */
@@ -161,7 +161,7 @@ export class MarkdownFormatter {
   static formatList(items: string[], ordered: boolean = false): string {
     return items
       .map((item, index) => {
-        const prefix = ordered ? `${index + 1}.` : '•';
+        const prefix = ordered ? `${index + 1}.` : 'â€¢';
         return `${prefix} ${item}`;
       })
       .join('\n');
@@ -241,3 +241,4 @@ export class MarkdownFormatter {
     });
   }
 }
+

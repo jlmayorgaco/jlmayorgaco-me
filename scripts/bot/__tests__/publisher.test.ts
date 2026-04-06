@@ -7,7 +7,7 @@ import {
   checkGitStatus, 
   validateGitSetup,
   type PublishResult 
-} from '../publisher';
+} from '../infrastructure/external/GitPublisher';
 
 const execFileAsync = promisify(execFile);
 
@@ -20,7 +20,7 @@ vi.mock('util', () => ({
   promisify: vi.fn((fn) => fn),
 }));
 
-vi.mock('../logger', () => ({
+vi.mock('../infrastructure/logging/Logger', () => ({
   logError: vi.fn(),
   logInfo: vi.fn(),
 }));
@@ -204,3 +204,4 @@ describe('Publisher Module (Production)', () => {
     });
   });
 });
+

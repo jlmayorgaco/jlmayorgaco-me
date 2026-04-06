@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Paper entity value object
  */
 export interface Paper {
@@ -42,3 +42,4 @@ export interface BlogPost {
   imageQuery?: string;
   imagePath?: string;
 }
+

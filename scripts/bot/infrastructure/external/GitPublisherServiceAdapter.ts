@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Git Publisher Service Adapter
  * Implements IPublisher port using legacy publisher.ts
  */
@@ -8,13 +8,13 @@ import type {
   PublishResult, 
   GitValidationResult 
 } from '../../application/ports';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 
 // Import legacy functions
 import { 
   gitAddCommitPush, 
   validateGitSetup 
-} from '../../publisher';
+} from '../../infrastructure/external/GitPublisher';
 
 export class GitPublisherServiceAdapter implements IPublisher {
   async publishPost(
@@ -60,3 +60,4 @@ export class GitPublisherServiceAdapter implements IPublisher {
     }
   }
 }
+

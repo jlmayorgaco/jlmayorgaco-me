@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Voice/Style Profiles
  * 
  * Writing profiles:
- * - técnico formal
+ * - tÃ©cnico formal
  * - LinkedIn profesional
- * - más crítico
- * - más pedagógico
+ * - mÃ¡s crÃ­tico
+ * - mÃ¡s pedagÃ³gico
  *
  * @module application/services/VoiceProfiles
  */
@@ -138,3 +138,4 @@ export class VoiceProfileManager {
     return msg;
   }
 }
+

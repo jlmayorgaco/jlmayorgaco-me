@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Result type for functional error handling
  * Replaces throwing exceptions for expected errors
  */
@@ -53,3 +53,4 @@ export const Result = {
 
 // Helper type for async results
 export type AsyncResult<T, E = Error> = Promise<Result<T, E>>;
+

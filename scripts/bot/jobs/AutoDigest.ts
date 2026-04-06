@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Auto-run daily digest with full error handling
  *
  * @module jobs/AutoDigest
@@ -49,7 +49,7 @@ async function autoDigest() {
     if (topPapers.length > 0) {
       digest += `*TOP PAPERS:*\n\n`;
       for (const p of topPapers) {
-        digest += `📄 *${(p.summary || p.paperId).substring(0, 80)}*\n`;
+        digest += `ðŸ“„ *${(p.summary || p.paperId).substring(0, 80)}*\n`;
         digest += `   ${(p.summary || 'No summary').substring(0, 150)}...\n\n`;
       }
     }
@@ -57,7 +57,7 @@ async function autoDigest() {
     if (topNews.length > 0) {
       digest += `*TOP NEWS:*\n\n`;
       for (const n of topNews.slice(0, 3)) {
-        digest += `📰 *${n.source}*: ${n.title.substring(0, 60)}\n`;
+        digest += `ðŸ“° *${n.source}*: ${n.title.substring(0, 60)}\n`;
         digest += `   ${(n.description || 'No description').substring(0, 100)}...\n\n`;
       }
     }
@@ -112,7 +112,7 @@ async function autoDigest() {
     try {
       const config = await loadConfig();
       const bot = new TelegramBot(config);
-      await bot.sendMessage(`❌ Auto digest error: ${e.message?.substring(0, 200)}`);
+      await bot.sendMessage(`âŒ Auto digest error: ${e.message?.substring(0, 200)}`);
     } catch (notifyError) {
       logError('Failed to send error notification', notifyError as Error);
     }
@@ -122,3 +122,4 @@ async function autoDigest() {
 }
 
 autoDigest();
+

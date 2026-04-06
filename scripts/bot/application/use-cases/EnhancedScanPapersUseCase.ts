@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Enhanced Scan Papers Use Case
  * Supports: paper history, tiered classification, batch review mode
  */
@@ -15,7 +15,7 @@ import {
   TierEmojis,
 } from '../ports';
 import { IResearchContextRepository } from '../ports/ResearchContextPort';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 import { MarkdownFormatter } from '../../infrastructure/formatting/MarkdownFormatter';
 import { BatchReviewItem } from '../../domain/value-objects/BatchReview';
 
@@ -62,7 +62,7 @@ export class EnhancedScanPapersUseCase {
       }
 
       if (uniquePapers.length === 0) {
-        await this.messagePort.sendMessage('📭 No new papers found today.');
+        await this.messagePort.sendMessage('ðŸ“­ No new papers found today.');
         return Result.ok(undefined);
       }
 
@@ -141,7 +141,7 @@ export class EnhancedScanPapersUseCase {
       logError('EnhancedScanPapersUseCase failed', error as Error);
       
       await this.messagePort.sendMessage(
-        `❌ Failed to scan papers: ${(error as Error).message}`
+        `âŒ Failed to scan papers: ${(error as Error).message}`
       );
 
       return Result.err(error as Error);
@@ -170,7 +170,7 @@ export class EnhancedScanPapersUseCase {
       });
 
     if (batchItems.length === 0) {
-      await this.messagePort.sendMessage('📭 No relevant papers found for review.');
+      await this.messagePort.sendMessage('ðŸ“­ No relevant papers found for review.');
       return;
     }
 
@@ -183,9 +183,9 @@ export class EnhancedScanPapersUseCase {
     });
 
     // Send batch review message
-    let msg = `*📚 Batch Review: ${batchItems.length} Papers*\n\n`;
+    let msg = `*ðŸ“š Batch Review: ${batchItems.length} Papers*\n\n`;
     msg += 'React to each paper:\n';
-    msg += '⭐ Must Read | 👍 Interesting | ✓ Ack | 🔖 Save | ⏭️ Skip\n\n';
+    msg += 'â­ Must Read | ðŸ‘ Interesting | âœ“ Ack | ðŸ”– Save | â­ï¸ Skip\n\n';
 
     for (let i = 0; i < batchItems.length; i++) {
       const item = batchItems[i];
@@ -197,7 +197,7 @@ export class EnhancedScanPapersUseCase {
       msg += `   ${MarkdownFormatter.truncate(item.summary, 120)}\n\n`;
     }
 
-    msg += 'Reply with numbers (e.g., "1⭐ 2👍 3⏭️") or react individually.';
+    msg += 'Reply with numbers (e.g., "1â­ 2ðŸ‘ 3â­ï¸") or react individually.';
 
     await this.messagePort.sendMessage(msg);
   }
@@ -218,11 +218,11 @@ export class EnhancedScanPapersUseCase {
       byTier[c.tier].push(c);
     }
 
-    let msg = '*📊 Today\'s Papers by Relevance*\n\n';
+    let msg = '*ðŸ“Š Today\'s Papers by Relevance*\n\n';
 
     // Must Read
     if (byTier[RelevanceTier.MUST_READ].length > 0) {
-      msg += `*🔴 Must Read (${byTier[RelevanceTier.MUST_READ].length})*\n`;
+      msg += `*ðŸ”´ Must Read (${byTier[RelevanceTier.MUST_READ].length})*\n`;
       for (const c of byTier[RelevanceTier.MUST_READ].slice(0, 3)) {
         const paper = papers.find(p => p.id === c.paperId);
         msg += this.formatPaperLine(c, paper);
@@ -232,7 +232,7 @@ export class EnhancedScanPapersUseCase {
 
     // Worth Scanning
     if (byTier[RelevanceTier.WORTH_SCANNING].length > 0) {
-      msg += `*🟡 Worth Scanning (${byTier[RelevanceTier.WORTH_SCANNING].length})*\n`;
+      msg += `*ðŸŸ¡ Worth Scanning (${byTier[RelevanceTier.WORTH_SCANNING].length})*\n`;
       for (const c of byTier[RelevanceTier.WORTH_SCANNING].slice(0, 3)) {
         const paper = papers.find(p => p.id === c.paperId);
         msg += this.formatPaperLine(c, paper);
@@ -242,7 +242,7 @@ export class EnhancedScanPapersUseCase {
 
     // Background
     if (byTier[RelevanceTier.BACKGROUND].length > 0) {
-      msg += `*🟢 Background (${byTier[RelevanceTier.BACKGROUND].length})*\n`;
+      msg += `*ðŸŸ¢ Background (${byTier[RelevanceTier.BACKGROUND].length})*\n`;
       for (const c of byTier[RelevanceTier.BACKGROUND].slice(0, 2)) {
         const paper = papers.find(p => p.id === c.paperId);
         msg += this.formatPaperLine(c, paper);
@@ -254,6 +254,7 @@ export class EnhancedScanPapersUseCase {
 
   private formatPaperLine(classification: TieredClassification, paper: any): string {
     const title = MarkdownFormatter.truncate(paper?.title || 'Unknown', 60);
-    return `• *${MarkdownFormatter.escape(title)}*\n  _${classification.suggestedAction}_\n  [ArXiv](${paper?.absUrl || paper?.url || ''})\n\n`;
+    return `â€¢ *${MarkdownFormatter.escape(title)}*\n  _${classification.suggestedAction}_\n  [ArXiv](${paper?.absUrl || paper?.url || ''})\n\n`;
   }
 }
+

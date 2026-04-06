@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Main bot orchestrator with command registry and graceful shutdown
  * Production-ready: proper lifecycle management, health checks, error recovery
  */
@@ -28,7 +28,7 @@ async function main() {
   // Validate environment before starting
   const envCheck = validateEnvironment();
   if (!envCheck.valid) {
-    console.error('❌ Missing required environment variables:');
+    console.error('âŒ Missing required environment variables:');
     envCheck.missing.forEach(v => console.error(`  - ${v}`));
     process.exit(1);
   }
@@ -44,7 +44,7 @@ async function main() {
   // Validate git setup
   const gitStatus = await validateGitSetup();
   if (!gitStatus.valid) {
-    console.warn('⚠️  Git setup issues:');
+    console.warn('âš ï¸  Git setup issues:');
     gitStatus.errors.forEach(e => console.warn(`  - ${e}`));
   }
 
@@ -67,7 +67,7 @@ async function main() {
 
   const activeBot = bot; // Closure-safe reference
   logInfo('Connected to Telegram');
-  await activeBot.sendMessage('*JLMT Lab Bot Online* ✅\nType /help to see commands');
+  await activeBot.sendMessage('*JLMT Lab Bot Online* âœ…\nType /help to see commands');
 
   // Register commands
   const registry = getCommandRegistry();
@@ -132,7 +132,7 @@ async function handleUserComment(
   // Validate user comment
   const validation = safeValidate(UserCommentSchema, text);
   if (!validation.success) {
-    await bot.sendMessage(`❌ ${validation.errors?.[0]}`);
+    await bot.sendMessage(`âŒ ${validation.errors?.[0]}`);
     return;
   }
 
@@ -174,7 +174,7 @@ async function handleUserComment(
 
   } catch (e: any) {
     logError('Post generation failed', e);
-    await bot.sendMessage(`❌ Generation error: ${e.message}`);
+    await bot.sendMessage(`âŒ Generation error: ${e.message}`);
     session.state = 'idle';
     sessionManager.updateSession(chatId, session);
   }
@@ -192,7 +192,7 @@ async function handleConfirmation(
 
   if (cmd === 'yes' || cmd === 'si' || cmd === 'confirm') {
     if (!session.pendingPost) {
-      await bot.sendMessage('❌ No post to publish.');
+      await bot.sendMessage('âŒ No post to publish.');
       return;
     }
 
@@ -201,16 +201,16 @@ async function handleConfirmation(
 
     try {
       const filePath = await saveBlogPost(session.pendingPost);
-      await bot.sendMessage(`💾 Saved to: \`${filePath}\``);
+      await bot.sendMessage(`ðŸ’¾ Saved to: \`${filePath}\``);
 
       const result = await publishPost(filePath, session.pendingPost.title);
 
       if (result.success) {
         await bot.sendMessage(
-          `✅ *Published!*\n${result.message}\n\nVercel will auto-deploy.`
+          `âœ… *Published!*\n${result.message}\n\nVercel will auto-deploy.`
         );
       } else {
-        await bot.sendMessage(`❌ Publish failed: ${result.message}`);
+        await bot.sendMessage(`âŒ Publish failed: ${result.message}`);
       }
 
       session.state = 'idle';
@@ -219,14 +219,14 @@ async function handleConfirmation(
 
     } catch (e: any) {
       logError('Publish failed', e);
-      await bot.sendMessage(`❌ Publish error: ${e.message}`);
+      await bot.sendMessage(`âŒ Publish error: ${e.message}`);
     }
 
   } else if (cmd === 'no' || cmd === 'cancel') {
     session.state = 'idle';
     session.pendingPost = null;
     sessionManager.updateSession(chatId, session);
-    await bot.sendMessage('✅ Cancelled. Use /daily to start again.');
+    await bot.sendMessage('âœ… Cancelled. Use /daily to start again.');
 
   } else if (cmd.startsWith('/edit') || cmd.startsWith('/cambio')) {
     await handleEditCommand(text, chatId, config, sessionManager, bot);
@@ -248,7 +248,7 @@ async function handleEditCommand(
   const session = sessionManager.getSession(chatId);
   
   if (!session.pendingPost) {
-    await bot.sendMessage('❌ No post to edit.');
+    await bot.sendMessage('âŒ No post to edit.');
     return;
   }
 
@@ -257,7 +257,7 @@ async function handleEditCommand(
   const validation = safeValidate(EditInstructionSchema, instruction);
   
   if (!validation.success) {
-    await bot.sendMessage(`❌ ${validation.errors?.[0]}`);
+    await bot.sendMessage(`âŒ ${validation.errors?.[0]}`);
     return;
   }
 
@@ -293,7 +293,7 @@ async function handleEditCommand(
 
   } catch (e: any) {
     logError('Edit failed', e);
-    await bot.sendMessage(`❌ Edit error: ${e.message}`);
+    await bot.sendMessage(`âŒ Edit error: ${e.message}`);
   }
 }
 
@@ -340,3 +340,4 @@ main().catch((error) => {
   logError('Fatal error starting bot', error);
   process.exit(1);
 });
+

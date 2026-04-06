@@ -1,4 +1,4 @@
-/**
+﻿/**
  * In-Memory Paper History Repository
  * For personal use - tracks seen papers in memory
  * Can be persisted to file if needed
@@ -9,7 +9,7 @@ import {
   PaperRecord, 
   UserAction 
 } from '../../application/ports/PaperHistoryPort';
-import { logDebug, logInfo } from '../../logger';
+import { logDebug, logInfo } from '../../infrastructure/logging/Logger';
 
 export class InMemoryPaperHistoryRepository implements IPaperHistoryRepository {
   private history = new Map<string, PaperRecord>();
@@ -135,3 +135,4 @@ export class InMemoryPaperHistoryRepository implements IPaperHistoryRepository {
     ]));
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Batch Review Use Case
  * Manages batch review of papers with reactions
  */
@@ -16,7 +16,7 @@ import type {
   BatchReviewPaperDTO 
 } from '../dto';
 import { Result } from '../../shared/Result';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 import { MarkdownFormatter } from '../../infrastructure/formatting/MarkdownFormatter';
 import { ReactionEmoji } from '../../domain/value-objects/BatchReview';
 
@@ -148,11 +148,11 @@ export class BatchReviewUseCase {
   }
 
   private async sendBatchReviewMessage(items: any[]): Promise<void> {
-    let msg = `*📋 Batch Review: ${items.length} Papers*\n\n`;
+    let msg = `*ðŸ“‹ Batch Review: ${items.length} Papers*\n\n`;
     msg += `React with:\n`;
-    msg += `⭐ Must Read | 👍 Interesting | ✓ Acknowledge\n`;
-    msg += `🔖 Save Later | ⏭️ Skip\n\n`;
-    msg += `Format: \`1⭐ 2👍 3⏭️\`\n\n`;
+    msg += `â­ Must Read | ðŸ‘ Interesting | âœ“ Acknowledge\n`;
+    msg += `ðŸ”– Save Later | â­ï¸ Skip\n\n`;
+    msg += `Format: \`1â­ 2ðŸ‘ 3â­ï¸\`\n\n`;
 
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
@@ -164,3 +164,4 @@ export class BatchReviewUseCase {
     await this.messagePort.sendMessage(msg);
   }
 }
+

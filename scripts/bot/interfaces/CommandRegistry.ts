@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Command registry implementation
  * Implements the command pattern for extensible bot commands
  */
@@ -48,7 +48,7 @@ export class BotCommandRegistry implements CommandRegistry {
     if (!handler) {
       logWarn('Unknown command', { command: commandName, chatId: context.chatId });
       await context.bot.sendMessage(
-        '❓ Unknown command. Type /help to see available commands.'
+        'â“ Unknown command. Type /help to see available commands.'
       );
       return;
     }
@@ -66,7 +66,7 @@ export class BotCommandRegistry implements CommandRegistry {
       });
       
       await context.bot.sendMessage(
-        '❌ An error occurred while processing your command. Please try again.'
+        'âŒ An error occurred while processing your command. Please try again.'
       );
     }
   }
@@ -81,3 +81,4 @@ export function getCommandRegistry(): BotCommandRegistry {
   }
   return registryInstance;
 }
+

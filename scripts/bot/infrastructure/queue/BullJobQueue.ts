@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Bull Job Queue Implementation
  * For background processing
  */
 
 import { IJobQueue, Job, JobOptions, JobProcessor, JobStatus } from '../../application/ports';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 
 // Bull Queue interface (replace with actual Bull imports)
 export interface BullQueue {
@@ -103,3 +103,4 @@ export class BullJobQueue implements IJobQueue {
     }
   }
 }
+

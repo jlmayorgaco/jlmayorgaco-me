@@ -1,14 +1,14 @@
-/**
+﻿/**
  * News Scanner Service Adapter
  * Implements INewsScanner port using legacy news-scanner.ts
  */
 
 import type { INewsScanner, NewsItem } from '../../application/ports';
 import type { Result } from '../../shared/Result';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 
 // Import legacy function
-import { scanNewsSources } from '../../news-scanner';
+import { scanNewsSources } from '../../infrastructure/connectors/RssConnector';
 
 export class NewsScannerServiceAdapter implements INewsScanner {
   async scanSources(): Promise<Result<NewsItem[], Error>> {
@@ -33,3 +33,4 @@ export class NewsScannerServiceAdapter implements INewsScanner {
     }
   }
 }
+

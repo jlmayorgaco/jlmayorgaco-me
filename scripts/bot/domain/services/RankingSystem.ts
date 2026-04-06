@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Ranking System - Intelligent Scoring
  * 
  * - ResearchScore: novelty, topic relevance, technical depth
@@ -296,3 +296,4 @@ export class CompositeScore {
     return 'hybrid';
   }
 }
+

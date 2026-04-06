@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Authorization Service
  * For multi-user support
  */
 
 import { UnauthorizedError } from '../../shared/errors/AppError';
-import { logDebug, logWarn } from '../../logger';
+import { logDebug, logWarn } from '../../infrastructure/logging/Logger';
 
 export class AuthorizationService {
   private allowedChatIds: Set<string>;
@@ -48,3 +48,4 @@ export class AuthorizationService {
     return Array.from(this.allowedChatIds);
   }
 }
+

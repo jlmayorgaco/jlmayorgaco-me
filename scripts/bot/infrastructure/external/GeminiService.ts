@@ -127,25 +127,19 @@ export async function classifyAndSummarizePapers(
     return [];
   }
 
-  const systemPrompt = `You are a research assistant for a robotics and control systems lab.
-Analyze each paper and return a JSON array with objects containing:
-- paperId: the paper id
-- relevance: "high", "medium", or "low" based on relevance to: distributed control, robotics, FPGA, power systems, embedded systems
-- summary: a 2-3 sentence summary in English
-- classification: one of ["control-theory", "robotics", "embedded", "power-systems", "ml-ai", "signal-processing", "other"]
-
-Topics of interest: distributed control, multi-agent systems, FPGA, Kalman filters, frequency estimation, collaborative robotics, graph theory, embedded systems, power electronics.
-
-Return ONLY valid JSON array, no markdown fences.`;
+  const systemPrompt = `Research assistant. Analyze papers. Return JSON array:
+[{ "paperId": "id", "relevance": "high|medium|low", "summary": "short summary", "classification": "control-theory|robotics|embedded|power-systems|ml-ai|signal-processing|other" }]
+Relevance based on: distributed control, robotics, FPGA, power systems, embedded systems.
+Return ONLY JSON array.`;
 
   const papersText = papers
     .map(
       (p, i) =>
-        `[${i}] ID: ${p.id}\nTitle: ${sanitizeUserInput(p.title)}\nAbstract: ${sanitizeUserInput(p.summary?.substring(0, 500) || '')}\nCategories: ${p.categories?.join(', ') || ''}`,
+        `ID:${p.id}\nTitle:${sanitizeUserInput(p.title)}\nAbstract:${sanitizeUserInput(p.summary?.substring(0, 1500) || '')}\nCat:${p.categories?.join(',') || ''}`,
     )
     .join('\n---\n');
 
-  const prompt = `Classify and summarize these papers:\n\n${papersText}`;
+  const prompt = `Classify:\n${papersText}`;
 
   try {
     const response = await withRetry(() => callGemini(config, prompt, systemPrompt), {
@@ -201,27 +195,15 @@ export async function generateBlogPost(
     context: string;
   },
 ): Promise<GeneratedBlogPost> {
-  const systemPrompt = `You are a technical blog writer for a robotics/control systems lab portfolio site.
-Generate a blog post in JSON format with:
-- title: compelling technical title (5-100 chars)
-- description: 1-2 sentence meta description (10-500 chars)
-- category: one of ["Research", "Tutorial", "Lab Notes", "Industry"]
-- tags: array of 5-8 relevant tags
-- content: full blog post in markdown (300-500 words), technical but accessible
-- imageQuery: a search query (2-4 words) to find a relevant cover image on Unsplash
+  const systemPrompt = `Tech blog writer. Generate JSON:
+{ "title": "5-100 chars", "description": "1-2 sentences", "category": "Research|Tutorial|Lab Notes|Industry", "tags": ["tag1", "tag2"], "content": "markdown post 300 words", "imageQuery": "2-4 words" }
+Based on news & context. No emojis. Professional. Return ONLY JSON object.`;
 
-The post should be based on the news items provided, with the user's commentary as the unique perspective.
-Write in English. Technical but not academic. Use headers, bold for key terms.
-Do NOT use emojis. Keep it professional and industrial feel.
+  const prompt = `Generate post from:
+NEWS:
+${data.newsItems.slice(0, 5).map(item => sanitizeUserInput(item)).join('\n')}
 
-Return ONLY valid JSON object, no markdown fences.`;
-
-  const prompt = `Generate a blog post based on:
-
-NEWS ITEMS:
-${data.newsItems.slice(0, 5).map(item => sanitizeUserInput(item)).join('\n\n')}
-
-USER'S COMMENTARY/INSIGHT:
+INSIGHT:
 ${sanitizeUserInput(data.userComment)}
 
 CONTEXT:
@@ -264,3 +246,4 @@ export function getGeminiCircuitStatus(): {
 } {
   return geminiCircuitBreaker.metrics;
 }
+

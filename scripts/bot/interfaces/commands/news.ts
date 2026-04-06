@@ -1,4 +1,4 @@
-/**
+﻿/**
  * News command - scan RSS feeds for relevant news
  */
 
@@ -35,7 +35,8 @@ export const newsCommand: CommandHandler = {
       
     } catch (e: any) {
       logError('News command failed', e);
-      await bot.sendMessage(`❌ News scan error: ${e.message}`);
+      await bot.sendMessage(`âŒ News scan error: ${e.message}`);
     }
   },
 };
+

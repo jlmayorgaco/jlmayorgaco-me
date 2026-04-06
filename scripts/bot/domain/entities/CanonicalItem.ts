@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Canonical Item Builder
  * 
  * Maps any source to unified format:
@@ -199,3 +199,4 @@ export class CanonicalItemBuilder {
     return Array.from(seen.values());
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Entity Extraction
  * 
  * Extract from content:
@@ -155,19 +155,20 @@ export class EntityExtractor {
     let msg = '*Extracted Entities*\n\n';
 
     const labels: Record<string, string> = {
-      method: '🔧 Methods',
-      tool: '🛠️ Tools',
-      metric: '📊 Metrics',
-      scenario: '📍 Scenarios',
-      domain: '🌐 Domains',
+      method: 'ðŸ”§ Methods',
+      tool: 'ðŸ› ï¸ Tools',
+      metric: 'ðŸ“Š Metrics',
+      scenario: 'ðŸ“ Scenarios',
+      domain: 'ðŸŒ Domains',
     };
 
     for (const [type, list] of byType.entries()) {
       msg += `${labels[type]}:\n`;
-      msg += list.map(e => `  • ${e.value}`).join('\n');
+      msg += list.map(e => `  â€¢ ${e.value}`).join('\n');
       msg += '\n';
     }
 
     return msg;
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Gemini Service Adapter
  * Implements IGeminiService port using legacy gemini.ts
  */
@@ -12,13 +12,13 @@ import type {
   CircuitStatus 
 } from '../../application/ports';
 import type { Result } from '../../shared/Result';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 
 // Import legacy functions
 import { 
   classifyPapers as legacyClassifyPapers, 
   generateBlogPost as legacyGenerateBlogPost 
-} from '../../gemini';
+} from '../../infrastructure/external/GeminiService';
 
 export class GeminiServiceAdapter implements IGeminiService {
   private contextPrompt: string = '';
@@ -125,3 +125,4 @@ export class GeminiServiceAdapter implements IGeminiService {
     return map[relevance] || 'Review when available';
   }
 }
+

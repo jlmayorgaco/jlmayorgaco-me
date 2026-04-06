@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Top N Selection Per Day
  * 
  * - Select best N items per day
@@ -126,3 +126,4 @@ export function selectTopPerDay<T extends { timestamp?: string }>(
 
   return selector.select(items).map(s => s.item);
 }
+

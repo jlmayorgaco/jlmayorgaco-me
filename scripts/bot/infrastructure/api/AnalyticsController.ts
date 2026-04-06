@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Analytics API Controller
  * Provides endpoints for dashboard
  */
@@ -94,3 +94,4 @@ export class AnalyticsController {
     return { start, end, period };
   }
 }
+

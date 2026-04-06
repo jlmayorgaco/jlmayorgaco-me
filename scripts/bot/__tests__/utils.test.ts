@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { sleep, withRetry, withTimeout, CircuitBreaker } from '../utils';
+﻿import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { sleep, withRetry, withTimeout, CircuitBreaker } from '../shared/utils';
 
 describe('Utils Module', () => {
   describe('sleep', () => {
@@ -46,7 +46,7 @@ describe('Utils Module', () => {
     it('should succeed on first try', async () => {
       const fn = vi.fn().mockResolvedValue('success');
       
-      const result = await withRetry(fn, 3);
+      const result = await withRetry(fn, { maxRetries: 3 });
       
       expect(result).toBe('success');
       expect(fn).toHaveBeenCalledTimes(1);
@@ -58,7 +58,7 @@ describe('Utils Module', () => {
         .mockRejectedValueOnce(new Error('fail 2'))
         .mockResolvedValue('success');
       
-      const result = await withRetry(fn, 3, 10);
+      const result = await withRetry(fn, { maxRetries: 3, baseDelay: 10 });
       
       expect(result).toBe('success');
       expect(fn).toHaveBeenCalledTimes(3);
@@ -67,7 +67,7 @@ describe('Utils Module', () => {
     it('should throw after exhausting retries', async () => {
       const fn = vi.fn().mockRejectedValue(new Error('always fails'));
       
-      await expect(withRetry(fn, 3, 10)).rejects.toThrow('always fails');
+      await expect(withRetry(fn, { maxRetries: 3, baseDelay: 10 })).rejects.toThrow('always fails');
       expect(fn).toHaveBeenCalledTimes(3);
     });
 
@@ -87,7 +87,7 @@ describe('Utils Module', () => {
         .mockRejectedValueOnce(new Error('fail'))
         .mockResolvedValue('success');
       
-      await withRetry(fn, 3, 100);
+      await withRetry(fn, { maxRetries: 3, baseDelay: 100 });
       
       expect(delays[0]).toBe(100);
       expect(delays[1]).toBe(200);
@@ -102,7 +102,7 @@ describe('Utils Module', () => {
       const result = await cb.execute(fn);
       
       expect(result).toBe('success');
-      expect(cb.state).toBe('closed');
+      expect(cb.currentState).toBe('closed');
     });
 
     it('should open after threshold failures', async () => {
@@ -112,7 +112,7 @@ describe('Utils Module', () => {
       await expect(cb.execute(fn)).rejects.toThrow('fail');
       await expect(cb.execute(fn)).rejects.toThrow('fail');
       
-      expect(cb.state).toBe('open');
+      expect(cb.currentState).toBe('open');
     });
 
     it('should reject calls when open', async () => {
@@ -134,11 +134,11 @@ describe('Utils Module', () => {
       });
       
       await expect(cb.execute(() => Promise.reject(new Error('fail')))).rejects.toThrow();
-      expect(cb.state).toBe('open');
+      expect(cb.currentState).toBe('open');
       
       await sleep(100);
       
-      expect(cb.state).toBe('half-open');
+      expect(cb.currentState).toBe('half-open');
     });
 
     it('should close on success in half-open', async () => {
@@ -154,7 +154,8 @@ describe('Utils Module', () => {
       const result = await cb.execute(successFn);
       
       expect(result).toBe('success');
-      expect(cb.state).toBe('closed');
+      expect(cb.currentState).toBe('closed');
     });
   });
 });
+

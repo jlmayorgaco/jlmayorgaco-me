@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Voice Command Handler
  * Handles voice messages for commentary input
  * Requires OpenAI Whisper API
@@ -27,7 +27,7 @@ export async function handleVoiceMessage(
   
   if (!transcriptionService) {
     await bot.sendMessage(
-      '❌ Voice transcription not configured. Please send text commentary instead.\n' +
+      'âŒ Voice transcription not configured. Please send text commentary instead.\n' +
       'To enable voice, set OPENAI_API_KEY in your environment.'
     );
     return null;
@@ -42,7 +42,7 @@ export async function handleVoiceMessage(
     const audioBuffer = await downloadTelegramFile(ctx, fileId);
     
     if (!audioBuffer) {
-      await bot.sendMessage('❌ Could not download voice message.');
+      await bot.sendMessage('âŒ Could not download voice message.');
       return null;
     }
     
@@ -50,7 +50,7 @@ export async function handleVoiceMessage(
     const result = await transcriptionService.transcribe(audioBuffer, 'audio/ogg');
     
     if (!result.success) {
-      await bot.sendMessage(`❌ Transcription failed: ${result.error?.message}`);
+      await bot.sendMessage(`âŒ Transcription failed: ${result.error?.message}`);
       return null;
     }
     
@@ -66,7 +66,7 @@ export async function handleVoiceMessage(
       if (formatted.keyPoints.length > 0) {
         let keyPointsMsg = `\n\n*Key Points:*\n`;
         for (const point of formatted.keyPoints.slice(0, 3)) {
-          keyPointsMsg += `• ${point}\n`;
+          keyPointsMsg += `â€¢ ${point}\n`;
         }
       }
     }
@@ -80,7 +80,7 @@ export async function handleVoiceMessage(
     
   } catch (e: any) {
     logError('Voice processing failed', e);
-    await bot.sendMessage(`❌ Voice processing error: ${e.message}`);
+    await bot.sendMessage(`âŒ Voice processing error: ${e.message}`);
     return null;
   }
 }
@@ -138,3 +138,4 @@ export function getFileId(message: any): string | null {
   if (message.video_note) return message.video_note.file_id;
   return null;
 }
+

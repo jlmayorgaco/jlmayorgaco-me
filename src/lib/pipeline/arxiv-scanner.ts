@@ -178,8 +178,11 @@ async function main() {
   return papers;
 }
 
-export { ArxivPaper, SearchQuery, runScanner, main };
+export type { ArxivPaper, SearchQuery };
+export { runScanner, main };
 
-if (require.main === module) {
+import { fileURLToPath } from 'url';
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main().catch(console.error);
 }

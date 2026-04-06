@@ -1,4 +1,4 @@
-/**
+﻿/**
  * In-Memory Research Context Repository
  * For personal use - stores research interests and learns from interactions
  */
@@ -10,7 +10,7 @@ import {
   PaperInteraction,
   ContextUpdate
 } from '../../application/ports/ResearchContextPort';
-import { logDebug, logInfo } from '../../logger';
+import { logDebug, logInfo } from '../../infrastructure/logging/Logger';
 
 export class InMemoryResearchContextRepository implements IResearchContextRepository {
   private contexts = new Map<string, ResearchContext>();
@@ -134,10 +134,10 @@ export class InMemoryResearchContextRepository implements IResearchContextReposi
 ${context.researchAreas.map(a => `- ${a}`).join('\n')}
 
 Classification Criteria:
-🔴 MUST READ: Directly relevant to your core research areas, introduces novel methods you can apply, or by key researchers
-🟡 WORTH SCANNING: Related to your interests, good background/context, or interesting methodology
-🟢 BACKGROUND: Peripheral interest, might provide context but not directly applicable
-⚪ SKIP: Not relevant to your research focus
+ðŸ”´ MUST READ: Directly relevant to your core research areas, introduces novel methods you can apply, or by key researchers
+ðŸŸ¡ WORTH SCANNING: Related to your interests, good background/context, or interesting methodology
+ðŸŸ¢ BACKGROUND: Peripheral interest, might provide context but not directly applicable
+âšª SKIP: Not relevant to your research focus
 
 ${context.preferredTopics.length > 0 ? `\nPreferred Topics: ${context.preferredTopics.join(', ')}` : ''}
 ${context.avoidedTopics.length > 0 ? `\nAvoid Topics: ${context.avoidedTopics.join(', ')}` : ''}
@@ -215,3 +215,4 @@ For each paper, provide:
     };
   }
 }
+

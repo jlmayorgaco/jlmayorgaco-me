@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Whisper Voice Transcription Service
  * Uses OpenAI Whisper API to transcribe voice messages
  */
@@ -11,7 +11,7 @@ import {
 } from '../../application/ports/VoiceTranscriptionPort';
 import { Result } from '../../shared/Result';
 import { ExternalServiceError } from '../../shared/errors/AppError';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 import { withRetry } from '../../shared/retry/RetryPolicy';
 import FormData from 'form-data';
 
@@ -179,3 +179,4 @@ export class CommentaryFormatter implements ICommentaryFormatter {
     return Array.from(tags).slice(0, 10);
   }
 }
+

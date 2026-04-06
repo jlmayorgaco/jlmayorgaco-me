@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Status command - show bot health and metrics
  */
 
@@ -22,12 +22,12 @@ export const statusCommand: CommandHandler = {
     const memory = process.memoryUsage();
     const memoryMB = Math.round(memory.heapUsed / 1024 / 1024);
     
-    let msg = `*Bot Status*\n━━━━━━━━━━━━\n\n`;
-    msg += `✅ Running: ${uptimeStr}\n`;
-    msg += `💾 Memory: ${memoryMB}MB\n`;
-    msg += `👥 Sessions: ${sessionMetrics.activeSessions} active\n`;
-    msg += `🤖 Gemini: ${geminiStatus.state.toUpperCase()}\n`;
-    msg += `⏱️ Time: ${new Date().toISOString()}`;
+    let msg = `*Bot Status*\nâ”â”â”â”â”â”â”â”â”â”â”â”\n\n`;
+    msg += `âœ… Running: ${uptimeStr}\n`;
+    msg += `ðŸ’¾ Memory: ${memoryMB}MB\n`;
+    msg += `ðŸ‘¥ Sessions: ${sessionMetrics.activeSessions} active\n`;
+    msg += `ðŸ¤– Gemini: ${geminiStatus.state.toUpperCase()}\n`;
+    msg += `â±ï¸ Time: ${new Date().toISOString()}`;
     
     await bot.sendMessage(msg);
   },
@@ -42,3 +42,4 @@ function formatUptime(seconds: number): string {
   if (hours > 0) return `${hours}h ${mins}m`;
   return `${mins}m`;
 }
+

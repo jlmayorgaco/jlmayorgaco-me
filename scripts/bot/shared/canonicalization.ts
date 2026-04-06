@@ -1,4 +1,4 @@
-/**
+﻿/**
  * URL Canonicalization
  * 
  * Features:
@@ -132,3 +132,4 @@ export function extractDoi(urlOrDoi: string): string | null {
 
   return null;
 }
+

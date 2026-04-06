@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Plugin System
  * Allows extending bot with custom commands
  *
@@ -196,3 +196,4 @@ export class PluginManager {
     this.commandHandlers.delete(name.toLowerCase());
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Software Engineering Intelligence
  * 
  * - Architecture lens generator
@@ -118,13 +118,13 @@ export class ArchitectureLens {
   }
 
   formatForTelegram(analysis: ArchitectureAnalysis): string {
-    let msg = '🏗️ *Architecture Analysis*\n\n';
+    let msg = 'ðŸ—ï¸ *Architecture Analysis*\n\n';
 
     if (analysis.services.length > 0) {
       msg += `*Services:* ${analysis.services.join(', ')}\n`;
     }
     if (analysis.dataFlow.length > 0) {
-      msg += `*Data Flow:* ${analysis.dataFlow.join(' → ')}\n`;
+      msg += `*Data Flow:* ${analysis.dataFlow.join(' â†’ ')}\n`;
     }
     if (analysis.constraints.length > 0) {
       msg += `*Constraints:* ${analysis.constraints.join(', ')}\n`;
@@ -264,3 +264,4 @@ export class ImplementationComplexity {
     return Math.min(100, score);
   }
 }
+

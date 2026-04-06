@@ -1,4 +1,4 @@
-/**
+﻿/**
  * JLMT Lab Bot - Public API
  *
  * All exports use backward-compatible re-exports from the canonical locations.
@@ -86,3 +86,4 @@ export { scanNewsSources, formatNewsForTelegram, type NewsItem } from './infrast
 
 // Command Registry
 export { getCommandRegistry, BotCommandRegistry } from './interfaces/CommandRegistry';
+

@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Redis Session Repository
  * For distributed deployments and persistence
  */
 
 import { Session, SessionData } from '../../domain/entities/Session';
 import { ISessionRepository, SessionMetrics } from '../../application/ports';
-import { logDebug, logError, logWarn } from '../../logger';
+import { logDebug, logError, logWarn } from '../../infrastructure/logging/Logger';
 import { CONSTANTS } from '../../shared/constants';
 
 // Simple Redis interface (you can replace with actual ioredis or redis imports)
@@ -111,3 +111,4 @@ export class RedisSessionRepository implements ISessionRepository {
     return `${this.keyPrefix}${chatId}`;
   }
 }
+

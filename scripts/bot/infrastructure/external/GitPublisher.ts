@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Safe git operations with async execution
  * Production-ready: no command injection, proper error handling, rollback support
  */
@@ -236,3 +236,4 @@ export async function validateGitSetup(cwd: string = process.cwd()): Promise<{
     errors,
   };
 }
+

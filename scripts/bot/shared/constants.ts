@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Shared constants for the JLMT Lab Bot
  * No magic numbers or strings
  */
@@ -100,3 +100,4 @@ Object.freeze(CONSTANTS.GIT);
 Object.freeze(CONSTANTS.RATE_LIMITER);
 Object.freeze(CONSTANTS.CIRCUIT_BREAKER);
 Object.freeze(CONSTANTS.VALIDATION);
+

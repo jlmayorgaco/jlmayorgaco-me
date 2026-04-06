@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Weekly Report Generator
  * 
  * - Aggregated insights
@@ -141,7 +141,7 @@ export class WeeklyReport {
       return '*No weekly report available yet.*';
     }
 
-    let msg = `📅 *Weekly Report*\n`;
+    let msg = `ðŸ“… *Weekly Report*\n`;
     msg += `_Week of ${r.period.start}_\n\n`;
 
     msg += `*Stats:*\n`;
@@ -153,7 +153,7 @@ export class WeeklyReport {
     if (r.insights.length > 0) {
       msg += `*Key Insights:*\n`;
       for (const insight of r.insights) {
-        msg += `• ${insight}\n`;
+        msg += `â€¢ ${insight}\n`;
       }
       msg += `\n`;
     }
@@ -179,3 +179,4 @@ function getWeekStart(date: Date): string {
 function getWeekString(date: Date): string {
   return getWeekStart(date);
 }
+

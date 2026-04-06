@@ -1,13 +1,13 @@
-/**
+﻿/**
  * Relevance Tier Enum
  * 4-level hierarchical classification for academic papers
  */
 
 export enum RelevanceTier {
-  MUST_READ = 'must_read',      // 🔴 Critical to your research
-  WORTH_SCANNING = 'worth_scanning', // 🟡 Relevant, worth a look
-  BACKGROUND = 'background',    // 🟢 Interesting background/context
-  SKIP = 'skip',                // ⚪ Not relevant
+  MUST_READ = 'must_read',      // ðŸ”´ Critical to your research
+  WORTH_SCANNING = 'worth_scanning', // ðŸŸ¡ Relevant, worth a look
+  BACKGROUND = 'background',    // ðŸŸ¢ Interesting background/context
+  SKIP = 'skip',                // âšª Not relevant
 }
 
 export interface TieredClassification {
@@ -21,10 +21,10 @@ export interface TieredClassification {
 }
 
 export const TierEmojis: Record<RelevanceTier, string> = {
-  [RelevanceTier.MUST_READ]: '🔴',
-  [RelevanceTier.WORTH_SCANNING]: '🟡',
-  [RelevanceTier.BACKGROUND]: '🟢',
-  [RelevanceTier.SKIP]: '⚪',
+  [RelevanceTier.MUST_READ]: 'ðŸ”´',
+  [RelevanceTier.WORTH_SCANNING]: 'ðŸŸ¡',
+  [RelevanceTier.BACKGROUND]: 'ðŸŸ¢',
+  [RelevanceTier.SKIP]: 'âšª',
 };
 
 export const TierLabels: Record<RelevanceTier, string> = {
@@ -40,3 +40,4 @@ export const TierColors: Record<RelevanceTier, string> = {
   [RelevanceTier.BACKGROUND]: '#44ff44',
   [RelevanceTier.SKIP]: '#888888',
 };
+

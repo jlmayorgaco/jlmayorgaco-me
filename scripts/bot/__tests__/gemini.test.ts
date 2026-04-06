@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { callGemini, classifyAndSummarizePapers, generateBlogPost } from '../gemini';
-import type { BotConfig } from '../config';
+import { callGemini, classifyAndSummarizePapers, generateBlogPost } from '../infrastructure/external/GeminiService';
+import type { BotConfig } from '../config/index';
 
 describe('Gemini Module', () => {
   let mockConfig: BotConfig;
@@ -10,7 +10,15 @@ describe('Gemini Module', () => {
       telegram: { botToken: 'test', chatId: '123' },
       gemini: { apiKey: 'test-key', model: 'gemini-test' },
       topics: ['robotics', 'control'],
-      sources: []
+      sources: [],
+      sessionTtlMinutes: 30,
+      maxPapersToScan: 10,
+      topPapersToShow: 3,
+      maxNewsItems: 20,
+      telegramRateLimit: 30,
+      geminiTimeoutMs: 30000,
+      retryAttempts: 3,
+      retryBaseDelayMs: 1000
     };
     
     global.fetch = vi.fn();
@@ -246,3 +254,4 @@ describe('Gemini Module', () => {
     });
   });
 });
+

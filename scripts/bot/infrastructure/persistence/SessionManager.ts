@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Session management with TTL and automatic cleanup
  *
  * @module infrastructure/persistence/SessionManager
@@ -248,3 +248,4 @@ export function destroySessionManager(): void {
     sessionManagerInstance = null;
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Telegram Bot client with rate limiting and retry logic
  *
  * @module infrastructure/inbound/TelegramBot
@@ -381,3 +381,4 @@ export class TelegramBot {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Infrastructure & Robustness Utilities
  * 
  * - Checkpoint persistence
@@ -216,3 +216,4 @@ export class PipelineLogger {
     };
   }
 }
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * OpenAlex Connector - Metadata Enrichment Only
  * 
  * Features (metadata enrichment only):
@@ -257,3 +257,4 @@ export function createEnrichmentContext(work: OpenAlexWork): string {
   
   return context;
 }
+

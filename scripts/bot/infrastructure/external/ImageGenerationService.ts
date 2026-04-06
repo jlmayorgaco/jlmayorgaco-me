@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Image Generation Service
  * Generates cover images for blog posts
  */
@@ -6,7 +6,7 @@
 import { IImageGenerationService, ImageOptions } from '../../application/ports';
 import { Result } from '../../shared/Result';
 import { ExternalServiceError } from '../../shared/errors/AppError';
-import { logDebug, logError, logInfo } from '../../logger';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 import { withRetry } from '../../shared/retry/RetryPolicy';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -203,3 +203,4 @@ export class StableDiffusionService implements IImageGenerationService {
     return `/images/generated/${filename}`;
   }
 }
+

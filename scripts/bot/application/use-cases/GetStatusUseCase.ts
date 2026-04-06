@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Get Status Use Case
  * Returns current bot status and metrics
  */
@@ -13,7 +13,7 @@ import type {
   GetStatusOutput 
 } from '../dto';
 import { Result } from '../../shared/Result';
-import { logDebug, logInfo } from '../../logger';
+import { logDebug, logInfo } from '../../infrastructure/logging/Logger';
 import { getSessionStateLabel } from '../../domain/enums/SessionState';
 
 export class GetStatusUseCase {
@@ -53,7 +53,7 @@ export class GetStatusUseCase {
       logError('GetStatusUseCase failed', error as Error);
       
       await this.messagePort.sendMessage(
-        `❌ Failed to get status: ${(error as Error).message}`
+        `âŒ Failed to get status: ${(error as Error).message}`
       );
 
       return Result.err(error as Error);
@@ -65,7 +65,7 @@ export class GetStatusUseCase {
     metrics: any,
     circuitStatus: any
   ): string {
-    let msg = `*📊 Bot Status*\n\n`;
+    let msg = `*ðŸ“Š Bot Status*\n\n`;
     msg += `*Session:* ${status.state}\n`;
     msg += `*Papers:* ${status.papersCount}\n`;
     msg += `*News:* ${status.newsCount}\n`;
@@ -73,11 +73,12 @@ export class GetStatusUseCase {
     msg += `*Session Age:* ${Math.round(status.sessionAge / 1000 / 60)} min\n\n`;
     
     msg += `*System:*\n`;
-    msg += `• Total Sessions: ${metrics.totalSessions}\n`;
-    msg += `• Active: ${metrics.activeSessions}\n`;
-    msg += `• Expired: ${metrics.expiredSessions}\n`;
-    msg += `• Gemini API: ${circuitStatus.state}\n`;
+    msg += `â€¢ Total Sessions: ${metrics.totalSessions}\n`;
+    msg += `â€¢ Active: ${metrics.activeSessions}\n`;
+    msg += `â€¢ Expired: ${metrics.expiredSessions}\n`;
+    msg += `â€¢ Gemini API: ${circuitStatus.state}\n`;
 
     return msg;
   }
 }
+

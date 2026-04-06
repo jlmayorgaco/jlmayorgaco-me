@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Security utilities for URL validation and SSRF protection
  *
  * @module shared/security
@@ -160,3 +160,4 @@ export function wrapInInstruction(userInput: string, systemPrompt: string): stri
 
   return `System: ${systemPrompt}\n\nUser: ${sanitizeForLLM(userInput)}`;
 }
+

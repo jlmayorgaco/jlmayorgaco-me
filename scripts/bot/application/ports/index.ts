@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Application layer ports (interfaces)
  * Define contracts that infrastructure must implement
  */
@@ -240,3 +240,4 @@ export interface CommandHandler<T = unknown, R = unknown> {
   aliases?: string[];
   execute(payload: T): Promise<R>;
 }
+

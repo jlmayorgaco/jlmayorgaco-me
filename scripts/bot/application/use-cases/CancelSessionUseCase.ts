@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Cancel Session Use Case
  * Cancels current operation and resets session
  */
@@ -6,7 +6,7 @@
 import type { ISessionRepository, IMessagePort } from '../ports';
 import type { CancelSessionInput, CancelSessionOutput } from '../dto';
 import { Result } from '../../shared/Result';
-import { logDebug, logInfo } from '../../logger';
+import { logDebug, logInfo } from '../../infrastructure/logging/Logger';
 import { getSessionStateLabel } from '../../domain/enums/SessionState';
 import { SessionState } from '../../domain/enums/SessionState';
 
@@ -28,7 +28,7 @@ export class CancelSessionUseCase {
       await this.sessionRepo.save(input.chatId, session);
 
       await this.messagePort.sendMessage(
-        `✅ Cancelled. Previous state: ${previousState}\nUse /daily to start again.`
+        `âœ… Cancelled. Previous state: ${previousState}\nUse /daily to start again.`
       );
 
       logInfo('Session cancelled', { 
@@ -45,10 +45,11 @@ export class CancelSessionUseCase {
       logError('CancelSessionUseCase failed', error as Error);
       
       await this.messagePort.sendMessage(
-        `❌ Failed to cancel: ${(error as Error).message}`
+        `âŒ Failed to cancel: ${(error as Error).message}`
       );
 
       return Result.err(error as Error);
     }
   }
 }
+

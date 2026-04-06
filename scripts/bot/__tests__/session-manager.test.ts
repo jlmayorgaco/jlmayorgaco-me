@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { SessionManager, type UserSession } from '../session-manager';
-import { logger } from '../logger';
+﻿import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { SessionManager, type UserSession } from '../infrastructure/persistence/SessionManager';
+import { logger } from '../infrastructure/logging/Logger';
 
 // Mock logger
 vi.mock('../logger', () => ({
@@ -136,3 +136,4 @@ describe('SessionManager', () => {
     });
   });
 });
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Post Series Engine
  * 
  * Creates recurring series:
@@ -37,7 +37,7 @@ const SERIES_DEFINITIONS: SeriesDefinition[] = [
     id: 'paper-to-production',
     name: 'Paper to Production',
     description: 'Translating academic research into real systems',
-    color: '🔬',
+    color: 'ðŸ”¬',
     templates: [
       { episode: 1, title: 'The Paper', prompt: 'Summarize the key contribution', expectedCategory: 'research' },
       { episode: 2, title: 'The Gap', prompt: 'What problem does this solve in production?', expectedCategory: 'engineering' },
@@ -50,11 +50,11 @@ const SERIES_DEFINITIONS: SeriesDefinition[] = [
     id: 'reviewer2-notes',
     name: 'Reviewer 2 Notes',
     description: 'Critical analysis of recent papers',
-    color: '📝',
+    color: 'ðŸ“',
     templates: [
       { episode: 1, title: 'The Claim', prompt: 'What is the main claim?', expectedCategory: 'research' },
       { episode: 2, title: 'The Problems', prompt: 'What are the limitations?', expectedCategory: 'engineering' },
-      { episode: 3, title: 'The Verdict', prompt: 'Is this值得? For whom?', expectedCategory: 'systems' },
+      { episode: 3, title: 'The Verdict', prompt: 'Is thiså€¼å¾—? For whom?', expectedCategory: 'systems' },
     ],
     currentEpisode: 0,
   },
@@ -62,7 +62,7 @@ const SERIES_DEFINITIONS: SeriesDefinition[] = [
     id: 'system-design',
     name: 'System Design from Research',
     description: 'Designing systems inspired by papers',
-    color: '🏗️',
+    color: 'ðŸ—ï¸',
     templates: [
       { episode: 1, title: 'The Concept', prompt: 'What is the core idea?', expectedCategory: 'research' },
       { episode: 2, title: 'Architecture', prompt: 'How does this map to system components?', expectedCategory: 'software' },
@@ -149,3 +149,4 @@ export class PostSeriesEngine {
     return msg;
   }
 }
+

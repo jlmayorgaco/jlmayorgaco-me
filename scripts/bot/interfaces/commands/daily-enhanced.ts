@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Enhanced Daily Command
  * Supports: Paper history deduplication, Batch review mode, Research context
  */
@@ -46,7 +46,7 @@ export const dailyCommand = {
       }
       
       if (selectedPapers.length === 0) {
-        await bot.sendMessage('📭 No new papers found today.');
+        await bot.sendMessage('ðŸ“­ No new papers found today.');
         return;
       }
       
@@ -65,7 +65,7 @@ export const dailyCommand = {
       }
       
       // Send tiered results
-      let msg = `*📊 Today's Papers (${selectedPapers.length} found)*\n\n`;
+      let msg = `*ðŸ“Š Today's Papers (${selectedPapers.length} found)*\n\n`;
       
       const maxDisplay = Math.min(selectedPapers.length, 5);
       for (let i = 0; i < maxDisplay; i++) {
@@ -90,7 +90,7 @@ export const dailyCommand = {
       
       // Prompt for commentary
       await bot.sendMessage(
-        `📝 *Ready for your commentary!*\n\n` +
+        `ðŸ“ *Ready for your commentary!*\n\n` +
         `Selected ${selectedPapers.length} papers. ` +
         `Send text or voice message with your analysis.`
       );
@@ -103,7 +103,8 @@ export const dailyCommand = {
       
     } catch (e: any) {
       logError('Daily command failed', e);
-      await bot.sendMessage(`❌ Scan error: ${e.message}`);
+      await bot.sendMessage(`âŒ Scan error: ${e.message}`);
     }
   }
 };
+

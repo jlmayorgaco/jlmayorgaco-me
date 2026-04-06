@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Content Quota Balancer
  * 
  * Ensures weekly output maintains 50/50 balance:
@@ -115,14 +115,14 @@ export class ContentBalancer {
   formatForTelegram(): string {
     const balance = this.getBalance();
     
-    let msg = balance.balanced ? '✅ ' : '⚠️ ';
+    let msg = balance.balanced ? 'âœ… ' : 'âš ï¸ ';
     msg += `*Weekly Balance*\n\n`;
 
     const labels: Record<ContentType, string> = {
-      software: '💻 Software',
-      systems: '🔧 Systems',
-      research: '🔬 Research',
-      engineering: '⚙️ Engineering',
+      software: 'ðŸ’» Software',
+      systems: 'ðŸ”§ Systems',
+      research: 'ðŸ”¬ Research',
+      engineering: 'âš™ï¸ Engineering',
     };
 
     for (const [type, label] of Object.entries(labels)) {
@@ -145,3 +145,4 @@ function getWeekString(): string {
   d.setDate(d.getDate() - d.getDay());
   return d.toISOString().split('T')[0];
 }
+

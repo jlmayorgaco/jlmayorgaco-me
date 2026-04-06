@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Session Entity - Rich domain model for user sessions
  * Encapsulates state machine logic and business rules
  */
@@ -295,7 +295,7 @@ export class Session {
       this._state = SessionState.COLLECTING_COMMENT;
       
       // Build selected items from reactions (exclude skipped)
-      const skipEmoji = '⏭️' as ReactionEmoji;
+      const skipEmoji = 'â­ï¸' as ReactionEmoji;
       this._selectedItems = Array.from(this._batchReview.reactions.entries())
         .filter(([, r]) => r.reaction !== skipEmoji)
         .map(([id]) => id);
@@ -305,7 +305,7 @@ export class Session {
   }
 
   skipBatchItem(paperId: string): void {
-    this.addReaction(paperId, '⏭️');
+    this.addReaction(paperId, 'â­ï¸');
   }
 
   getBatchReview(): BatchReviewSession | null {
@@ -355,3 +355,4 @@ export class Session {
     return Session.fromData(this.toData());
   }
 }
+

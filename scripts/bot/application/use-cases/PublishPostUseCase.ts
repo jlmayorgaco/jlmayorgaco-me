@@ -1,12 +1,12 @@
-/**
+﻿/**
  * Publish Post Use Case
  */
 
 import { Result } from '../../shared/Result';
 import { SessionState } from '../../domain/enums/SessionState';
 import { ISessionRepository, IPublisher, IMessagePort } from '../ports';
-import { saveBlogPost } from '../../blog-generator';
-import { logDebug, logError, logInfo } from '../../logger';
+import { saveBlogPost } from '../../infrastructure/formatting/BlogGenerator';
+import { logDebug, logError, logInfo } from '../../infrastructure/logging/Logger';
 
 export interface PublishPostInput {
   chatId: number;
@@ -28,7 +28,7 @@ export class PublishPostUseCase {
 
       // Validate state
       if (!session.canPublish()) {
-        await this.messagePort.sendMessage('❌ No post ready to publish.');
+        await this.messagePort.sendMessage('âŒ No post ready to publish.');
         return Result.err(new Error('No pending post'));
       }
 
@@ -52,7 +52,7 @@ export class PublishPostUseCase {
 
       // Send success message
       await this.messagePort.sendMessage(
-        `✅ *Published!*\n${publishResult.message}\n\nVercel will auto-deploy.`
+        `âœ… *Published!*\n${publishResult.message}\n\nVercel will auto-deploy.`
       );
 
       logInfo('Post published', { 
@@ -66,10 +66,11 @@ export class PublishPostUseCase {
       logError('PublishPostUseCase failed', error as Error);
       
       await this.messagePort.sendMessage(
-        `❌ Failed to publish: ${(error as Error).message}`
+        `âŒ Failed to publish: ${(error as Error).message}`
       );
 
       return Result.err(error as Error);
     }
   }
 }
+

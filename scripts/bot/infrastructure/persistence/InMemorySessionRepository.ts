@@ -1,6 +1,6 @@
-import { Session, SessionData } from '../../domain/entities/Session';
+﻿import { Session, SessionData } from '../../domain/entities/Session';
 import { ISessionRepository, SessionMetrics } from '../../application/ports';
-import { logDebug, logWarn } from '../../logger';
+import { logDebug, logWarn } from '../../infrastructure/logging/Logger';
 import { CONSTANTS } from '../../shared/constants';
 
 /**
@@ -123,3 +123,4 @@ export class InMemorySessionRepository implements ISessionRepository {
     }
   }
 }
+
