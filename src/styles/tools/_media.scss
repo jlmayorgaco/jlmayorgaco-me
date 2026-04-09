@@ -1,0 +1,38 @@
+// ============================================================
+// TOOLS — MEDIA QUERIES
+// Min-width (mobile-first) and max-width convenience mixins.
+// Usage: @include bp-up('md') { ... }
+//        @include bp-down('md') { ... }
+// ============================================================
+
+@use '../foundations/breakpoints' as *;
+@use 'sass:map';
+
+// Mobile-first (min-width)
+@mixin bp-up($key) {
+  $val: map.get($breakpoints, $key);
+  @if $val {
+    @media (min-width: #{$val}) { @content; }
+  } @else {
+    @warn "Unknown breakpoint `#{$key}`. Available: #{map.keys($breakpoints)}";
+  }
+}
+
+// Desktop-first (max-width — use sparingly)
+@mixin bp-down($key) {
+  $val: map.get($breakpoints, $key);
+  @if $val {
+    @media (max-width: #{$val - 1}) { @content; }
+  } @else {
+    @warn "Unknown breakpoint `#{$key}`. Available: #{map.keys($breakpoints)}";
+  }
+}
+
+// Between two breakpoints
+@mixin bp-between($lower, $upper) {
+  $lo: map.get($breakpoints, $lower);
+  $hi: map.get($breakpoints, $upper);
+  @if $lo and $hi {
+    @media (min-width: #{$lo}) and (max-width: #{$hi - 1}) { @content; }
+  }
+}

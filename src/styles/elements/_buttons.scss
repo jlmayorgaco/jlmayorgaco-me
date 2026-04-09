@@ -1,0 +1,16 @@
+// ============================================================
+// ELEMENTS — BUTTONS (base element styles only)
+// Component-level .btn styles live in components/ui/_button.scss
+// ============================================================
+
+button,
+.btn {
+  transition: all 0.2s ease;
+
+  &:hover { transform: translateY(-1px); }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
+  }
+}

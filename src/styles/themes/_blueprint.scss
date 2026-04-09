@@ -1,0 +1,24 @@
+// ============================================================
+// THEMES — BLUEPRINT (body.theme-blueprint)
+// Dark engineering blueprint aesthetic.
+// ============================================================
+
+body.theme-blueprint {
+  --lab-bg-base:     #0a1628;
+  --lab-bg-panel:    #0f2040;
+  --lab-bg-elevated: #142850;
+  --lab-bg-dark:     #061020;
+  --panel-frame:     #1a3a60;
+  --panel-border:    #2a5a80;
+  --panel-inner:     #0a2040;
+  --lab-text-primary:   #c9d1d9;
+  --lab-text-secondary: #8b949e;
+  --lab-text-muted:     #6e7681;
+  --lab-text-on-dark:   #8b949e;
+  --accent-cyan:         #58a6ff;
+  --accent-cyan-dim:     #388bfd;
+  --accent-cyan-glow:    rgba(88, 166, 255, 0.3);
+  --led-green: #3fb950;
+  --led-amber: #d29922;
+  --led-red:   #f85149;
+}

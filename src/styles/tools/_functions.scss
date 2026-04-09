@@ -1,0 +1,17 @@
+// ============================================================
+// TOOLS — FUNCTIONS
+// ============================================================
+
+@use 'sass:math';
+
+/// Convert px to rem
+/// @param {Number} $px - Value in px (unitless)
+/// @return {Number} - Value in rem
+@function rem($px) {
+  @return math.div($px, 16) * 1rem;
+}
+
+/// Strip unit from a number
+@function strip-unit($number) {
+  @return math.div($number, ($number * 0 + 1));
+}

@@ -5,6 +5,7 @@ import Icon from '../ui/Icon.astro';
 import HomeTerminal from './HomeTerminal';
 import SignalWaveform from '../ui/SignalWaveform.astro';
 import SystemMetricsStrip from '../ui/SystemMetricsStrip.astro';
+import IdentityPanel from './IdentityPanel.astro';
 
 interface Props {
   projects: CollectionEntry<'projects'>[];
@@ -23,80 +24,14 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
   <!-- Row 1: Main Hero Area -->
   <div class="board-row main-row">
     <!-- Left Panel: Identity/Chip -->
-    <div class="panel identity-panel panel-reveal">
-      <div class="panel-header">
-        <div class="header-left">
-          <span class="label-tag">IDENTITY</span>
-          <span class="module-id">ID: JLMT-001</span>
-        </div>
-        <div class="panel-leds">
-          <span class="led led-green led-pulse"></span>
-        </div>
-      </div>
-      <div class="panel-content identity-content">
-        <!-- Chip/Badge with boot animation -->
-        <div class="chip-main">
-          <div class="chip-icon">
-            <Icon name="chip" size={20} />
-          </div>
-          <div class="chip-text">
-            <span class="chip-label">JLMT</span>
-            <span class="chip-sub">LAB</span>
-          </div>
-        </div>
-        
-        <!-- Screw decorations -->
-        <div class="screw-row">
-          <span class="screw brass"></span>
-          <span class="screw brass"></span>
-        </div>
-        
-        <div class="identity-info">
-          <p class="identity-title">Research Engineer</p>
-          <p class="identity-focus">Robotics &middot; Distributed Systems &middot; FPGA</p>
-          <p class="identity-tagline">Building real-time control systems and distributed algorithms for robotics applications.</p>
-        </div>
-        
-        <!-- CTA Buttons -->
-        <div class="identity-ctas">
-          <a href="/contact" class="cta-primary">
-            <Icon name="mail" size={12} />
-            Collaborate
-          </a>
-          <a href="/projects" class="cta-secondary">
-            <Icon name="projects" size={12} />
-            View Work
-          </a>
-        </div>
-        
-        <!-- Stats with LED indicators -->
-        <div class="identity-stats">
-          <div class="stat-item">
-            <span class="stat-led"></span>
-            <div class="stat-content">
-              <span class="stat-label">NODE</span>
-              <span class="stat-value">ACTIVE</span>
-            </div>
-          </div>
-          <div class="stat-item">
-            <span class="stat-led"></span>
-            <div class="stat-content">
-              <span class="stat-label">UPTIME</span>
-              <span class="stat-value">99.9%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="panel-footer">
-        <div class="port-row">
-          <span class="port"></span>
-          <span class="port port-active"></span>
-          <span class="port"></span>
-          <span class="port"></span>
-        </div>
-        <span class="port-label">I/O</span>
-      </div>
-    </div>
+    <IdentityPanel
+      socialLinks={[
+        { label: 'GitHub', href: 'https://github.com/jlmayorgaco', brand: 'github' },
+        { label: 'Google Scholar', href: 'TU_URL_DE_SCHOLAR', brand: 'scholar' },
+        { label: 'LinkedIn', href: 'TU_URL_DE_LINKEDIN', brand: 'linkedin' },
+      ]}
+      experienceStartYear={2017}
+    />
 
     <!-- Center: Main Monitor/Hero (ENHANCED) -->
     <div class="panel monitor-panel monitor-enhanced-frame panel-reveal-delay-1">

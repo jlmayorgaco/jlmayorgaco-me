@@ -1,0 +1,33 @@
+---
+import type { NavItem } from '../../../lib/config';
+import TopNavButton from './TopNavButton.astro';
+import TopNavMore from './TopNavMore.astro';
+
+interface Props {
+  primaryItems?: NavItem[];
+  secondaryItems?: NavItem[];
+}
+
+const {
+  primaryItems = [],
+  secondaryItems = [],
+} = Astro.props;
+---
+
+<div class="c-lab-header__nav">
+  {primaryItems.length > 0 && (
+    <ul class="c-lab-header__tabs" role="list">
+      {primaryItems.map((item) => (
+        <TopNavButton
+          href={item.href}
+          label={item.label}
+          isActive={item.isActive}
+        />
+      ))}
+    </ul>
+  )}
+
+  {secondaryItems.length > 0 && (
+    <TopNavMore items={secondaryItems} />
+  )}
+</div>

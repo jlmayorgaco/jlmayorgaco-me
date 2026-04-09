@@ -1,0 +1,21 @@
+// ============================================================
+// THEMES — LAB (body.theme-lab)
+// Slight green-gray shift from the default palette.
+// ============================================================
+
+body.theme-lab {
+  --lab-bg-base:     #e8ebe9;
+  --lab-bg-panel:    #f0f2f0;
+  --lab-bg-elevated: #f5f7f5;
+  --lab-bg-dark:     #d4d7d5;
+  --panel-frame:     #c4c8c6;
+  --panel-border:    #b8bcba;
+  --panel-inner:     #e4e6e4;
+  --lab-text-primary:   #1a1f1d;
+  --lab-text-secondary: #4a524d;
+  --lab-text-muted:     #7a807c;
+  --lab-text-on-dark:   #a8b0ac;
+  --accent-cyan:         #3fb9a7;
+  --accent-cyan-dim:     #2d8a7b;
+  --accent-cyan-glow:    rgba(63, 185, 167, 0.25);
+}

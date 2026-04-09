@@ -1,0 +1,29 @@
+// ============================================================
+// THEMES — MATRIX (body.theme-matrix)
+// Monochrome green terminal aesthetic.
+// ============================================================
+
+body.theme-matrix {
+  --lab-bg-base:     #0d0d0d;
+  --lab-bg-panel:    #0a1a0a;
+  --lab-bg-elevated: #0f200f;
+  --lab-bg-dark:     #050d05;
+  --panel-frame:     #1a3a1a;
+  --panel-border:    #2a4a2a;
+  --panel-inner:     #0a1a0a;
+  --lab-text-primary:   #c9d1c9;
+  --lab-text-secondary: #8b948b;
+  --lab-text-muted:     #6a7a6a;
+  --lab-text-on-dark:   #8b948b;
+  --accent-cyan:         #3fb950;
+  --accent-cyan-dim:     #2d8a3d;
+  --accent-cyan-glow:    rgba(63, 185, 80, 0.3);
+  --led-green: #3fb950;
+  --led-amber: #79c0ff;
+  --led-red:   #ff7b72;
+}
+
+// Chaos mode is reduced in matrix — no extra rules needed.
+body.theme-matrix.chaos-mode .lab-board {
+  animation: chaosWiggle 0.5s infinite;
+}

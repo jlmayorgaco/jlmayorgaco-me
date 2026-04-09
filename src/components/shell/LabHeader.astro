@@ -1,0 +1,184 @@
+---
+import { NAV_ITEMS, NAV_SECONDARY } from '../../lib/config';
+import HeaderBrand from './HeaderBrand.astro';
+import HeaderStatus from './HeaderStatus.astro';
+import TopNav from './TopNav/TopNav.astro';
+
+type BaseNavItem = {
+  href: string;
+  label: string;
+};
+
+type HeaderNavItem = BaseNavItem & {
+  isActive: boolean;
+};
+
+const currentPath = Astro.url.pathname;
+
+const isActive = (href: string) => {
+  if (href === '/') return currentPath === '/';
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+};
+
+const primaryItems: HeaderNavItem[] = (NAV_ITEMS as BaseNavItem[]).map((item) => ({
+  ...item,
+  isActive: isActive(item.href),
+}));
+
+const secondaryItems: HeaderNavItem[] = (NAV_SECONDARY as BaseNavItem[]).map((item) => ({
+  ...item,
+  isActive: isActive(item.href),
+}));
+---
+
+<header class="c-lab-header" data-header>
+  <div class="c-lab-header__signal" aria-hidden="true"></div>
+
+  <div class="c-lab-header__shell">
+    <nav class="c-lab-header__inner" aria-label="Primary navigation">
+
+      <HeaderBrand />
+
+      <TopNav
+        primaryItems={primaryItems}
+        secondaryItems={secondaryItems}
+      />
+
+      <HeaderStatus />
+
+    </nav>
+
+    <div class="c-lab-header__mobile-panel" hidden data-header-mobile-panel>
+      <ul class="c-lab-header__mobile-list" role="list">
+        {primaryItems.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={item.isActive ? 'page' : undefined}
+              class:list={[
+                'c-lab-header__mobile-link',
+                { 'c-lab-header__mobile-link--active': item.isActive },
+              ]}
+            >
+              <span class="c-lab-header__mobile-link-dot" aria-hidden="true"></span>
+              <span>{item.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      {secondaryItems.length > 0 && (
+        <>
+          <div class="c-lab-header__mobile-divider" aria-hidden="true"></div>
+
+          <ul class="c-lab-header__mobile-list c-lab-header__mobile-list--secondary" role="list">
+            {secondaryItems.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={item.isActive ? 'page' : undefined}
+                  class:list={[
+                    'c-lab-header__mobile-link',
+                    'c-lab-header__mobile-link--secondary',
+                    { 'c-lab-header__mobile-link--active': item.isActive },
+                  ]}
+                >
+                  <span class="c-lab-header__mobile-link-dot" aria-hidden="true"></span>
+                  <span>{item.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  </div>
+</header>
+
+<!-- Styles: src/styles/components/shell/_lab-header.scss -->
+
+<script is:inline>
+  class LabHeaderController {
+    constructor(root) {
+      this.root = root;
+      this.mobileTrigger = root.querySelector('[data-header-mobile-trigger]');
+      this.mobilePanel = root.querySelector('[data-header-mobile-panel]');
+      this.moreTrigger = root.querySelector('[data-header-more-trigger]');
+      this.moreMenu = root.querySelector('[data-header-more-menu]');
+    }
+
+    init() {
+      if (this.root.dataset.headerReady === 'true') return;
+      this.root.dataset.headerReady = 'true';
+
+      this.mobileTrigger?.addEventListener('click', this.handleMobileToggle);
+      this.moreTrigger?.addEventListener('click', this.handleMoreToggle);
+
+      document.addEventListener('click', this.handleOutsideClick);
+      document.addEventListener('keydown', this.handleKeydown);
+    }
+
+    handleMobileToggle = () => {
+      const shouldOpen = this.mobileTrigger?.getAttribute('aria-expanded') !== 'true';
+
+      this.setExpanded(this.mobileTrigger, shouldOpen);
+      this.setHidden(this.mobilePanel, !shouldOpen);
+
+      if (shouldOpen) {
+        this.closeMoreMenu();
+      }
+    };
+
+    handleMoreToggle = (event) => {
+      event.stopPropagation();
+
+      const shouldOpen = this.moreTrigger?.getAttribute('aria-expanded') !== 'true';
+
+      this.setExpanded(this.moreTrigger, shouldOpen);
+      this.setHidden(this.moreMenu, !shouldOpen);
+
+      if (shouldOpen) {
+        this.closeMobileMenu();
+      }
+    };
+
+    handleOutsideClick = (event) => {
+      const target = event.target;
+      if (!target) return;
+      if (!this.root.contains(target)) this.closeAll();
+    };
+
+    handleKeydown = (event) => {
+      if (event.key === 'Escape') this.closeAll();
+    };
+
+    closeAll() {
+      this.closeMobileMenu();
+      this.closeMoreMenu();
+    }
+
+    closeMobileMenu() {
+      this.setExpanded(this.mobileTrigger, false);
+      this.setHidden(this.mobilePanel, true);
+    }
+
+    closeMoreMenu() {
+      this.setExpanded(this.moreTrigger, false);
+      this.setHidden(this.moreMenu, true);
+    }
+
+    setExpanded(element, expanded) {
+      if (!element) return;
+      element.setAttribute('aria-expanded', String(expanded));
+    }
+
+    setHidden(element, hidden) {
+      if (!element) return;
+      element.hidden = hidden;
+    }
+  }
+
+  document
+    .querySelectorAll('[data-header]')
+    .forEach((element) => new LabHeaderController(element).init());
+</script>

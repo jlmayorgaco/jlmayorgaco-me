@@ -1,0 +1,34 @@
+// ============================================================
+// JLMT LAB — MAIN SCSS ENTRY POINT
+//
+// Load order follows the ITCSS / inverted-triangle model:
+//   Foundations → Tools → Base → Elements → Objects
+//   → Layout → Components → Utilities → Themes
+//
+// Each @use gets a unique namespace to avoid collisions
+// when multiple index files share the same filename.
+// ============================================================
+
+// 1. Foundations: token maps + CSS custom property emission
+@use 'foundations/index' as foundations;
+
+// 2. Base: reset, root, base elements, fonts, animations
+@use 'base/index' as base;
+
+// 3. Elements: styled HTML elements beyond bare reset
+@use 'elements/index' as elements;
+
+// 4. Objects: layout patterns and surface primitives
+@use 'objects/index' as objects;
+
+// 5. Layout: page shell structures
+@use 'layout/index' as layout;
+
+// 6. Components: BEM blocks grouped by domain
+@use 'components/index' as components;
+
+// 7. Utilities: intentionally small set of helpers
+@use 'utilities/index' as utilities;
+
+// 8. Themes: runtime CSS custom property overrides
+@use 'themes/index' as themes;

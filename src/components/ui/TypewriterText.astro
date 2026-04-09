@@ -1,0 +1,128 @@
+---
+interface Props {
+  text: string;
+  class?: string;
+  speed?: number;
+  delay?: number;
+  cursor?: boolean;
+  preserveWidth?: boolean;
+}
+
+const {
+  text,
+  class: className = '',
+  speed = 75,
+  delay = 250,
+  cursor = true,
+  preserveWidth = true,
+} = Astro.props;
+---
+
+<span
+  class={`c-typewriter ${className}`.trim()}
+  data-typewriter
+  data-text={text}
+  data-speed={String(speed)}
+  data-delay={String(delay)}
+  data-cursor={String(cursor)}
+  aria-label={text}
+>
+  <span class="c-typewriter__ghost" aria-hidden="true">
+    {preserveWidth ? text : ''}
+  </span>
+
+  <span class="c-typewriter__live" aria-hidden="true"></span>
+</span>
+
+<style>
+  .c-typewriter {
+    position: relative;
+    display: inline-grid;
+    align-items: center;
+  }
+
+  .c-typewriter__ghost,
+  .c-typewriter__live {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+  }
+
+  .c-typewriter__ghost {
+    visibility: hidden;
+  }
+
+  .c-typewriter__live {
+    min-width: 0;
+  }
+
+  .c-typewriter[data-cursor='true'] .c-typewriter__live::after {
+    content: '';
+    display: inline-block;
+    width: 0.08em;
+    height: 0.95em;
+    margin-left: 0.08em;
+    background: currentColor;
+    vertical-align: -0.08em;
+    animation: c-typewriter-blink 1s steps(1) infinite;
+  }
+
+  @keyframes c-typewriter-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .c-typewriter[data-cursor='true'] .c-typewriter__live::after {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  function wait(ms) {
+    return new Promise((resolve) => window.setTimeout(resolve, ms));
+  }
+
+  async function runTypewriter(el) {
+    if (!el || el.dataset.initialized === 'true') return;
+    el.dataset.initialized = 'true';
+
+    const live = el.querySelector('.c-typewriter__live');
+    if (!live) return;
+
+    const text = el.dataset.text ?? '';
+    const speed = Number(el.dataset.speed ?? 75);
+    const delay = Number(el.dataset.delay ?? 250);
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduceMotion) {
+      live.textContent = text;
+      el.dataset.done = 'true';
+      return;
+    }
+
+    live.textContent = '';
+    await wait(delay);
+
+    for (const char of text) {
+      live.textContent += char;
+      await wait(speed);
+    }
+
+    el.dataset.done = 'true';
+  }
+
+  function initTypewriters() {
+    document.querySelectorAll('[data-typewriter]').forEach((el) => {
+      runTypewriter(el);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTypewriters, { once: true });
+  } else {
+    initTypewriters();
+  }
+
+  document.addEventListener('astro:page-load', initTypewriters);
+</script>

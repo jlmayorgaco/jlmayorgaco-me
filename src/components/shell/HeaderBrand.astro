@@ -1,0 +1,36 @@
+---
+import AnimatedJlLogo from '../animations/AnimatedJlLogo.astro';
+import Icon from '../ui/Icon.astro';
+import TypewriterText from '../ui/TypewriterText.astro';
+---
+
+<a href="/" class="c-lab-header__brand" aria-label="Go to JLMT Lab home">
+  <span class="c-lab-header__brand-chip">
+    <span class="c-lab-header__brand-chip-icon">
+      <Icon name="chip" size={14} />
+    </span>
+    <span class="c-lab-header__brand-chip-text">lab</span>
+  </span>
+  <!-- 
+  <span class="c-lab-header__brand-chip">
+    <AnimatedJlLogo  size={60}/>
+  </span>
+  -->
+  <span class="c-lab-header__brand-divider" aria-hidden="true"></span>
+
+  <span class="c-lab-header__brand-copy">
+    <TypewriterText
+      text="jlmayorga"
+      class="c-lab-header__brand-title"
+      speed={70}
+      delay={350}
+      cursor={true}
+    />
+    <span class="c-lab-header__brand-subtitle">Software & Research</span>
+  </span>
+
+  <span class="c-lab-header__brand-leds" aria-hidden="true">
+    <span class="c-lab-header__led c-lab-header__led--online c-lab-header__led--pulse"></span>
+    <span class="c-lab-header__led c-lab-header__led--standby"></span>
+  </span>
+</a>

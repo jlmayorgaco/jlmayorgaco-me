@@ -1,10 +1,7 @@
 ---
-import '../styles/global.css';
-import '../styles/pixel-ui.css';
-import '../styles/animations.css';
-import '../styles/electric-field.css';
+import '../styles/main.scss';
 import SiteHead from '../components/shell/SiteHead.astro';
-import TopNav from '../components/shell/TopNav.astro';
+import TopNav from '../components/shell/TopNav/TopNav.astro';
 import FooterDock from '../components/shell/FooterDock.astro';
 import MobileNav from '../components/shell/MobileNav.astro';
 import BottomTabBar from '../components/mobile/BottomTabBar.astro';
@@ -56,31 +53,3 @@ const { title, description, canonical, image, type = 'website' } = Astro.props;
   </body>
 </html>
 
-<style>
-  .lab-layout {
-    position: relative;
-    min-height: 100vh;
-  }
-
-  /* Main content */
-  .lab-main {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: var(--space-lg) var(--space-md);
-    position: relative;
-    z-index: 1;
-  }
-
-  @media (max-width: 768px) {
-    .lab-main {
-      padding: var(--space-lg) var(--space-md);
-    }
-  }
-
-  /* Extra bottom clearance for BottomTabBar on small mobile */
-  @media (max-width: 640px) {
-    .lab-main {
-      padding-bottom: 5rem;
-    }
-  }
-</style>

@@ -7,6 +7,7 @@ import CollabBanner from '../components/home/CollabBanner.astro';
 import { getCollection } from 'astro:content';
 import { getTerminalData } from '../lib/terminal/getTerminalData';
 import Button from '../components/ui/Button.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 const projects = await getCollection('projects');
 const featuredProjects = projects
@@ -26,21 +27,7 @@ const portfolio = await getCollection('portfolio');
 const terminalData = await getTerminalData();
 ---
 
-<LabLayout>
-  <!-- Hero Section with Clear Value Prop -->
-  <header class="hero-header">
-    <h1 class="hero-headline">
-      Research Engineer
-      <span class="headline-sub">Robotics · Distributed Control · FPGA</span>
-    </h1>
-    <p class="hero-description">
-      Building real-time control systems and distributed algorithms for robotics applications.
-    </p>
-    <div class="hero-cta">
-      <Button href="/contact" variant="primary">Get In Touch</Button>
-      <Button href="/projects" variant="secondary">See My Work</Button>
-    </div>
-  </header>
+<BaseLayout >
   
   <LabBoard 
     projects={featuredProjects} 
@@ -61,7 +48,7 @@ const terminalData = await getTerminalData();
   </section>
   
   <HomeVisualSystem client:visible />
-</LabLayout>
+</BaseLayout>
 
 <style>
   .hero-header {

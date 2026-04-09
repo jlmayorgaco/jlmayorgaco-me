@@ -1,0 +1,12 @@
+// ============================================================
+// TOOLS — STATE HELPERS
+// BEM-compatible state modifier patterns.
+// ============================================================
+
+// Active state indicator via LED dot
+@mixin state-active-dot($dot-selector) {
+  #{$dot-selector} {
+    background: var(--accent-cyan);
+    box-shadow: 0 0 4px var(--accent-cyan);
+  }
+}

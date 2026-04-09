@@ -11,8 +11,14 @@ export const SITE_URL = 'https://jlmayorga.co';
 // Analytics - set your GA4 measurement ID here
 export const GA_MEASUREMENT_ID = '';
 
+export type NavItem = {
+  href: string;
+  label: string;
+  isActive?: boolean;
+};
+
 // Primary Navigation (always visible)
-export const NAV_ITEMS = [
+export const NAV_ITEMS: NavItem[] = [
   { href: '/projects', label: 'Projects' },
   { href: '/research', label: 'Research' },
   { href: '/datalab', label: 'Lab' },
@@ -21,7 +27,7 @@ export const NAV_ITEMS = [
 ] as const;
 
 // Secondary Navigation (dropdown)
-export const NAV_SECONDARY = [
+export const NAV_SECONDARY: NavItem[] = [
   { href: '/now', label: 'Now' },
   { href: '/portfolio', label: 'Portfolio' },
   { href: '/papers', label: 'Papers' },

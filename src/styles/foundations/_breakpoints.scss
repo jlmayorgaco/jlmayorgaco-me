@@ -1,0 +1,12 @@
+// ============================================================
+// FOUNDATIONS — BREAKPOINTS
+// Mobile-first: use min-width in @use tools/_media.scss
+// ============================================================
+
+$breakpoints: (
+  'sm':  640px,
+  'md':  768px,
+  'lg':  1024px,
+  'xl':  1200px,
+  '2xl': 1400px,
+);

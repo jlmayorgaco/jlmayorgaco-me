@@ -1,0 +1,140 @@
+// ============================================================
+// COMPONENTS / SHELL — MOBILE NAV  (.mobile-nav)
+//
+// BEM block ownership: MobileNav.astro
+// body.nav-open is also owned here (was previously
+// <style is:global> in MobileNav.astro).
+// ============================================================
+
+body.nav-open {
+  overflow: hidden;
+}
+
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--lab-bg-panel);
+  border-top: 2px solid var(--panel-frame);
+  z-index: 300;
+  flex-direction: column;
+
+  &.open { display: flex; }
+}
+
+.mobile-nav .mobile-nav-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--lab-bg-dark);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.mobile-nav .nav-marker {
+  font-size: 1.25rem;
+  color: var(--accent-cyan);
+}
+
+.mobile-nav .nav-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--lab-text-primary);
+}
+
+.mobile-nav .mobile-nav-list {
+  list-style: none;
+  padding: var(--space-md);
+  margin: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.mobile-nav .mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  color: var(--lab-text-secondary);
+  text-decoration: none;
+  background: var(--lab-bg-elevated);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  transition: all 150ms ease;
+
+  &:hover,
+  &.active {
+    color: var(--accent-cyan);
+    background: var(--lab-bg-dark);
+    border-color: var(--accent-cyan-dim);
+
+    .link-indicator {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 6px var(--accent-cyan-glow);
+    }
+  }
+
+  &.secondary-link {
+    background: var(--lab-bg-panel);
+    border: 1px dashed var(--panel-border);
+
+    &:hover,
+    &.active { border-color: var(--accent-cyan-dim); border-style: solid; }
+  }
+}
+
+.mobile-nav .link-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--panel-border);
+  transition: all 150ms ease;
+
+  &.secondary-indicator { width: 6px; height: 6px; }
+}
+
+.mobile-nav .nav-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  margin: var(--space-xs) 0;
+}
+
+.mobile-nav .divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--panel-border);
+}
+
+.mobile-nav .divider-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--lab-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.mobile-nav .mobile-nav-footer {
+  padding: var(--space-md);
+  background: var(--lab-bg-dark);
+  border-top: 1px solid var(--panel-border);
+  text-align: center;
+}
+
+.mobile-nav .status-online {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--led-green);
+}

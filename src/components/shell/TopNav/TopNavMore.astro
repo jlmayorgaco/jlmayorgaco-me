@@ -1,0 +1,60 @@
+---
+import type { NavItem } from '../../../lib/config';
+
+interface Props {
+  items?: NavItem[];
+  title?: string;
+  buttonLabel?: string;
+}
+
+const {
+  items = [],
+  title = 'Additional Navigation',
+  buttonLabel = 'More',
+} = Astro.props;
+---
+
+<div class="c-lab-header__more" data-header-more>
+  <button
+    type="button"
+    class="c-lab-header__more-trigger"
+    aria-expanded="false"
+    aria-haspopup="menu"
+    aria-label="Open secondary navigation"
+    data-header-more-trigger
+  >
+    <span class="c-lab-header__more-dots" aria-hidden="true">&bull;&bull;&bull;</span>
+    <span class="c-lab-header__more-label">{buttonLabel}</span>
+    <span class="c-lab-header__more-arrow" aria-hidden="true">&#9662;</span>
+  </button>
+
+  <div
+    class="c-lab-header__dropdown"
+    role="menu"
+    hidden
+    data-header-more-menu
+  >
+    <div class="c-lab-header__dropdown-head">
+      <span class="c-lab-header__dropdown-title">{title}</span>
+    </div>
+
+    <ul class="c-lab-header__dropdown-list" role="list">
+      {items.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            aria-current={item.isActive ? 'page' : undefined}
+            class:list={[
+              'c-lab-header__dropdown-link',
+              { 'c-lab-header__dropdown-link--active': item.isActive },
+            ]}
+            role="menuitem"
+          >
+            <span class="c-lab-header__dropdown-indicator" aria-hidden="true"></span>
+            <span>{item.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>

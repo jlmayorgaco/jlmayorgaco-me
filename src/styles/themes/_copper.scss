@@ -1,0 +1,24 @@
+// ============================================================
+// THEMES — COPPER (body.theme-copper)
+// Warm industrial / aged brass tone.
+// ============================================================
+
+body.theme-copper {
+  --lab-bg-base:     #1a1712;
+  --lab-bg-panel:    #2a2318;
+  --lab-bg-elevated: #3a3220;
+  --lab-bg-dark:     #0f0d08;
+  --panel-frame:     #4a4030;
+  --panel-border:    #5a5040;
+  --panel-inner:     #2a2318;
+  --lab-text-primary:   #e8e4dc;
+  --lab-text-secondary: #b8b0a0;
+  --lab-text-muted:     #8a8070;
+  --lab-text-on-dark:   #b8b0a0;
+  --accent-cyan:         #b8956a;
+  --accent-cyan-dim:     #8a704a;
+  --accent-cyan-glow:    rgba(184, 149, 106, 0.3);
+  --led-green: #a08050;
+  --led-amber: #c9a962;
+  --led-red:   #c9544d;
+}

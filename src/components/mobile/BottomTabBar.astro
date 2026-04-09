@@ -4,7 +4,6 @@ import Icon from '../ui/Icon.astro';
 
 const currentPath = Astro.url.pathname;
 
-// Mobile navigation should match primary NAV_ITEMS
 const mobileItems = NAV_ITEMS;
 
 function getIcon(href: string) {
@@ -37,93 +36,4 @@ function getIcon(href: string) {
   </ul>
 </nav>
 
-<style>
-  .tab-bar {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--lab-bg-elevated);
-    border-top: 2px solid var(--panel-frame);
-    padding: var(--space-xs) var(--space-sm);
-    z-index: 100;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
-  }
-
-  @media (max-width: 640px) {
-    .tab-bar {
-      display: block;
-    }
-  }
-
-  .tab-list {
-    display: flex;
-    justify-content: space-around;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .tab-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    padding: var(--space-xs) var(--space-sm);
-    min-width: 44px;
-    min-height: 44px;
-    text-decoration: none;
-    border-radius: var(--radius-md);
-    transition: all 0.15s ease;
-    position: relative;
-    justify-content: center;
-  }
-
-  .tab-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 25%;
-    right: 25%;
-    height: 2px;
-    background: var(--accent-cyan);
-    border-radius: 0 0 2px 2px;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-  }
-
-  .tab-item.active::before {
-    opacity: 1;
-  }
-
-  .tab-item.active {
-    color: var(--accent-cyan);
-    background: var(--lab-bg-panel);
-  }
-
-  .tab-item:not(.active) {
-    color: var(--lab-text-muted);
-  }
-
-  .tab-item:not(.active):active {
-    background: var(--lab-bg-panel);
-    color: var(--lab-text-secondary);
-  }
-
-  .tab-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-  }
-
-  .tab-label {
-    font-family: var(--font-mono);
-    font-size: 0.5625rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    line-height: 1;
-  }
-</style>
+<!-- Styles: src/styles/components/mobile/_bottom-tab-bar.scss -->

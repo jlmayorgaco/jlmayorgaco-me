@@ -1,0 +1,31 @@
+// ============================================================
+// COMPONENTS / BLOG — BLOG POST  (.prose)
+// Migrated from src/styles/prose.css
+// ============================================================
+
+.prose {
+  max-width: 70ch;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--lab-text-secondary);
+
+  > * + * { margin-top: var(--space-lg); }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--lab-text-primary);
+    margin-top: var(--space-2xl);
+    margin-bottom: var(--space-md);
+  }
+
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+  h4 { font-size: 1.125rem; }
+
+  h1:first-child,
+  h2:first-child,
+  h3:first-child { margin-top: 0; }
+
+  p { margin-bottom: var(--space-md); }
+}

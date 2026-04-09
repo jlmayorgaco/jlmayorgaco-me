@@ -1,0 +1,11 @@
+// ============================================================
+// THEMES — INDEX
+// Theme files emit CSS custom property overrides only.
+// No component styles belong here.
+// ============================================================
+
+@forward 'default';
+@forward 'lab';
+@forward 'blueprint';
+@forward 'copper';
+@forward 'matrix';

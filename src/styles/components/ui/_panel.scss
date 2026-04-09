@@ -1,0 +1,22 @@
+// ============================================================
+// COMPONENTS / UI — PANEL
+// Higher-level panel component (extends objects/_surface.scss).
+// Also hosts electric-panel cursor-FX styles.
+// ============================================================
+
+// Electric panel — cursor-reactive LED overlay
+.electric-panel {
+  position: relative;
+}
+
+.panel-led-indicator {
+  pointer-events: none;
+  z-index: 10;
+
+  &.pulse { animation: led-idle-pulse 4s ease-in-out infinite; }
+}
+
+@keyframes led-idle-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.6; }
+}

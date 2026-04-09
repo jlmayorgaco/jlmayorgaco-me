@@ -1,0 +1,16 @@
+// ============================================================
+// ELEMENTS — PAGE
+// Body-level page wrappers and scroll behavior.
+// ============================================================
+
+// Card elements — generic hover escalation
+// (specific card components own their own variants)
+.card,
+[class*="card"] {
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--accent-cyan);
+    transform: translateY(-2px);
+  }
+}

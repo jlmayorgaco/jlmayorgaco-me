@@ -1,0 +1,13 @@
+// ============================================================
+// FOUNDATIONS — TOKENS (aggregate forwarder)
+// @use this file in tools/mixins that need Sass-side values.
+// ============================================================
+
+@forward 'colors';
+@forward 'spacing';
+@forward 'typography';
+@forward 'radius';
+@forward 'shadows';
+@forward 'motion';
+@forward 'breakpoints';
+@forward 'z-index';

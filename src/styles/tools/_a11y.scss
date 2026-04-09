@@ -1,0 +1,29 @@
+// ============================================================
+// TOOLS — ACCESSIBILITY MIXINS
+// No output unless included inside a selector.
+// ============================================================
+
+// Visually hidden — accessible to screen readers
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Focus ring — keyboard-accessible only
+@mixin focus-ring($color: var(--accent-cyan), $offset: 2px) {
+  &:focus-visible {
+    outline: 2px solid #{$color};
+    outline-offset: #{$offset};
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}

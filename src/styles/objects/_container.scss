@@ -1,0 +1,10 @@
+// ============================================================
+// OBJECTS — CONTAINER
+// ============================================================
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}

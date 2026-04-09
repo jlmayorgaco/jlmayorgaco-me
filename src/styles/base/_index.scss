@@ -1,0 +1,10 @@
+// ============================================================
+// BASE — INDEX
+// Load order matters: fonts → reset → root → base → animations
+// ============================================================
+
+@forward 'fonts';
+@forward 'reset';
+@forward 'root';
+@forward 'base';
+@forward 'animations';

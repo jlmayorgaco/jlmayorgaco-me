@@ -1,0 +1,11 @@
+// ============================================================
+// ELEMENTS — LINKS
+// ============================================================
+
+a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  transition: color 150ms ease;
+
+  &:hover { color: var(--accent-cyan-dim); }
+}

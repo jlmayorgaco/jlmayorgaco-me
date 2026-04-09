@@ -1,0 +1,210 @@
+// ============================================================
+// TOOLS — MIXINS
+// Structural + aesthetic mixins for lab UI patterns.
+// ============================================================
+@use 'sass:map';
+@use '../foundations/tokens' as *;
+
+// Panel — hardware board surface
+@mixin panel {
+  background: var(--lab-bg-panel);
+  border: var(--border-hair);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
+}
+
+// Panel frame — heavier outer frame
+@mixin panel-frame {
+  background: var(--lab-bg-elevated);
+  border: var(--border-frame);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-raised);
+}
+
+// Surface — elevated content area
+@mixin surface {
+  background: var(--lab-bg-elevated);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+}
+
+// Screen / Monitor dark panel
+@mixin monitor {
+  background: var(--screen-bg);
+  border: 2px solid var(--screen-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-inset), 0 0 20px var(--screen-glow);
+}
+
+// Panel header bar
+@mixin panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--lab-bg-elevated);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+// LED indicator
+@mixin led($color: var(--led-green), $size: 6px) {
+  width: #{$size};
+  height: #{$size};
+  border-radius: 50%;
+  background: #{$color};
+  box-shadow: 0 0 4px #{$color};
+}
+
+// Screw decoration
+@mixin screw($size: 8px) {
+  display: inline-block;
+  width: #{$size};
+  height: #{$size};
+  border-radius: 50%;
+  background: linear-gradient(135deg, #888 0%, #666 50%, #777 100%);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(#{$size} * 0.5);
+    height: 1px;
+    background: #444;
+    border-radius: 1px;
+  }
+
+  &::before { transform: translate(-50%, -50%) rotate(45deg); }
+  &::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+}
+
+// Mono label tag
+@mixin label-tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 6px;
+  background: var(--lab-bg-dark);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  color: var(--lab-text-muted);
+}
+
+// Mono text shorthand
+@mixin mono($size: var(--text-sm)) {
+  font-family: var(--font-mono);
+  font-size: #{$size};
+}
+
+// Status badge
+@mixin status-badge($color: var(--accent-cyan)) {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  background: rgba(#{$color}, 0.1);
+  color: #{$color};
+  border-radius: var(--radius-sm);
+}
+
+// Motion-safe wrapper
+@mixin motion-safe {
+  @media (prefers-reduced-motion: no-preference) { @content; }
+}
+
+// Reduced motion override
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) { @content; }
+}
+
+
+// ------------------------------------------------------------
+// Shared token helpers for panel-family components
+// ------------------------------------------------------------
+
+@function space($key) {
+  @return map.get($space, $key);
+}
+
+@function radius($key) {
+  @return map.get($radius, $key);
+}
+
+@function text-size($key) {
+  @return map.get($text, $key);
+}
+
+@function duration($key) {
+  @return map.get($duration, $key);
+}
+
+@function easing($key) {
+  @return map.get($easing, $key);
+}
+
+@function shadow($key) {
+  @return map.get($shadow, $key);
+}
+
+@function bp($key) {
+  @return map.get($breakpoints, $key);
+}
+
+// ------------------------------------------------------------
+// Local reusable mixins
+// ------------------------------------------------------------
+
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin inline-center($gap: 0) {
+  display: inline-flex;
+  align-items: center;
+  gap: $gap;
+}
+
+@mixin flex-center($gap: 0) {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+}
+
+@mixin surface-panel {
+  background: var(--lab-bg-panel);
+  border: 1px solid var(--panel-border);
+  border-radius: radius('lg');
+  box-shadow: shadow('panel');
+}
+
+@mixin surface-dark {
+  background: var(--lab-bg-dark);
+}
+
+@mixin panel-transition($properties...) {
+  transition-duration: duration('fast');
+  transition-timing-function: easing('ease');
+  transition-property: $properties;
+}
+
+@mixin screw-slot($width) {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: $width;
+  height: 1px;
+  border-radius: 1px;
+}
+
+@mixin respond-down($breakpoint) {
+  @media (max-width: #{bp($breakpoint)}) {
+    @content;
+  }
+}

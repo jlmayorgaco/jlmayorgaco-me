@@ -1,0 +1,34 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  isActive?: boolean;
+}
+
+const {
+  href,
+  label,
+  isActive = false,
+} = Astro.props;
+---
+
+<li class="c-lab-header__tabs-item">
+  <a
+    href={href}
+    aria-current={isActive ? 'page' : undefined}
+    class:list={[
+      'c-lab-header__tab',
+      { 'c-lab-header__tab--active': isActive },
+    ]}
+  >
+    <span class="c-lab-header__tab-indicator" aria-hidden="true">
+      <span class="c-lab-header__tab-indicator-dot"></span>
+    </span>
+
+    <span class="c-lab-header__tab-label">{label}</span>
+
+    <span class="c-lab-header__tab-screw" aria-hidden="true"></span>
+  </a>
+</li>
+
+<!-- Styles: src/styles/components/shell/_lab-header.scss -->

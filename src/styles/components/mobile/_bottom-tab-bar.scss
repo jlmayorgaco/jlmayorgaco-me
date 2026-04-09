@@ -1,0 +1,87 @@
+// ============================================================
+// COMPONENTS / MOBILE — BOTTOM TAB BAR  (.tab-bar)
+//
+// BEM block ownership: BottomTabBar.astro
+// Visible only on mobile (≤ 640px).
+// ============================================================
+
+.tab-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--lab-bg-elevated);
+  border-top: 2px solid var(--panel-frame);
+  padding: var(--space-xs) var(--space-sm);
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+
+  @media (max-width: 640px) { display: block; }
+}
+
+.tab-bar .tab-list {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tab-bar .tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: var(--space-xs) var(--space-sm);
+  min-width: 44px;
+  min-height: 44px;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+  position: relative;
+  color: var(--lab-text-muted);
+
+  // Active top indicator
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background: var(--accent-cyan);
+    border-radius: 0 0 2px 2px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  &.active {
+    color: var(--accent-cyan);
+    background: var(--lab-bg-panel);
+
+    &::before { opacity: 1; }
+  }
+
+  &:not(.active):active {
+    background: var(--lab-bg-panel);
+    color: var(--lab-text-secondary);
+  }
+}
+
+.tab-bar .tab-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.tab-bar .tab-label {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}

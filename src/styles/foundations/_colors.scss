@@ -1,0 +1,58 @@
+// ============================================================
+// FOUNDATIONS — COLORS
+// Source-of-truth color maps. Runtime values are emitted as
+// CSS custom properties in _css-vars.scss.
+// ============================================================
+
+// Lab surfaces — light neutral palette
+$lab-bg: (
+  'base':     #e8ebe9,
+  'panel':    #f0f2f0,
+  'elevated': #f5f7f5,
+  'dark':     #d4d7d5,
+);
+
+// Panel chrome
+$lab-panel: (
+  'frame':  #c4c8c6,
+  'border': #b8bcba,
+  'inner':  #e4e6e4,
+);
+
+// Screen / Monitor — always dark (physical display)
+$lab-screen: (
+  'bg':     #1a2328,
+  'border': #2d3a40,
+  'inner':  #12191d,
+  'glow':   rgba(63, 185, 167, 0.15),
+);
+
+// Text
+$lab-text: (
+  'primary':   #1a1f1d,
+  'secondary': #4a524d,
+  'muted':     #7a807c,
+  'on-dark':   #a8b0ac,
+);
+
+// Accent: teal / cyan
+$accent-cyan: (
+  'base': #3fb9a7,
+  'dim':  #2d8a7b,
+  'glow': rgba(63, 185, 167, 0.25),
+);
+
+// Accent: warm / copper
+$accent-warm: (
+  'copper':     #b8956a,
+  'copper-dim': #8a704a,
+  'gold':       #c9a962,
+);
+
+// Status LEDs
+$led: (
+  'green': #3fb950,
+  'amber': #d29922,
+  'red':   #f85149,
+  'blue':  #58a6ff,
+);

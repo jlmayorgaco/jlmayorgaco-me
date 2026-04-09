@@ -1,0 +1,10 @@
+// ============================================================
+// BASE — ROOT
+// CSS custom properties are emitted by foundations/_css-vars.scss.
+// This file handles additional :root-level concerns.
+// ============================================================
+
+::selection {
+  background-color: var(--accent-cyan);
+  color: var(--lab-bg-base);
+}

@@ -1,0 +1,611 @@
+---
+interface Props {
+  id?: string;
+  class?: string;
+  size?: number | string;
+  background?: string;
+
+  stroke?: string;
+  ringStroke?: string;
+  accent?: string;
+  dotColor?: string;
+  textColor?: string;
+
+  fontFamily?: string;
+  fontWeight?: number | string;
+  fontSize?: number | string;
+  letterSpacing?: number | string;
+
+  ariaLabel?: string;
+  finalLetters?: string;
+  settleFrames?: string[];
+  alphabet?: string;
+
+  randomCycles?: number;
+  randomStepMs?: number;
+  settleRandomBursts?: number;
+  settleRandomMs?: number;
+  settleHoldMs?: number;
+
+  pointRadius?: number;
+  pointGrowScale?: number;
+
+  ringRadius?: number;
+  ringStrokeWidth?: number;
+
+  centerLineTop?: number;
+  centerLineBottom?: number;
+  centerLineFadeMs?: number;
+
+  bracketIntroOffset?: number;
+  leftBracketPath?: string;
+  rightBracketPath?: string;
+
+  dotX?: number;
+  dotY?: number;
+  dotRadius?: number;
+  dotPopScale?: number;
+
+  autoplay?: boolean;
+  trigger?: 'load' | 'visible' | 'manual';
+  loop?: boolean;
+  restartDelay?: number;
+
+  idle?: boolean;
+  idleAmplitude?: number;
+  idleDuration?: number;
+
+  reducedMotion?: 'system' | 'always' | 'never';
+}
+
+const {
+  id,
+  class: className = '',
+  size = 'min(420px, 88vw)',
+  background = 'transparent',
+
+  stroke = '#6d7177',
+  ringStroke = '#8c9096',
+  accent = '#d18a2d',
+  dotColor = accent,
+  textColor = '#5f6368',
+
+  fontFamily = 'Inter, ui-sans-serif, system-ui, sans-serif',
+  fontWeight = 700,
+  fontSize = '44px',
+  letterSpacing = '4px',
+
+  ariaLabel = 'Animated JL logo',
+  finalLetters = 'jl',
+  settleFrames = ['si', 'ui', 'lu', 'el', 'ge', 'rg', 'or', 'jo', 'jl'],
+  alphabet = 'abcdefghijklmnopqrstuvwxyz',
+
+  randomCycles = 10,
+  randomStepMs = 55,
+  settleRandomBursts = 3,
+  settleRandomMs = 45,
+  settleHoldMs = 140,
+
+  pointRadius = 4,
+  pointGrowScale = 4.2,
+
+  ringRadius = 108,
+  ringStrokeWidth = 4,
+
+  centerLineTop = 154,
+  centerLineBottom = 246,
+  centerLineFadeMs = 180,
+
+  bracketIntroOffset = 18,
+  leftBracketPath = 'M156 184 L132 200 L156 216',
+  rightBracketPath = 'M244 184 L268 200 L244 216',
+
+  dotX = 176,
+  dotY = 148,
+  dotRadius = 6.5,
+  dotPopScale = 1.15,
+
+  autoplay = true,
+  trigger = 'load',
+  loop = false,
+  restartDelay = 1200,
+
+  idle = true,
+  idleAmplitude = 1.5,
+  idleDuration = 2400,
+
+  reducedMotion = 'system',
+} = Astro.props;
+
+const toCssSize = (value: number | string) =>
+  typeof value === 'number' ? `${value}px` : value;
+
+const styleVars = [
+  `--jl-size:${toCssSize(size)}`,
+  `--jl-bg:${background}`,
+  `--jl-stroke:${stroke}`,
+  `--jl-ring:${ringStroke}`,
+  `--jl-accent:${accent}`,
+  `--jl-dot:${dotColor}`,
+  `--jl-text:${textColor}`,
+  `--jl-font:${fontFamily}`,
+  `--jl-weight:${fontWeight}`,
+  `--jl-font-size:${toCssSize(fontSize)}`,
+  `--jl-letter-spacing:${toCssSize(letterSpacing)}`,
+  `--jl-ring-width:${ringStrokeWidth}`,
+].join(';');
+
+const centerLineFrom = 'M200 200 L200 200';
+const centerLineTo = `M200 ${centerLineTop} L200 ${centerLineBottom}`;
+---
+
+<div
+  id={id}
+  class={`jl-logo ${className}`.trim()}
+  style={styleVars}
+  data-jl-logo
+  data-autoplay={String(autoplay)}
+  data-trigger={trigger}
+  data-loop={String(loop)}
+  data-restart-delay={restartDelay}
+  data-idle={String(idle)}
+  data-idle-amplitude={idleAmplitude}
+  data-idle-duration={idleDuration}
+  data-reduced-motion={reducedMotion}
+  data-final-letters={finalLetters}
+  data-alphabet={alphabet}
+  data-settle-frames={JSON.stringify(settleFrames)}
+  data-random-cycles={randomCycles}
+  data-random-step-ms={randomStepMs}
+  data-settle-random-bursts={settleRandomBursts}
+  data-settle-random-ms={settleRandomMs}
+  data-settle-hold-ms={settleHoldMs}
+  data-point-grow-scale={pointGrowScale}
+  data-center-line-from={centerLineFrom}
+  data-center-line-to={centerLineTo}
+  data-center-line-fade-ms={centerLineFadeMs}
+  data-bracket-intro-offset={bracketIntroOffset}
+>
+  <svg viewBox="0 0 200 200" role="img" aria-label={ariaLabel}>
+    <g data-idle-group>
+      <circle data-core-dot class="core-dot" cx="200" cy="200" r={pointRadius} />
+      <circle data-ring class="ring" cx="200" cy="200" r={ringRadius} />
+
+      <path data-center-line class="center-line" d={centerLineFrom} />
+      <path data-left-bracket class="bracket" d={leftBracketPath} />
+      <path data-right-bracket class="bracket" d={rightBracketPath} />
+
+      <text data-slot-text class="slot-text" x="200" y="205">{finalLetters}</text>
+
+      <circle
+        data-accent-dot
+        class="accent-dot"
+        cx={dotX}
+        cy={dotY}
+        r={dotRadius}
+      />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .jl-logo {
+    width: var(--jl-size);
+    aspect-ratio: 1;
+    display: inline-grid;
+    place-items: center;
+    background: var(--jl-bg);
+  }
+
+  .jl-logo svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+
+  .jl-logo .core-dot {
+    fill: var(--jl-stroke);
+    transform-origin: 200px 200px;
+    opacity: 1;
+  }
+
+  .jl-logo .ring {
+    fill: none;
+    stroke: var(--jl-ring);
+    stroke-width: var(--jl-ring-width);
+    opacity: 0;
+    transform-origin: 200px 200px;
+    transform: scale(0.08);
+  }
+
+  .jl-logo .center-line,
+  .jl-logo .bracket {
+    fill: none;
+    stroke: var(--jl-stroke);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+  }
+
+  .jl-logo .slot-text {
+    fill: var(--jl-text);
+    font-family: var(--jl-font);
+    font-weight: var(--jl-weight);
+    font-size: var(--jl-font-size);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    letter-spacing: var(--jl-letter-spacing);
+    opacity: 0;
+    user-select: none;
+  }
+
+  .jl-logo .accent-dot {
+    fill: var(--jl-dot);
+    opacity: 0;
+    transform: scale(0.2);
+    transform-origin: center;
+  }
+</style>
+
+<script>
+  const initAnimatedJlLogos = () => {
+    document.querySelectorAll('[data-jl-logo]').forEach((root) => {
+      if (root.dataset.initialized === 'true') return;
+      root.dataset.initialized = 'true';
+      setupAnimatedJlLogo(root);
+    });
+  };
+
+  function setupAnimatedJlLogo(root) {
+    const svg = root.querySelector('svg');
+    const coreDot = root.querySelector('[data-core-dot]');
+    const ring = root.querySelector('[data-ring]');
+    const centerLine = root.querySelector('[data-center-line]');
+    const leftBracket = root.querySelector('[data-left-bracket]');
+    const rightBracket = root.querySelector('[data-right-bracket]');
+    const slotText = root.querySelector('[data-slot-text]');
+    const accentDot = root.querySelector('[data-accent-dot]');
+    const idleGroup = root.querySelector('[data-idle-group]');
+
+    if (!svg || !coreDot || !ring || !centerLine || !leftBracket || !rightBracket || !slotText || !accentDot || !idleGroup) {
+      return;
+    }
+
+    const parseBool = (value, fallback = false) => {
+      if (value == null) return fallback;
+      return value === 'true';
+    };
+
+    const parseNum = (value, fallback) => {
+      const num = Number(value);
+      return Number.isFinite(num) ? num : fallback;
+    };
+
+    const parseJson = (value, fallback) => {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return fallback;
+      }
+    };
+
+    const cfg = {
+      autoplay: parseBool(root.dataset.autoplay, true),
+      trigger: root.dataset.trigger || 'load',
+      loop: parseBool(root.dataset.loop, false),
+      restartDelay: parseNum(root.dataset.restartDelay, 1200),
+      idle: parseBool(root.dataset.idle, true),
+      idleAmplitude: parseNum(root.dataset.idleAmplitude, 1.5),
+      idleDuration: parseNum(root.dataset.idleDuration, 2400),
+      reducedMotion: root.dataset.reducedMotion || 'system',
+      finalLetters: root.dataset.finalLetters || 'jl',
+      alphabet: root.dataset.alphabet || 'abcdefghijklmnopqrstuvwxyz',
+      settleFrames: parseJson(root.dataset.settleFrames, ['si', 'ui', 'lu', 'el', 'ge', 'rg', 'or', 'jo', 'jl']),
+      randomCycles: parseNum(root.dataset.randomCycles, 10),
+      randomStepMs: parseNum(root.dataset.randomStepMs, 55),
+      settleRandomBursts: parseNum(root.dataset.settleRandomBursts, 3),
+      settleRandomMs: parseNum(root.dataset.settleRandomMs, 45),
+      settleHoldMs: parseNum(root.dataset.settleHoldMs, 140),
+      pointGrowScale: parseNum(root.dataset.pointGrowScale, 4.2),
+      centerLineFrom: root.dataset.centerLineFrom || 'M200 200 L200 200',
+      centerLineTo: root.dataset.centerLineTo || 'M200 154 L200 246',
+      centerLineFadeMs: parseNum(root.dataset.centerLineFadeMs, 180),
+      bracketIntroOffset: parseNum(root.dataset.bracketIntroOffset, 18),
+      dotPopScale: parseNum(accentDot.getAttribute('data-dot-pop-scale'), 1.15),
+    };
+
+    let idleAnimation = null;
+    let running = false;
+    let observer = null;
+
+    const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
+    const prefersReducedMotion = () =>
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const freeze = (el, styles) => {
+      el.style.transition = 'none';
+      Object.assign(el.style, styles);
+    };
+
+    const clearIdle = () => {
+      if (idleAnimation) {
+        idleAnimation.cancel();
+        idleAnimation = null;
+      }
+    };
+
+    const resetVisuals = () => {
+      clearIdle();
+
+      freeze(coreDot, {
+        opacity: '1',
+        transform: 'scale(1)',
+      });
+
+      freeze(ring, {
+        opacity: '0',
+        transform: 'scale(0.08)',
+      });
+
+      centerLine.style.transition = 'none';
+      centerLine.style.opacity = '0';
+      centerLine.setAttribute('d', cfg.centerLineFrom);
+
+      freeze(leftBracket, {
+        opacity: '0',
+        transform: `translateX(${cfg.bracketIntroOffset}px)`,
+      });
+
+      freeze(rightBracket, {
+        opacity: '0',
+        transform: `translateX(-${cfg.bracketIntroOffset}px)`,
+      });
+
+      freeze(slotText, {
+        opacity: '0',
+      });
+      slotText.textContent = cfg.finalLetters;
+
+      freeze(accentDot, {
+        opacity: '0',
+        transform: 'scale(0.2)',
+      });
+
+      root.getBoundingClientRect();
+    };
+
+    const setFinalState = () => {
+      clearIdle();
+
+      freeze(coreDot, {
+        opacity: '0',
+        transform: 'scale(1)',
+      });
+
+      freeze(ring, {
+        opacity: '1',
+        transform: 'scale(1)',
+      });
+
+      centerLine.style.transition = 'none';
+      centerLine.style.opacity = '0';
+      centerLine.setAttribute('d', cfg.centerLineTo);
+
+      freeze(leftBracket, {
+        opacity: '1',
+        transform: 'translateX(0)',
+      });
+
+      freeze(rightBracket, {
+        opacity: '1',
+        transform: 'translateX(0)',
+      });
+
+      freeze(slotText, {
+        opacity: '1',
+      });
+      slotText.textContent = cfg.finalLetters;
+
+      freeze(accentDot, {
+        opacity: '1',
+        transform: 'scale(1)',
+      });
+
+      if (cfg.idle && !cfg.loop) startIdle();
+    };
+
+    function randomPair() {
+      const chars = cfg.alphabet;
+      const a = chars[Math.floor(Math.random() * chars.length)] || 'j';
+      const b = chars[Math.floor(Math.random() * chars.length)] || 'l';
+      return `${a}${b}`;
+    }
+
+    async function animatePointToCircle() {
+      coreDot.style.transition = 'transform 500ms cubic-bezier(.22,1,.36,1), opacity 300ms ease';
+      coreDot.style.transform = `scale(${cfg.pointGrowScale})`;
+      await wait(260);
+
+      ring.style.transition = 'opacity 420ms ease, transform 850ms cubic-bezier(.22,1,.36,1)';
+      ring.style.opacity = '1';
+      ring.style.transform = 'scale(1)';
+
+      coreDot.style.opacity = '0';
+      await wait(760);
+    }
+
+    async function animateCenterLine() {
+      centerLine.style.opacity = '1';
+      centerLine.style.transition = 'opacity 120ms ease';
+      centerLine.setAttribute('d', cfg.centerLineFrom);
+
+      await wait(40);
+
+      centerLine.style.transition = 'all 480ms cubic-bezier(.22,1,.36,1)';
+      centerLine.setAttribute('d', cfg.centerLineTo);
+
+      await wait(520);
+    }
+
+    async function animateBrackets() {
+      leftBracket.style.opacity = '1';
+      rightBracket.style.opacity = '1';
+
+      leftBracket.style.transition = 'opacity 180ms ease, transform 400ms cubic-bezier(.22,1,.36,1)';
+      rightBracket.style.transition = 'opacity 180ms ease, transform 400ms cubic-bezier(.22,1,.36,1)';
+
+      await wait(30);
+
+      leftBracket.style.transform = 'translateX(0)';
+      rightBracket.style.transform = 'translateX(0)';
+
+      await wait(430);
+    }
+
+    async function animateLetters() {
+      centerLine.style.transition = `opacity ${cfg.centerLineFadeMs}ms ease`;
+      centerLine.style.opacity = '0';
+
+      await wait(Math.max(80, Math.round(cfg.centerLineFadeMs * 0.55)));
+
+      slotText.style.transition = 'opacity 180ms ease';
+      slotText.style.opacity = '1';
+
+      for (let i = 0; i < cfg.randomCycles; i++) {
+        slotText.textContent = randomPair();
+        await wait(cfg.randomStepMs);
+      }
+
+      for (const frame of cfg.settleFrames) {
+        for (let i = 0; i < cfg.settleRandomBursts; i++) {
+          slotText.textContent = randomPair();
+          await wait(cfg.settleRandomMs);
+        }
+        slotText.textContent = frame;
+        await wait(cfg.settleHoldMs);
+      }
+
+      slotText.textContent = cfg.finalLetters;
+      await wait(200);
+    }
+
+    async function animateAccentDot() {
+      const popScale = parseNum(accentDot.getAttribute('data-dot-pop-scale'), 1.15);
+
+      accentDot.style.transition = 'opacity 180ms ease, transform 300ms cubic-bezier(.22,1,.36,1)';
+      accentDot.style.opacity = '1';
+      accentDot.style.transform = `scale(${popScale})`;
+
+      await wait(180);
+
+      accentDot.style.transition = 'transform 180ms ease';
+      accentDot.style.transform = 'scale(1)';
+
+      await wait(220);
+    }
+
+    function startIdle() {
+      clearIdle();
+      idleAnimation = idleGroup.animate(
+        [
+          { transform: 'translateY(0px)' },
+          { transform: `translateY(-${cfg.idleAmplitude}px)` },
+          { transform: 'translateY(0px)' },
+        ],
+        {
+          duration: cfg.idleDuration,
+          iterations: Infinity,
+          easing: 'ease-in-out',
+        }
+      );
+    }
+
+    async function runOnce() {
+      await animatePointToCircle();
+      await animateCenterLine();
+      await animateBrackets();
+      await animateLetters();
+      await animateAccentDot();
+
+      if (cfg.idle && !cfg.loop) {
+        startIdle();
+      }
+    }
+
+    async function play() {
+      if (running) return;
+
+      const reduced =
+        cfg.reducedMotion === 'always' ||
+        (cfg.reducedMotion === 'system' && prefersReducedMotion());
+
+      if (reduced) {
+        setFinalState();
+        return;
+      }
+
+      running = true;
+
+      do {
+        resetVisuals();
+        await runOnce();
+
+        if (!cfg.loop) break;
+        await wait(cfg.restartDelay);
+      } while (cfg.loop && root.isConnected);
+
+      running = false;
+    }
+
+    function observeAndPlay() {
+      if (!('IntersectionObserver' in window)) {
+        play();
+        return;
+      }
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (!entry?.isIntersecting) return;
+          observer?.disconnect();
+          observer = null;
+          play();
+        },
+        { threshold: 0.35 }
+      );
+
+      observer.observe(root);
+    }
+
+    root.__jlLogo = {
+      play,
+      reset: resetVisuals,
+      finish: setFinalState,
+    };
+
+    resetVisuals();
+
+    if (!cfg.autoplay) return;
+
+    if (cfg.trigger === 'visible') {
+      observeAndPlay();
+      return;
+    }
+
+    if (cfg.trigger === 'manual') {
+      return;
+    }
+
+    play();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAnimatedJlLogos, { once: true });
+  } else {
+    initAnimatedJlLogos();
+  }
+
+  document.addEventListener('astro:page-load', initAnimatedJlLogos);
+</script>
