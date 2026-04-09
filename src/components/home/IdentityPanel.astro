@@ -135,20 +135,13 @@ const resolvedQuickFacts =
   quickFacts.length > 0
     ? quickFacts
     : [
-        { label: 'Based', value: 'Colombia', icon: 'location' },
+        { label: 'Based', value: 'Bogotá, Colombia', icon: 'location' },
         { label: 'Open To', value: 'Collaboration', icon: 'collab' },
-        { label: 'Current', value: 'MSc Robotics track', icon: 'current' },
+        { label: 'Current', value: 'MSc Robotics', icon: 'current' },
         { label: 'Mode', value: 'Software + research', icon: 'mode' },
       ];
 
-const resolvedNowItems =
-  nowItems.length > 0
-    ? nowItems
-    : [
-        'Distributed control',
-        'Frequency estimation benchmarks',
-        'Embedded / FPGA systems',
-      ];
+
 
 const resolvedActions: Cta[] =
   actions.length > 0
@@ -363,7 +356,6 @@ const getSocialIcon = (brand?: string) =>
             </div>
 
             <div class="fact-value-row">
-              <span class="fact-dot"></span>
               <span class="fact-value">{fact.value}</span>
             </div>
           </div>
@@ -371,24 +363,7 @@ const getSocialIcon = (brand?: string) =>
       </div>
     )}
 
-    {resolvedNowItems.length > 0 && (
-      <div class="identity-now">
-        <div class="identity-now__header">
-          <span class="fact-dot"></span>
-          <span class="identity-now__label">NOW</span>
-          <span class="identity-now__line"></span>
-        </div>
 
-        <ul class="identity-now__list">
-          {resolvedNowItems.map((item) => (
-            <li class="identity-now__item">
-              <span class="fact-dot"></span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
 
     <slot name="extra" />
 

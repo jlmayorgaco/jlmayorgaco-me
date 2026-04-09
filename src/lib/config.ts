@@ -19,20 +19,23 @@ export type NavItem = {
 
 // Primary Navigation (always visible)
 export const NAV_ITEMS: NavItem[] = [
-  { href: '/projects', label: 'Projects' },
-  { href: '/research', label: 'Research' },
+  //
+  { href: '/about', label: 'Me' },
+  { href: '/portfolio', label: 'Portfolio' },
+  { href: '/tutorials', label: 'Tutorials' },
   { href: '/datalab', label: 'Lab' },
   { href: '/blog', label: 'Blog' },
-  { href: '/about', label: 'About' },
+  
 ] as const;
 
 // Secondary Navigation (dropdown)
 export const NAV_SECONDARY: NavItem[] = [
   { href: '/now', label: 'Now' },
-  { href: '/portfolio', label: 'Portfolio' },
-  { href: '/papers', label: 'Papers' },
   { href: '/media', label: 'Media' },
-  { href: '/tutorials', label: 'Tutorials' },
+
+  { href: '/projects', label: 'Projects' },
+  { href: '/research', label: 'Research' },
+  { href: '/papers', label: 'Papers' },
   { href: '/contact', label: 'Contact' },
 ] as const;
 
