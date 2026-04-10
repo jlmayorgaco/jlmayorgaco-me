@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Enhanced Scan Papers Use Case
  * Supports: paper history, tiered classification, batch review mode
  */
@@ -46,7 +46,7 @@ export class EnhancedScanPapersUseCase {
         useBatchMode: input.useBatchMode 
       });
 
-      await this.messagePort.sendMessage('_Scanning ArXiv for papers..._');
+      await this.messagePort.sendMessage('<i>Scanning ArXiv for papers...</i>');
 
       // Scan papers
       const papers = await runScanner();
@@ -57,7 +57,7 @@ export class EnhancedScanPapersUseCase {
         uniquePapers = await this.historyRepo.deduplicate(papers);
         const duplicates = papers.length - uniquePapers.length;
         if (duplicates > 0) {
-          await this.messagePort.sendMessage(`_Filtered ${duplicates} previously seen papers_`);
+          await this.messagePort.sendMessage(`<i>Filtered ${duplicates} previously seen papers</i>`);
         }
       }
 
@@ -74,7 +74,7 @@ export class EnhancedScanPapersUseCase {
       this.geminiService.setContextPrompt(contextPrompt);
 
       // Classify papers with tiered system
-      await this.messagePort.sendMessage('_Classifying papers with AI..._');
+      await this.messagePort.sendMessage('<i>Classifying papers with AI...</i>');
 
       const classificationResult = await this.geminiService.classifyPapers(
         selectedPapers.map(p => ({
@@ -183,18 +183,16 @@ export class EnhancedScanPapersUseCase {
     });
 
     // Send batch review message
-    let msg = `*ðŸ“š Batch Review: ${batchItems.length} Papers*\n\n`;
+    let msg = `<b>📚 Batch Review: ${batchItems.length} Papers</b>\n\n`;
     msg += 'React to each paper:\n';
     msg += 'â­ Must Read | ðŸ‘ Interesting | âœ“ Ack | ðŸ”– Save | â­ï¸ Skip\n\n';
 
     for (let i = 0; i < batchItems.length; i++) {
       const item = batchItems[i];
       const emoji = TierEmojis[item.tier];
-      const title = MarkdownFormatter.truncate(item.title, 70);
-      
-      msg += `${i + 1}. ${emoji} *${MarkdownFormatter.escape(title)}*\n`;
+      msg += `${i + 1}. ${emoji} <b>${MarkdownFormatter.escape(item.title, 'html')}</b>\n`;
       msg += `   Score: ${item.relevanceScore}/100 | ${item.tier.replace('_', ' ')}\n`;
-      msg += `   ${MarkdownFormatter.truncate(item.summary, 120)}\n\n`;
+      msg += `   ${MarkdownFormatter.escape(item.summary, 'html')}\n\n`;
     }
 
     msg += 'Reply with numbers (e.g., "1â­ 2ðŸ‘ 3â­ï¸") or react individually.';
@@ -218,11 +216,11 @@ export class EnhancedScanPapersUseCase {
       byTier[c.tier].push(c);
     }
 
-    let msg = '*ðŸ“Š Today\'s Papers by Relevance*\n\n';
+    let msg = '<b>📊 Today\'s Papers by Relevance</b>\n\n';
 
     // Must Read
     if (byTier[RelevanceTier.MUST_READ].length > 0) {
-      msg += `*ðŸ”´ Must Read (${byTier[RelevanceTier.MUST_READ].length})*\n`;
+      msg += `<b>🔴 Must Read (${byTier[RelevanceTier.MUST_READ].length})</b>\n`;
       for (const c of byTier[RelevanceTier.MUST_READ].slice(0, 3)) {
         const paper = papers.find(p => p.id === c.paperId);
         msg += this.formatPaperLine(c, paper);
@@ -232,7 +230,7 @@ export class EnhancedScanPapersUseCase {
 
     // Worth Scanning
     if (byTier[RelevanceTier.WORTH_SCANNING].length > 0) {
-      msg += `*ðŸŸ¡ Worth Scanning (${byTier[RelevanceTier.WORTH_SCANNING].length})*\n`;
+      msg += `<b>🟡 Worth Scanning (${byTier[RelevanceTier.WORTH_SCANNING].length})</b>\n`;
       for (const c of byTier[RelevanceTier.WORTH_SCANNING].slice(0, 3)) {
         const paper = papers.find(p => p.id === c.paperId);
         msg += this.formatPaperLine(c, paper);
@@ -242,7 +240,7 @@ export class EnhancedScanPapersUseCase {
 
     // Background
     if (byTier[RelevanceTier.BACKGROUND].length > 0) {
-      msg += `*ðŸŸ¢ Background (${byTier[RelevanceTier.BACKGROUND].length})*\n`;
+      msg += `<b>🟢 Background (${byTier[RelevanceTier.BACKGROUND].length})</b>\n`;
       for (const c of byTier[RelevanceTier.BACKGROUND].slice(0, 2)) {
         const paper = papers.find(p => p.id === c.paperId);
         msg += this.formatPaperLine(c, paper);
@@ -253,8 +251,10 @@ export class EnhancedScanPapersUseCase {
   }
 
   private formatPaperLine(classification: TieredClassification, paper: any): string {
-    const title = MarkdownFormatter.truncate(paper?.title || 'Unknown', 60);
-    return `â€¢ *${MarkdownFormatter.escape(title)}*\n  _${classification.suggestedAction}_\n  [ArXiv](${paper?.absUrl || paper?.url || ''})\n\n`;
+    const title = MarkdownFormatter.escape(paper?.title || 'Unknown', 'html');
+    const action = MarkdownFormatter.escape(classification.suggestedAction, 'html');
+    const url = paper?.absUrl || paper?.url || '';
+    return `• <b>${title}</b>\n  <i>${action}</i>\n  <a href="${url}">ArXiv</a>\n\n`;
   }
 }
 

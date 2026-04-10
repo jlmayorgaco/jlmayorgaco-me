@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Enhanced Generate Blog Post Use Case
  * Supports: voice transcription, personal context integration
  */
@@ -180,20 +180,18 @@ Session state: ${session.state}`;
     chatId: number, 
     post: GeneratedBlogPost & { imagePath?: string }
   ): Promise<void> {
-    let preview = `*Blog Post Preview*\n`;
-    preview += `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n\n`;
-    preview += `*Title:* ${MarkdownFormatter.escape(post.title)}\n`;
-    preview += `*Category:* ${post.category}\n`;
-    preview += `*Tags:* ${post.tags.join(', ')}\n\n`;
-    preview += `*Description:*\n${MarkdownFormatter.escape(post.description)}\n\n`;
+    let preview = `<b>Blog Post Preview</b>\n\n`;
+    preview += `<b>Title:</b> ${MarkdownFormatter.escape(post.title, 'html')}\n`;
+    preview += `<b>Category:</b> ${post.category}\n`;
+    preview += `<b>Tags:</b> ${post.tags.join(', ')}\n\n`;
+    preview += `<b>Description:</b>\n${MarkdownFormatter.escape(post.description, 'html')}\n\n`;
     
     if (post.imagePath) {
-      preview += `*Cover Image:* Generated âœ“\n\n`;
+      preview += `<b>Cover Image:</b> Generated ✓\n\n`;
     }
     
     preview += `Reply "yes" to publish, "no" to cancel, or /edit to make changes.`;
 
-    await this.messagePort.sendMessage(preview);
   }
 }
 

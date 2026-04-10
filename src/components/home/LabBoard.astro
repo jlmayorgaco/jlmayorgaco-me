@@ -6,6 +6,7 @@ import HomeTerminal from './HomeTerminal';
 import SignalWaveform from '../ui/SignalWaveform.astro';
 import SystemMetricsStrip from '../ui/SystemMetricsStrip.astro';
 import IdentityPanel from './IdentityPanel.astro';
+import { SOCIAL_LINKS } from '../../lib/config';
 
 interface Props {
   projects: CollectionEntry<'projects'>[];
@@ -25,11 +26,7 @@ const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tut
   <div class="board-row main-row">
     <!-- Left Panel: Identity/Chip -->
     <IdentityPanel
-      socialLinks={[
-        { label: 'GitHub', href: 'https://github.com/jlmayorgaco', brand: 'github' },
-        { label: 'Google Scholar', href: 'TU_URL_DE_SCHOLAR', brand: 'scholar' },
-        { label: 'LinkedIn', href: 'TU_URL_DE_LINKEDIN', brand: 'linkedin' },
-      ]}
+      socialLinks={SOCIAL_LINKS}
       experienceStartYear={2017}
     />
 

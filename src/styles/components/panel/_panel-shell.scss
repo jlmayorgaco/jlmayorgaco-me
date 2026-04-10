@@ -28,6 +28,7 @@ $fact-value-size:  0.75rem;
 $now-label-size:   0.7rem;
 
 $cta-font-size:         0.75rem;
+$social-font-size:      0.6rem;
 $metric-label-size:     0.65rem;
 $metric-value-size:     0.85rem;
 $metric-highlight-size: 1.3rem;
@@ -507,7 +508,8 @@ $cta-min-height:   2rem;
   .social-link__label {
     color: currentColor;
     font-family: var(--font-mono);
-    font-size: $cta-font-size;
+    font-size: $social-font-size;
+    letter-spacing: 1px;
     font-weight: 600;
     line-height: 1;
   }
@@ -521,8 +523,7 @@ $cta-min-height:   2rem;
   // Metrics grid
   // ----------------------------------------
   .identity-metrics {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: flex;
     gap: 0;
     padding-top: 0.75rem;
     border-top: 1px solid var(--panel-border);

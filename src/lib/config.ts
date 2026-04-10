@@ -39,12 +39,35 @@ export const NAV_SECONDARY: NavItem[] = [
   { href: '/contact', label: 'Contact' },
 ] as const;
 
-// Social links
-export const SOCIAL_LINKS = [
-  { href: 'https://github.com/jlmayorga', label: 'GitHub', icon: 'github' },
-  { href: 'https://linkedin.com/in/jlmayorga', label: 'LinkedIn', icon: 'linkedin' },
-  { href: 'https://twitter.com/jlmayorga', label: 'Twitter', icon: 'twitter' },
+export type SocialBrand =
+  | 'github'
+  | 'linkedin'
+  | 'scholar'
+  | 'orcid'
+  | 'ieee'
+  | 'arxiv'
+  | 'email'
+  | 'cv';
+
+export type SocialLink = {
+  label: string;
+  href: string;
+  brand: SocialBrand;
+  external?: boolean;
+};
+
+export const SOCIAL_LINKS: readonly SocialLink[] = [
+  { label: 'Email', href: 'jl.mayorga.co+me@gmail.com', brand: 'email' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/jorge-luis-mayorga-taborda-a33a16102/', brand: 'linkedin' },
+  { label: 'GitHub', href: 'https://github.com/jlmayorgaco', brand: 'github' },
+  { label: 'Google Scholar', href: 'https://scholar.google.com/citations?user=C08gmDcAAAAJ&hl=es', brand: 'scholar' },
+  { label: 'ORCID', href: 'https://orcid.org/0000-0002-0774-2176', brand: 'orcid' },
+  { label: 'IEEE Xplore', href: 'https://ieeexplore.ieee.org/author/37088045767', brand: 'ieee' },
+  { label: 'arXiv', href: 'https://arxiv.org/', brand: 'arxiv' }, // replace with your real arXiv URL
+  
 ] as const;
+
+
 
 // Valid themes for the lab interface
 export const VALID_THEMES = ['lab', 'dark', 'blueprint', 'copper', 'matrix'] as const;

@@ -38,13 +38,17 @@ export class MarkdownFormatter {
   };
 
   /**
-   * Escape markdown characters for Telegram
-   * Automatically bypasses URLs inside standard []() markdown links
+   * Escape HTML characters for Telegram HTML mode
    * @param text - Text to escape
-   * @param mode - 'v1' (legacy) or 'v2' (MarkdownV2) defaults to 'v2'
-   * @returns Escaped text safe for Telegram
+   * @returns Escaped text safe for Telegram HTML
    */
-  static escape(text: string, mode: 'v1' | 'v2' = 'v1'): string {
+  static escape(text: string, mode: 'v1' | 'v2' | 'html' = 'html'): string {
+    if (mode === 'html') {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
     const escapeMap = mode === 'v2' 
       ? this.TELEGRAM_V2_ESCAPE_CHARS 
       : this.TELEGRAM_ESCAPE_CHARS;
@@ -162,9 +166,10 @@ export class MarkdownFormatter {
    * @returns Truncated text
    */
   static truncate(text: string, maxLength: number): string {
-    if (text.length <= maxLength) {
-      return text;
+    if (!text || text.length <= maxLength) {
+      return text || '';
     }
+    // Only safely truncate plain text. If HTML is passed, this could break tags.
     return text.slice(0, maxLength - 3) + '...';
   }
 
@@ -177,7 +182,7 @@ export class MarkdownFormatter {
   static formatList(items: string[], ordered: boolean = false): string {
     return items
       .map((item, index) => {
-        const prefix = ordered ? `${index + 1}.` : 'â€¢';
+        const prefix = ordered ? `${index + 1}.` : '•';
         return `${prefix} ${item}`;
       })
       .join('\n');
@@ -190,7 +195,7 @@ export class MarkdownFormatter {
    * @returns Formatted code block
    */
   static formatCodeBlock(code: string, language?: string): string {
-    return '```' + (language || '') + '\n' + code + '\n```';
+    return `<pre><code class="language-${language || ''}">${this.escape(code, 'html')}</code></pre>`;
   }
 
   /**
@@ -199,7 +204,7 @@ export class MarkdownFormatter {
    * @returns Inline code
    */
   static formatInlineCode(text: string): string {
-    return '`' + text.replace(/`/g, '\\`') + '`';
+    return `<code>${this.escape(text, 'html')}</code>`;
   }
 
   /**
@@ -208,7 +213,7 @@ export class MarkdownFormatter {
    * @returns Bold text
    */
   static bold(text: string): string {
-    return '*' + text.replace(/\*/g, '\\*') + '*';
+    return `<b>${text}</b>`;
   }
 
   /**
@@ -217,7 +222,7 @@ export class MarkdownFormatter {
    * @returns Italic text
    */
   static italic(text: string): string {
-    return '_' + text.replace(/_/g, '\\_') + '_';
+    return `<i>${text}</i>`;
   }
 
   /**
@@ -227,8 +232,7 @@ export class MarkdownFormatter {
    * @returns Markdown link
    */
   static link(text: string, url: string): string {
-    const escapedText = text.replace(/\]/g, '\\]');
-    return `[${escapedText}](${url})`;
+    return `<a href="${url}">${text}</a>`;
   }
 
   /**
@@ -238,8 +242,7 @@ export class MarkdownFormatter {
    * @returns Markdown header
    */
   static header(text: string, level: number = 1): string {
-    const hashes = '#'.repeat(Math.min(Math.max(level, 1), 6));
-    return `${hashes} ${text}`;
+    return `<b>${text}</b>\n`;
   }
 }
 

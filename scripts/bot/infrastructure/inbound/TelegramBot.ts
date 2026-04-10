@@ -72,7 +72,7 @@ export class TelegramBot {
     return `${TELEGRAM_API}${this.token}/${method}`;
   }
 
-  async sendMessage(text: string, parseMode: 'Markdown' | 'HTML' = 'Markdown'): Promise<boolean> {
+  async sendMessage(text: string, parseMode: 'Markdown' | 'MarkdownV2' | 'HTML' = 'HTML'): Promise<boolean> {
     try {
       await this.rateLimiter.consume();
 
@@ -112,7 +112,7 @@ export class TelegramBot {
     return this.sendMessage(text, 'HTML');
   }
 
-  private async sendChunkedMessage(text: string, parseMode: 'Markdown' | 'HTML'): Promise<boolean> {
+  private async sendChunkedMessage(text: string, parseMode: 'Markdown' | 'MarkdownV2' | 'HTML'): Promise<boolean> {
     const chunks: string[] = [];
     let currentChunk = '';
 
@@ -153,7 +153,7 @@ export class TelegramBot {
 
   private async sendSingleMessage(
     text: string,
-    parseMode: 'Markdown' | 'HTML',
+    parseMode: 'Markdown' | 'MarkdownV2' | 'HTML',
     isLast: boolean
   ): Promise<boolean> {
     await this.rateLimiter.consume();
@@ -188,7 +188,7 @@ export class TelegramBot {
           chat_id: this.chatId,
           photo: photoUrl,
           caption: caption,
-          parse_mode: 'Markdown',
+          parse_mode: 'HTML',
         }),
       });
 
@@ -211,7 +211,7 @@ export class TelegramBot {
           chat_id: this.chatId,
           message_id: messageId,
           text: text,
-          parse_mode: 'Markdown',
+          parse_mode: 'HTML',
           reply_markup: keyboard,
         }),
       });

@@ -1,4 +1,14 @@
 ---
+
+import githubIcon from './src/icons/github.svg?raw';
+import scholarIcon from './src/icons/scholar.svg?raw';
+import linkedinIcon from './src/icons/linkedin.svg?raw';
+import ieeeIcon from './src/icons/ieee.svg?raw';
+import orcidIcon from './src/icons/orcid.svg?raw';
+import arxivIcon from './src/icons/arxiv.svg?raw';
+import emailIcon from './src/icons/email.svg?raw';
+import cvIcon from './src/icons/cv.svg?raw';
+
 type Cta = {
   href: string;
   label: string;
@@ -218,9 +228,7 @@ const resolvedMetrics =
           highlight: false,
         }))
       : [
-          { label: 'Tech Stack', value: 'TS · Python · MATLAB · FPGA' },
-          { label: 'Dashboards', value: '12' },
-          { label: 'Research', value: 'Control · Robotics' },
+          { label: 'Tech Stack', value: 'Angular | TS | Python | MATLAB | FPGA' },
           {
             label: 'Years of Experience',
             value: `+${yearsOfExperience}`,
@@ -287,31 +295,33 @@ const actionIconSvgs: Record<string, string> = {
   `,
 };
 
-const socialIconSvgs: Record<string, string> = {
-  github: `
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-      <path d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.91c.58.11.79-.25.79-.56v-2.02c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.05-.71.08-.69.08-.69 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.27-5.24-5.66 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.47.11-3.07 0 0 .97-.31 3.19 1.18a11.1 11.1 0 0 1 5.82 0c2.22-1.49 3.19-1.18 3.19-1.18.62 1.6.23 2.78.11 3.07.74.8 1.18 1.83 1.18 3.08 0 4.4-2.69 5.37-5.25 5.65.41.35.78 1.04.78 2.09v3.1c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/>
-    </svg>
-  `,
-  scholar: `
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
-      <path d="M12 3 2 8l10 5 10-5-10-5Z" fill="currentColor" opacity=".92"/>
-      <path d="M6 10.5v4.2c0 1.7 3 3.3 6 3.3s6-1.6 6-3.3v-4.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M22 8v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <circle cx="22" cy="15.8" r="1" fill="currentColor"/>
-    </svg>
-  `,
-  linkedin: `
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-      <path d="M4.98 3.5A2.48 2.48 0 1 0 5 8.46 2.48 2.48 0 0 0 4.98 3.5ZM3 9.75h3.96V21H3V9.75Zm7.1 0H13.9v1.54h.06c.53-1 1.84-2.05 3.79-2.05 4.05 0 4.8 2.66 4.8 6.12V21h-3.96v-4.98c0-1.19-.02-2.72-1.66-2.72-1.66 0-1.92 1.3-1.92 2.63V21H10.1V9.75Z"/>
-    </svg>
-  `,
+type SocialBrand =
+  | 'github'
+  | 'scholar'
+  | 'linkedin'
+  | 'ieee'
+  | 'orcid'
+  | 'arxiv'
+  | 'email'
+  | 'cv';
+
+const socialIconSvgs: Record<SocialBrand, string> = {
+  github: githubIcon,
+  scholar: scholarIcon,
+  linkedin: linkedinIcon,
+  ieee: ieeeIcon,
+  orcid: orcidIcon,
+  arxiv: arxivIcon,
+  email: emailIcon,
+  cv: cvIcon,
 };
 
 const getFactIcon = (icon?: string) => (icon ? factIconSvgs[icon] ?? '' : '');
 const getActionIcon = (icon?: string) => (icon ? actionIconSvgs[icon] ?? '' : '');
 const getSocialIcon = (brand?: string) =>
-  brand ? socialIconSvgs[brand] ?? socialIconSvgs.github : socialIconSvgs.github;
+  brand && brand in socialIconSvgs
+    ? socialIconSvgs[brand as SocialBrand]
+    : socialIconSvgs.github;
 ---
 
 <div class:list={['panel', 'identity-panel', className]}>
@@ -367,6 +377,30 @@ const getSocialIcon = (brand?: string) =>
 
     <slot name="extra" />
 
+       {resolvedSocialLinks.length > 0 && (
+      <div class="identity-social">
+        {resolvedSocialLinks.map((item) => {
+          const openExternally = isExternalUrl(item.href);
+
+          return (
+            <a
+              href={item.href}
+              class:list={['social-link', `social-link--${item.brand}`]}
+              target={openExternally ? '_blank' : undefined}
+              rel={openExternally ? 'noreferrer noopener' : undefined}
+              aria-label={item.label}
+            >
+              <span
+                class="social-link__icon"
+                aria-hidden="true"
+                set:html={getSocialIcon(item.brand)}
+              ></span>
+            </a>
+          );
+        })}
+      </div>
+    )}
+    
     {resolvedActions.length > 0 && (
       <div class="identity-ctas">
         {resolvedActions.map((action) => {
@@ -399,43 +433,26 @@ const getSocialIcon = (brand?: string) =>
       </div>
     )}
 
-    {resolvedSocialLinks.length > 0 && (
-      <div class="identity-social">
-        {resolvedSocialLinks.map((item) => {
-          const openExternally = isExternalUrl(item.href);
+ 
 
-          return (
-            <a
-              href={item.href}
-              class:list={['social-link', `social-link--${item.brand}`]}
-              target={openExternally ? '_blank' : undefined}
-              rel={openExternally ? 'noreferrer noopener' : undefined}
-              aria-label={item.label}
-            >
-              <span
-                class="social-link__icon"
-                aria-hidden="true"
-                set:html={getSocialIcon(item.brand)}
-              ></span>
-              <span class="social-link__label">{item.label}</span>
-            </a>
-          );
-        })}
+    <div class="identity-metrics">
+      <div class="metric-item" style="border-bottom: none; margin-bottom: 4px;">
+        <span class="metric-label">Years of Experience</span>
+        <span class="metric-value metric-value--highlight">
+          +{yearsOfExperience}
+        </span>
       </div>
-    )}
-
-    {resolvedMetrics.length > 0 && (
-      <div class="identity-metrics">
-        {resolvedMetrics.map((metric) => (
-          <div class="metric-item">
-            <span class="metric-label">{metric.label}</span>
-            <span class:list={['metric-value', metric.highlight && 'metric-value--highlight']}>
-              {metric.value}
-            </span>
-          </div>
-        ))}
+      
+      <div class="tech-stack-badges" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 16px; border-top: 1px solid rgba(var(--color-primary-rgb, 0, 255, 170), 0.15);">
+        <img src="https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white" height="22" alt="Angular" />
+        <img src="https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white" height="22" alt="TypeScript" />
+        <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white" height="22" alt="Python" />
+        <img src="https://img.shields.io/badge/C%2B%2B-00599C?style=flat&logo=c%2B%2B&logoColor=white" height="22" alt="C++" />
+        <img src="https://img.shields.io/badge/ROS-22314E?style=flat&logo=ros&logoColor=white" height="22" alt="ROS" />
+        <img src="https://img.shields.io/badge/MATLAB-e16737?style=flat&logo=mathworks&logoColor=white" height="22" alt="MATLAB" />
+        <img src="https://img.shields.io/badge/FPGA-4B5563?style=flat&logo=intel&logoColor=white" height="22" alt="FPGA" />
       </div>
-    )}
+    </div>
   </div>
 
   <div class="panel-footer">
