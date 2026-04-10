@@ -1,14 +1,47 @@
 ---
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_URL, GA_MEASUREMENT_ID } from '../../lib/config';
+import {
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  SITE_URL,
+  GA_MEASUREMENT_ID,
+} from '../../lib/config';
+
+type MetaType = 'website' | 'article';
+
+type AlternateLanguage = {
+  hrefLang: string;
+  href: string;
+};
 
 interface Props {
   title?: string;
   description?: string;
   canonical?: string;
   image?: string;
-  type?: 'website' | 'article';
+  imageAlt?: string;
+  type?: MetaType;
+
   publishedTime?: string;
+  modifiedTime?: string;
   author?: string;
+  keywords?: string[];
+
+  noindex?: boolean;
+  nofollow?: boolean;
+
+  locale?: string;
+  siteName?: string;
+  section?: string;
+  tags?: string[];
+
+  twitterSite?: string;
+  twitterCreator?: string;
+
+  themeColor?: string;
+  schema?: Record<string, unknown> | Array<Record<string, unknown>>;
+  alternateLanguages?: AlternateLanguage[];
+
+  socialProfiles?: string[];
 }
 
 const {
@@ -16,86 +49,252 @@ const {
   description = SITE_DESCRIPTION,
   canonical,
   image,
+  imageAlt,
   type = 'website',
+
   publishedTime,
-  author,
+  modifiedTime,
+  author = 'Jorge Luis Mayorga Taborda',
+  keywords = [
+    'control systems',
+    'robotics',
+    'FPGA',
+    'embedded systems',
+    'distributed control',
+    'research engineer',
+    'signal processing',
+    'real-time systems',
+    'software engineering',
+    'machine learning',
+  ],
+
+  noindex = false,
+  nofollow = false,
+
+  locale = 'en_US',
+  siteName = SITE_TITLE,
+  section,
+  tags = [],
+
+  twitterSite,
+  twitterCreator,
+
+  themeColor = '#0d1319',
+  schema,
+  alternateLanguages = [],
+
+  socialProfiles = [
+    'https://github.com/jlmayorgaco',
+    'https://www.linkedin.com/in/jlmayorga',
+  ],
 } = Astro.props;
 
-const pageTitle = title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
-const canonicalUrl = canonical ? canonical : Astro.url.href;
-const ogImage = image ? new URL(image, SITE_URL).href : undefined;
+const SITE_ORIGIN = new URL(SITE_URL).origin;
+const currentPath = Astro.url?.pathname ?? '/';
 
-const schemaOrg = type === 'article' ? {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": title,
-  "description": description,
-  "url": canonicalUrl,
-  "datePublished": publishedTime,
-  "author": author ? { "@type": "Person", "name": author } : undefined,
-} : {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Jorge Luis Mayorga Taborda",
-  "url": SITE_URL,
-  "jobTitle": "Research Engineer",
-  "description": SITE_DESCRIPTION,
-  "sameAs": [
-    "https://github.com/jlmayorga",
-    "https://linkedin.com/in/jlmayorga",
-    "https://twitter.com/jlmayorga"
-  ]
+function toAbsoluteUrl(value?: string): string | undefined {
+  if (!value) return undefined;
+
+  try {
+    return new URL(value, SITE_ORIGIN).href;
+  } catch {
+    return undefined;
+  }
+}
+
+function compact<T>(items: Array<T | undefined | null | false>): T[] {
+  return items.filter(Boolean) as T[];
+}
+
+const pageTitle = title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
+const pageDescription = description.trim();
+const canonicalUrl =
+  toAbsoluteUrl(canonical) ??
+  new URL(currentPath, SITE_ORIGIN).href;
+
+const ogImage = toAbsoluteUrl(image);
+const resolvedImageAlt = imageAlt ?? pageTitle;
+
+const robotsContent = [
+  noindex ? 'noindex' : 'index',
+  nofollow ? 'nofollow' : 'follow',
+  'max-image-preview:large',
+  'max-snippet:-1',
+  'max-video-preview:-1',
+].join(', ');
+
+const defaultAlternateLanguages =
+  alternateLanguages.length > 0
+    ? alternateLanguages.map((item) => ({
+        hrefLang: item.hrefLang,
+        href: toAbsoluteUrl(item.href) ?? canonicalUrl,
+      }))
+    : [
+        { hrefLang: 'en', href: canonicalUrl },
+        { hrefLang: 'x-default', href: canonicalUrl },
+      ];
+
+const personId = `${SITE_ORIGIN}#person`;
+const websiteId = `${SITE_ORIGIN}#website`;
+const webpageId = `${canonicalUrl}#webpage`;
+const articleId = `${canonicalUrl}#article`;
+
+const personSchema = {
+  '@type': 'Person',
+  '@id': personId,
+  name: author,
+  url: SITE_ORIGIN,
+  description: SITE_DESCRIPTION,
+  jobTitle: 'Software Engineer and Control & Robotics Researcher',
+  sameAs: socialProfiles,
+};
+
+const websiteSchema = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  url: SITE_ORIGIN,
+  name: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  inLanguage: locale,
+  publisher: {
+    '@id': personId,
+  },
+};
+
+const webpageSchema = {
+  '@type': 'WebPage',
+  '@id': webpageId,
+  url: canonicalUrl,
+  name: pageTitle,
+  description: pageDescription,
+  isPartOf: {
+    '@id': websiteId,
+  },
+  about: {
+    '@id': personId,
+  },
+  inLanguage: locale,
+};
+
+const articleSchema =
+  type === 'article'
+    ? {
+        '@type': 'Article',
+        '@id': articleId,
+        headline: title ?? SITE_TITLE,
+        description: pageDescription,
+        url: canonicalUrl,
+        mainEntityOfPage: {
+          '@id': webpageId,
+        },
+        author: {
+          '@id': personId,
+        },
+        publisher: {
+          '@id': personId,
+        },
+        datePublished: publishedTime,
+        dateModified: modifiedTime ?? publishedTime,
+        image: ogImage ? [ogImage] : undefined,
+        articleSection: section,
+        keywords: tags.length > 0 ? tags.join(', ') : keywords.join(', '),
+        inLanguage: locale,
+      }
+    : undefined;
+
+const customSchemaArray = Array.isArray(schema)
+  ? schema
+  : schema
+    ? [schema]
+    : [];
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': compact([
+    websiteSchema,
+    personSchema,
+    webpageSchema,
+    articleSchema,
+    ...customSchemaArray,
+  ]),
 };
 ---
 
-<!-- Resource hints for performance -->
+<!-- Core -->
+<title>{pageTitle}</title>
+<meta name="description" content={pageDescription} />
+<link rel="canonical" href={canonicalUrl} />
+<meta name="robots" content={robotsContent} />
+<meta name="generator" content={Astro.generator} />
+<meta name="theme-color" content={themeColor} />
+<meta name="author" content={author} />
+<meta name="keywords" content={keywords.join(', ')} />
+
+<!-- Performance -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<!-- Security headers (meta equivalent for static sites) -->
-<meta http-equiv="X-Frame-Options" content="DENY" />
-<meta http-equiv="X-Content-Type-Options" content="nosniff" />
-<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-
-<title>{pageTitle}</title>
-<meta name="description" content={description} />
-<link rel="canonical" href={canonicalUrl} />
-
-<!-- Robots -->
-<meta name="robots" content="index, follow" />
-
+<!-- Open Graph -->
+<meta property="og:site_name" content={siteName} />
 <meta property="og:title" content={pageTitle} />
-<meta property="og:description" content={description} />
+<meta property="og:description" content={pageDescription} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:type" content={type} />
+<meta property="og:locale" content={locale} />
 {ogImage && <meta property="og:image" content={ogImage} />}
+{ogImage && <meta property="og:image:alt" content={resolvedImageAlt} />}
 
-{publishedTime && <meta property="article:published_time" content={publishedTime} />}
-{author && <meta property="article:author" content={author} />}
+<!-- Article -->
+{type === 'article' && publishedTime && (
+  <meta property="article:published_time" content={publishedTime} />
+)}
+{type === 'article' && modifiedTime && (
+  <meta property="article:modified_time" content={modifiedTime} />
+)}
+{type === 'article' && author && (
+  <meta property="article:author" content={author} />
+)}
+{type === 'article' && section && (
+  <meta property="article:section" content={section} />
+)}
+{type === 'article' &&
+  tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
-<meta name="twitter:card" content="summary_large_image" />
+<!-- Twitter -->
+<meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
 <meta name="twitter:title" content={pageTitle} />
-<meta name="twitter:description" content={description} />
+<meta name="twitter:description" content={pageDescription} />
+{twitterSite && <meta name="twitter:site" content={twitterSite} />}
+{twitterCreator && <meta name="twitter:creator" content={twitterCreator} />}
 {ogImage && <meta name="twitter:image" content={ogImage} />}
+{ogImage && <meta name="twitter:image:alt" content={resolvedImageAlt} />}
 
-<meta name="theme-color" content="#0d1319" />
-<meta name="generator" content={Astro.generator} />
+<!-- Internationalization -->
+{defaultAlternateLanguages.map((lang) => (
+  <link rel="alternate" hreflang={lang.hrefLang} href={lang.href} />
+))}
 
-<!-- Language -->
-<link rel="alternate" hreflang="en" href={canonicalUrl} />
-<link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+<!-- Structured Data -->
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(structuredData)}
+/>
 
-<!-- Keywords for SEO -->
-<meta name="keywords" content="control systems, robotics, FPGA, embedded systems, distributed control, research engineer, power electronics, signal processing" />
-
-<script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
-
+<!-- Analytics -->
 {GA_MEASUREMENT_ID && (
-  <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
-  <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', GA_MEASUREMENT_ID);
-  </script>
+  <>
+    <script
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+    ></script>
+    <script is:inline define:vars={{ GA_MEASUREMENT_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){window.dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', GA_MEASUREMENT_ID, {
+        page_location: window.location.href,
+        page_title: document.title,
+      });
+    </script>
+  </>
 )}

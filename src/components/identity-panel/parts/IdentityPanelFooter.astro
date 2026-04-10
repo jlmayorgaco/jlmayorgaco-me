@@ -1,0 +1,101 @@
+---
+import type {
+  IdentityPanelSlideBase,
+  IdentityPanelSlideId,
+} from '../IdentityPanel.types';
+
+interface Props {
+  slides: IdentityPanelSlideBase[];
+  activeSlideId?: IdentityPanelSlideId;
+  footerLabel?: string;
+  showNavigation?: boolean;
+  previousLabel?: string;
+  nextLabel?: string;
+  tabsLabel?: string;
+  panelId?: string;
+}
+
+const {
+  slides = [],
+  activeSlideId = 'intro',
+  footerLabel = 'I/O',
+  showNavigation = false,
+  previousLabel = 'Previous slide',
+  nextLabel = 'Next slide',
+  tabsLabel = 'Identity panel slides',
+  panelId = 'identity-panel',
+} = Astro.props as Props;
+
+const resolvedSlides = slides.filter((slide) => !slide.disabled);
+
+const resolvedActiveIndex = resolvedSlides.findIndex(
+  (slide) => slide.id === activeSlideId
+);
+
+const activeIndex = resolvedActiveIndex >= 0 ? resolvedActiveIndex : 0;
+
+const getSlidePanelId = (slideId: IdentityPanelSlideId): string =>
+  `${panelId}-slide-${slideId}`;
+
+const getTriggerId = (slideId: IdentityPanelSlideId): string =>
+  `${panelId}-tab-${slideId}`;
+---
+
+<div class="panel-footer identity-panel__footer">
+  {showNavigation && (
+    <button
+      type="button"
+      class="identity-panel__nav identity-panel__nav--prev"
+      data-identity-prev
+      aria-label={previousLabel}
+    >
+      <span aria-hidden="true">‹</span>
+    </button>
+  )}
+
+  <div
+    class="port-row identity-panel__ports"
+    role="tablist"
+    aria-label={tabsLabel}
+  >
+    {resolvedSlides.map((slide, index) => {
+      const isActive = index === activeIndex;
+
+      return (
+        <button
+          id={getTriggerId(slide.id)}
+          type="button"
+          class:list={[
+            'port',
+            'identity-panel__port',
+            isActive && 'port-active',
+            isActive && 'is-active',
+          ]}
+          role="tab"
+          aria-selected={isActive ? 'true' : 'false'}
+          aria-controls={getSlidePanelId(slide.id)}
+          aria-label={slide.ariaLabel ?? `Go to ${slide.label}`}
+          title={slide.label}
+          tabindex={isActive ? '0' : '-1'}
+          data-identity-trigger
+          data-identity-target={slide.id}
+        >
+          <span class="sr-only">{slide.label}</span>
+        </button>
+      );
+    })}
+  </div>
+
+  <span class="port-label identity-panel__footer-label">{footerLabel}</span>
+
+  {showNavigation && (
+    <button
+      type="button"
+      class="identity-panel__nav identity-panel__nav--next"
+      data-identity-next
+      aria-label={nextLabel}
+    >
+      <span aria-hidden="true">›</span>
+    </button>
+  )}
+</div>

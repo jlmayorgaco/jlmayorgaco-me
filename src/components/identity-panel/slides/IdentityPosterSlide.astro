@@ -1,0 +1,168 @@
+---
+import type { IdentityPosterSlideData } from '../IdentityPanel.types';
+
+interface Props extends IdentityPosterSlideData {}
+
+const {
+  imageSrc,
+  imageAlt,
+} = Astro.props as Props;
+---
+
+<div class="crt-frame">
+  <div class="crt-screen">
+    <img
+      class="crt-image"
+      src={imageSrc}
+      alt={imageAlt}
+      loading="lazy"
+      decoding="async"
+    />
+    
+    <div class="crt-overlay"></div>
+    <div class="crt-scanline"></div>
+    <div class="crt-flicker"></div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --crt-green: #14fd2f;
+    --crt-dark-green: #062d0a;
+  }
+
+  .crt-frame {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    background: #111;
+    padding: 10px;
+    border-radius: 10px;
+    border: 4px solid #333;
+    box-shadow: 
+      inset 0 0 50px rgba(0,0,0,1),
+      0 10px 20px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+
+  .crt-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+    border-radius: 5px;
+    /* Efecto de curvatura de pantalla vieja */
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+  }
+
+  .crt-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.7) contrast(1.2);
+    /* Animación inicial de revelado */
+    animation: revealImage 5s ease-in-out forwards;
+  }
+
+  /* Capa verde que se va aclarando */
+  .crt-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--crt-green);
+    mix-blend-mode: color; /* Aquí ocurre la magia del color */
+    pointer-events: none;
+    animation: clearGreen 5s ease-in-out forwards;
+  }
+
+  /* La línea del osciloscopio que baja y sube */
+  .crt-scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: rgba(20, 253, 47, 0.2);
+    box-shadow: 0 0 15px var(--crt-green);
+    opacity: 0.8;
+    pointer-events: none;
+    z-index: 10;
+    animation: scan 3s linear infinite;
+  }
+
+  /* Efecto de estática/flicker */
+  .crt-flicker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(18, 16, 16, 0.1);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 5;
+    animation: flicker 0.15s infinite;
+  }
+
+  /* Capa de rejilla (scanlines estáticas) */
+  .crt-screen::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 2;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+  }
+
+  /* --- ANIMACIONES --- */
+
+  @keyframes scan {
+    0% { top: -10%; }
+    100% { top: 110%; }
+  }
+
+  @keyframes flicker {
+    0% { opacity: 0.1; }
+    50% { opacity: 0.02; }
+    100% { opacity: 0.08; }
+  }
+
+  @keyframes clearGreen {
+    0% { 
+      background: var(--crt-green); 
+      opacity: 1;
+      backdrop-filter: blur(10px) contrast(2);
+    }
+    50% {
+      background: var(--crt-green);
+      opacity: 0.6;
+      backdrop-filter: blur(4px);
+    }
+    100% { 
+      background: rgba(20, 253, 47, 0.1); /* Queda un tinte muy leve */
+      opacity: 0.3;
+      backdrop-filter: blur(0px);
+    }
+  }
+
+  @keyframes revealImage {
+    0% { 
+      filter: brightness(0) contrast(2) blur(10px);
+      transform: scale(1.1);
+    }
+    50% {
+       filter: brightness(0.5) contrast(1.5) blur(5px);
+    }
+    100% { 
+      filter: brightness(0.8) contrast(1.1) blur(0px);
+      transform: scale(1);
+    }
+  }
+</style>

@@ -1,0 +1,213 @@
+---
+import githubIcon from './src/icons/github.svg?raw';
+import scholarIcon from './src/icons/scholar.svg?raw';
+import linkedinIcon from './src/icons/linkedin.svg?raw';
+import ieeeIcon from './src/icons/ieee.svg?raw';
+import orcidIcon from './src/icons/orcid.svg?raw';
+import arxivIcon from './src/icons/arxiv.svg?raw';
+import emailIcon from './src/icons/email.svg?raw';
+import cvIcon from './src/icons/cv.svg?raw';
+
+import type {
+  IdentityIntroSlideData,
+  IdentityPanelActionIcon,
+  IdentityPanelFactIcon,
+  IdentityPanelSocialBrand,
+} from '../IdentityPanel.types';
+
+interface Props extends IdentityIntroSlideData {}
+
+const {
+  name,
+  title,
+  tagline,
+  focusItems = [],
+  quickFacts = [],
+  socialLinks = [],
+  actions = [],
+} = Astro.props as Props;
+
+const isExternalUrl = (href?: string): boolean =>
+  typeof href === 'string' && /^(https?:)?\/\//.test(href);
+
+const factIconSvgs: Record<string, string> = {
+  location: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M12 21s7-5.9 7-11a7 7 0 1 0-14 0c0 5.1 7 11 7 11Z" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="12" cy="10" r="2.6" fill="currentColor"/>
+    </svg>
+  `,
+  collab: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M8.5 12.5 11 15l2-2 2.5 2.5 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M8 8.5 5.5 6 1.5 10l4 4 2.5-2.5M16 8.5 18.5 6l4 4-4 4-2.5-2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `,
+  current: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M2 8.5 12 3l10 5.5L12 14 2 8.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M6 11.2V16m12-4.8V16M4.5 13.5c2 1.4 4.7 2.2 7.5 2.2s5.5-.8 7.5-2.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  `,
+  mode: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M4 19h16M6 16V9m6 7V5m6 11v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="m5 10 4-4 3 3 6-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `,
+};
+
+const actionIconSvgs: Record<string, string> = {
+  cv: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M7 3h7l5 5v13H7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M14 3v5h5M10 13h6M10 17h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  `,
+  projects: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M3 7h6l2 2h10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    </svg>
+  `,
+  scholar: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M12 3 2 8l10 5 10-5-10-5Z" fill="currentColor" opacity=".92"/>
+      <path d="M6 10.5v4.2c0 1.7 3 3.3 6 3.3s6-1.6 6-3.3v-4.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `,
+  contact: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+      <path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `,
+  mail: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+      <path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `,
+  fallback: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M7 12h10M12 7l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `,
+};
+
+const socialIconSvgs: Record<string, string> = {
+  github: githubIcon,
+  scholar: scholarIcon,
+  linkedin: linkedinIcon,
+  ieee: ieeeIcon,
+  orcid: orcidIcon,
+  arxiv: arxivIcon,
+  email: emailIcon,
+  cv: cvIcon,
+  fallback: `
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M7 12h10M12 7l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  `,
+};
+
+const getFactIcon = (icon?: IdentityPanelFactIcon | string): string =>
+  icon ? factIconSvgs[icon] ?? '' : '';
+
+const getActionIcon = (icon?: IdentityPanelActionIcon | string): string =>
+  icon ? actionIconSvgs[icon] ?? actionIconSvgs.fallback : '';
+
+const getSocialIcon = (brand?: IdentityPanelSocialBrand | string): string =>
+  brand ? socialIconSvgs[brand] ?? socialIconSvgs.fallback : socialIconSvgs.fallback;
+---
+
+<div class="identity-slide identity-slide--intro">
+  <div class="identity-info">
+    <h1 class="identity-name">{name}</h1>
+    <p class="identity-title">{title}</p>
+    <p class="identity-tagline">{tagline}</p>
+  </div>
+
+  {focusItems.length > 0 && (
+    <div class="identity-focus-list" aria-label="Focus areas">
+      {focusItems.map((item) => <span class="identity-pill">{item}</span>)}
+    </div>
+  )}
+
+  {quickFacts.length > 0 && (
+    <div class="identity-facts">
+      {quickFacts.map((fact) => (
+        <div class="fact-item">
+          <div class="fact-head">
+            {getFactIcon(fact.icon) && (
+              <span class="fact-icon" set:html={getFactIcon(fact.icon)}></span>
+            )}
+            <span class="fact-label">{fact.label}</span>
+          </div>
+
+          <div class="fact-value-row">
+            <span class="fact-value">{fact.value}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
+  <slot />
+
+  {socialLinks.length > 0 && (
+    <div class="identity-social" aria-label="Social links">
+      {socialLinks.map((item) => {
+        const openExternally = isExternalUrl(item.href);
+
+        return (
+          <a
+            href={item.href}
+            class:list={['social-link', `social-link--${item.brand}`]}
+            target={openExternally ? '_blank' : undefined}
+            rel={openExternally ? 'noreferrer noopener' : undefined}
+            aria-label={item.label}
+          >
+            <span
+              class="social-link__icon"
+              aria-hidden="true"
+              set:html={getSocialIcon(item.brand)}
+            ></span>
+          </a>
+        );
+      })}
+    </div>
+  )}
+
+  {actions.length > 0 && (
+    <div class="identity-ctas">
+      {actions.map((action) => {
+        const openExternally = action.external ?? isExternalUrl(action.href);
+        const iconSvg = getActionIcon(action.icon);
+
+        return (
+          <a
+            href={action.href}
+            class:list={[
+              'identity-cta',
+              action.variant === 'primary'
+                ? 'identity-cta--primary'
+                : 'identity-cta--secondary',
+            ]}
+            target={openExternally ? '_blank' : undefined}
+            rel={openExternally ? 'noreferrer noopener' : undefined}
+            aria-label={action.label}
+          >
+            {iconSvg && (
+              <span
+                class="identity-cta__icon"
+                aria-hidden="true"
+                set:html={iconSvg}
+              ></span>
+            )}
+            <span>{action.label}</span>
+          </a>
+        );
+      })}
+    </div>
+  )}
+</div>

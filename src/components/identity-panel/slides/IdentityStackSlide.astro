@@ -1,0 +1,87 @@
+---
+import type {
+  IdentityStackGroup,
+  IdentityStackItem,
+  IdentityStackSlideData,
+} from '../IdentityPanel.types';
+
+interface Props extends IdentityStackSlideData {}
+
+const { groups = [] } = Astro.props as Props;
+
+const hasGroups = groups.length > 0;
+
+const getGroupLabel = (group: IdentityStackGroup, index: number): string =>
+  group.title?.trim() || `Stack group ${index + 1}`;
+
+const isExternalUrl = (href?: string): boolean =>
+  typeof href === 'string' && /^(https?:)?\/\//.test(href);
+---
+
+<div class="identity-slide identity-slide--stack">
+  <div class="identity-stack" aria-label="Tech stack and platforms">
+    {hasGroups ? (
+      <div class="identity-stack__flow">
+        {groups.map((group, groupIndex) => (
+          <section
+            class="identity-stack__group"
+            aria-label={getGroupLabel(group, groupIndex)}
+          >
+            <h2 class="sr-only">{getGroupLabel(group, groupIndex)}</h2>
+
+            <ul class="identity-stack__list" role="list">
+              {group.items.map((item: IdentityStackItem) => {
+                const openExternally = isExternalUrl(item.href);
+
+                const content = (
+                  <>
+                    <img
+                      class="identity-stack__badge"
+                      src={item.src}
+                      alt={item.alt ?? item.label}
+                      height={item.height ?? 22}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="sr-only">{item.label}</span>
+                  </>
+                );
+
+                return (
+                  <li class="identity-stack__item">
+                    {item.href ? (
+                      <a
+                        href={item.href}
+                        class="identity-stack__chip identity-stack__chip--link"
+                        target={openExternally ? '_blank' : undefined}
+                        rel={openExternally ? 'noreferrer noopener' : undefined}
+                        aria-label={item.label}
+                        title={item.label}
+                      >
+                        {content}
+                      </a>
+                    ) : (
+                      <span
+                        class="identity-stack__chip"
+                        aria-label={item.label}
+                        title={item.label}
+                      >
+                        {content}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))}
+      </div>
+    ) : (
+      <div class="identity-stack__empty-state">
+        <p class="identity-stack__empty">No stack items configured.</p>
+      </div>
+    )}
+
+    <slot />
+  </div>
+</div>

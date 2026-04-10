@@ -1,0 +1,373 @@
+---
+import type {
+  IdentityPanelProps,
+  IdentityPanelSlideBase,
+  IdentityPanelSlideId,
+  IdentityIntroSlideData,
+  IdentityStackSlideData,
+  IdentityPosterSlideData,
+  IdentityEasterEggSlideData,
+} from './IdentityPanel.types';
+
+import IdentityPanelHeader from './parts/IdentityPanelHeader.astro';
+import IdentityPanelFooter from './parts/IdentityPanelFooter.astro';
+
+import IdentityIntroSlide from './slides/IdentityIntroSlide.astro';
+import IdentityStackSlide from './slides/IdentityStackSlide.astro';
+import IdentityPosterSlide from './slides/IdentityPosterSlide.astro';
+import IdentityEasterEggSlide from './slides/IdentityEasterEggSlide.astro';
+
+interface LegacyIdentityPanelProps {
+  name?: string;
+  title?: string;
+  focus?: string;
+  tagline?: string;
+
+  focusItems?: string[];
+  quickFacts?: IdentityIntroSlideData['quickFacts'];
+  socialLinks?: IdentityIntroSlideData['socialLinks'];
+  actions?: IdentityIntroSlideData['actions'];
+
+  stackGroups?: IdentityStackSlideData['groups'];
+
+  posterImageSrc?: string;
+  posterImageAlt?: string;
+  posterEyebrow?: string;
+  posterTitle?: string;
+  posterCaption?: string;
+
+  easterEggTitle?: string;
+  easterEggLines?: string[];
+  easterEggAction?: IdentityEasterEggSlideData['action'];
+}
+
+interface Props extends IdentityPanelProps, LegacyIdentityPanelProps {}
+
+const DEFAULT_SLIDES: IdentityPanelSlideBase[] = [
+  { id: 'intro', label: 'Intro', ariaLabel: 'Go to intro slide' },
+  { id: 'stack', label: 'Stack', ariaLabel: 'Go to stack slide' },
+  { id: 'poster', label: 'Poster', ariaLabel: 'Go to poster slide' },
+  { id: 'easter-egg', label: 'Easter Egg', ariaLabel: 'Go to easter egg slide' },
+];
+
+const DEFAULT_POSTER_PLACEHOLDER = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Poster placeholder">
+    <rect width="1200" height="900" fill="#0f1117"/>
+    <rect x="56" y="56" width="1088" height="788" rx="28" fill="#141925" stroke="#2b3448" stroke-width="2"/>
+    <text x="600" y="410" text-anchor="middle" fill="#d8dee9" font-size="42" font-family="Arial, Helvetica, sans-serif">
+      Poster pending
+    </text>
+    <text x="600" y="468" text-anchor="middle" fill="#7f8aa3" font-size="24" font-family="Arial, Helvetica, sans-serif">
+      Add your illustration to slide 3
+    </text>
+  </svg>
+`)}`;
+
+const {
+  class: className = '',
+  panelLabel = 'IDENTITY',
+  moduleId = 'ID: JLMT-001',
+  footerLabel = 'I/O',
+  ledPulse = true,
+
+  chipIcon,
+  chipIconSize = 20,
+  chipLabel = 'JLMT',
+  chipSub = 'LAB',
+
+  initialSlide = 'intro',
+  slides = DEFAULT_SLIDES,
+  data,
+
+  portCount,
+  activePortIndex,
+  screwCount = 2,
+  brassScrews = true,
+
+  experienceStartYear = 2018,
+
+  name = 'Jorge L. Mayorga',
+  title = 'Software Engineer · Control & Robotics Researcher',
+  focus = 'Robotics · Distributed Systems · FPGA',
+  tagline = 'Building real-time systems from algorithms and embedded control to software products and research tooling.',
+
+  focusItems = [],
+  quickFacts = [],
+  socialLinks = [],
+  actions = [],
+
+  stackGroups = [],
+
+  posterImageSrc,
+  posterImageAlt,
+  posterEyebrow,
+  posterTitle,
+  posterCaption,
+
+  easterEggTitle,
+  easterEggLines = [],
+  easterEggAction,
+} = Astro.props as Props;
+
+const currentYear = new Date().getFullYear();
+const yearsOfExperience = Math.max(0, currentYear - experienceStartYear);
+
+const resolvedFocusItems =
+  focusItems.length > 0
+    ? focusItems
+    : focus
+        .split('·')
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+const resolvedQuickFacts =
+  quickFacts.length > 0
+    ? quickFacts
+    : [
+        { label: 'Based', value: 'Bogotá, Colombia', icon: 'location' },
+        { label: 'Years of Experience', value: `+${yearsOfExperience}`, icon: 'collab' },
+        { label: 'Current', value: 'MSc Robotics', icon: 'current' },
+        { label: 'Mode', value: 'Software + research', icon: 'mode' },
+      ];
+
+const resolvedSocialLinks =
+  socialLinks.length > 0
+    ? socialLinks
+    : [
+        {
+          label: 'GitHub',
+          href: 'https://github.com/jlmayorgaco',
+          brand: 'github',
+        },
+        {
+          label: 'Google Scholar',
+          href: '/papers',
+          brand: 'scholar',
+        },
+        {
+          label: 'LinkedIn',
+          href: '/contact',
+          brand: 'linkedin',
+        },
+      ];
+
+const resolvedActions =
+  actions.length > 0
+    ? actions
+    : [
+        {
+          href: '/cv',
+          label: 'View CV',
+          icon: 'cv',
+          variant: 'primary',
+        },
+        {
+          href: '/projects',
+          label: 'Projects',
+          icon: 'projects',
+          variant: 'secondary',
+        },
+        {
+          href: '/papers',
+          label: 'Scholar',
+          icon: 'scholar',
+          variant: 'secondary',
+        },
+        {
+          href: '/contact',
+          label: 'Contact',
+          icon: 'contact',
+          variant: 'secondary',
+        },
+      ];
+
+const resolvedPoster: IdentityPosterSlideData =
+  data?.poster ?? {
+    imageSrc: posterImageSrc?.trim() || DEFAULT_POSTER_PLACEHOLDER,
+    imageAlt:
+      posterImageAlt?.trim() ||
+      'Poster placeholder for identity panel illustration',
+    eyebrow: posterEyebrow ?? 'Poster mode',
+    title: posterTitle ?? 'Building quietly behind the interface',
+    caption:
+      posterCaption ??
+      'Add your illustrated back-view working scene here.',
+  };
+
+const resolvedEasterEgg: IdentityEasterEggSlideData =
+  data?.['easter-egg'] ?? {
+    title: easterEggTitle ?? 'GO / hidden mode',
+    lines:
+      easterEggLines.length > 0
+        ? easterEggLines
+        : [
+            'boot sequence initialized',
+            'research tooling online',
+            'distributed systems link stable',
+            'fpga sandbox ready',
+          ],
+    action: easterEggAction,
+  };
+
+const resolvedData = {
+  intro:
+    data?.intro ??
+    ({
+      name,
+      title,
+      tagline,
+      focusItems: resolvedFocusItems,
+      quickFacts: resolvedQuickFacts,
+      socialLinks: resolvedSocialLinks,
+      actions: resolvedActions,
+    } satisfies IdentityIntroSlideData),
+
+  stack:
+    data?.stack ??
+    ({
+      groups: stackGroups,
+    } satisfies IdentityStackSlideData),
+
+  poster: resolvedPoster,
+  'easter-egg': resolvedEasterEgg,
+};
+
+const slideRegistry = [
+  {
+    id: 'intro' as const,
+    component: IdentityIntroSlide,
+    props: resolvedData.intro,
+  },
+  {
+    id: 'stack' as const,
+    component: IdentityStackSlide,
+    props: resolvedData.stack,
+  },
+  {
+    id: 'poster' as const,
+    component: IdentityPosterSlide,
+    props: resolvedData.poster,
+  },
+  {
+    id: 'easter-egg' as const,
+    component: IdentityEasterEggSlide,
+    props: resolvedData['easter-egg'],
+  },
+];
+
+const requestedSlides: IdentityPanelSlideBase[] = slides.filter((slide) => !slide.disabled);
+
+const slideDefinitions = slideRegistry.filter((slide) =>
+  requestedSlides.some((item) => item.id === slide.id)
+);
+
+const resolvedSlides: IdentityPanelSlideBase[] = requestedSlides.filter((slide) =>
+  slideDefinitions.some((item) => item.id === slide.id)
+);
+
+const fallbackInitialSlide: IdentityPanelSlideId = resolvedSlides[0]?.id ?? 'intro';
+
+const normalizedInitialSlide: IdentityPanelSlideId = resolvedSlides.some(
+  (slide) => slide.id === initialSlide
+)
+  ? initialSlide
+  : fallbackInitialSlide;
+
+const resolvedInitialIndex = Math.max(
+  0,
+  resolvedSlides.findIndex((slide) => slide.id === normalizedInitialSlide)
+);
+
+const normalizedPortCount =
+  typeof portCount === 'number' && portCount > 0 ? portCount : resolvedSlides.length;
+
+const normalizedActivePortIndex =
+  typeof activePortIndex === 'number'
+    ? Math.min(Math.max(0, activePortIndex), Math.max(0, normalizedPortCount - 1))
+    : resolvedInitialIndex;
+
+const screws = Array.from({ length: Math.max(0, screwCount) });
+
+const slugify = (value: string): string =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+
+const panelId = `identity-panel-${slugify(moduleId || panelLabel || 'panel')}`;
+
+const getSlideLabel = (slideId: IdentityPanelSlideId): string => {
+  const found = resolvedSlides.find((slide) => slide.id === slideId);
+  return found?.label ?? slideId;
+};
+---
+
+<div
+  class:list={['panel', 'identity-panel', className]}
+  data-identity-panel
+  data-initial-slide={normalizedInitialSlide}
+  data-initial-index={String(resolvedInitialIndex)}
+  data-active-slide={normalizedInitialSlide}
+  data-active-index={String(normalizedActivePortIndex)}
+  id={panelId}
+>
+  {screws.length > 0 && (
+    <div class="identity-panel__screws" aria-hidden="true">
+      {screws.map((_, index) => (
+        <span
+          class:list={[
+            'identity-panel__screw',
+            brassScrews && 'identity-panel__screw--brass',
+            `identity-panel__screw--${index + 1}`,
+          ]}
+        ></span>
+      ))}
+    </div>
+  )}
+
+  <IdentityPanelHeader
+    panelLabel={panelLabel}
+    moduleId={moduleId}
+    ledPulse={ledPulse}
+    chipIcon={chipIcon}
+    chipIconSize={chipIconSize}
+    chipLabel={chipLabel}
+    chipSub={chipSub}
+  />
+
+  <div class="panel-content identity-panel__content">
+    <div class="identity-panel__viewport">
+      <div class="identity-panel__track">
+        {slideDefinitions.map((slide) => {
+          const SlideComponent = slide.component;
+          const isActive = normalizedInitialSlide === slide.id;
+          const slideId = `${panelId}-slide-${slide.id}`;
+
+          return (
+            <section
+              id={slideId}
+              class:list={['identity-panel__slide', isActive && 'is-active']}
+              data-identity-slide={slide.id}
+              aria-label={getSlideLabel(slide.id)}
+              aria-hidden={isActive ? 'false' : 'true'}
+              tabindex={isActive ? '0' : '-1'}
+              hidden={!isActive}
+            >
+              <SlideComponent {...slide.props} />
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  </div>
+
+  <IdentityPanelFooter
+    slides={resolvedSlides}
+    activeSlideId={normalizedInitialSlide}
+    footerLabel={footerLabel}
+    panelId={panelId}
+  />
+</div>
+<script src="./identity-panel.client.ts"></script>

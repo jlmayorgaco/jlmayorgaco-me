@@ -5,8 +5,9 @@ import Icon from '../ui/Icon.astro';
 import HomeTerminal from './HomeTerminal';
 import SignalWaveform from '../ui/SignalWaveform.astro';
 import SystemMetricsStrip from '../ui/SystemMetricsStrip.astro';
-import IdentityPanel from './IdentityPanel.astro';
 import { SOCIAL_LINKS } from '../../lib/config';
+import IdentityPanel from '../identity-panel/IdentityPanel.astro';
+import { identityPanelData } from '../identity-panel/identity-panel.data';
 
 interface Props {
   projects: CollectionEntry<'projects'>[];
@@ -17,19 +18,21 @@ interface Props {
   tutorialsCount?: number;
   terminalData?: TerminalData;
 }
-
 const { projects, posts, papersCount = 0, portfolioCount = 0, blogCount = 0, tutorialsCount = 0, terminalData } = Astro.props;
+
 ---
 
 <div class="lab-board stagger-in">
   <!-- Row 1: Main Hero Area -->
   <div class="board-row main-row">
     <!-- Left Panel: Identity/Chip -->
+    <!--
     <IdentityPanel
       socialLinks={SOCIAL_LINKS}
       experienceStartYear={2017}
     />
-
+    -->
+   <IdentityPanel data={identityPanelData} />
     <!-- Center: Main Monitor/Hero (ENHANCED) -->
     <div class="panel monitor-panel monitor-enhanced-frame panel-reveal-delay-1">
       <!-- Hardware mounts / corner decorations -->

@@ -8,6 +8,7 @@ import orcidIcon from './src/icons/orcid.svg?raw';
 import arxivIcon from './src/icons/arxiv.svg?raw';
 import emailIcon from './src/icons/email.svg?raw';
 import cvIcon from './src/icons/cv.svg?raw';
+import { TECH_STACK_BADGES } from '../../lib/config';
 
 type Cta = {
   href: string;
@@ -141,12 +142,16 @@ const resolvedFocusItems =
         .map((item) => item.trim())
         .filter(Boolean);
 
+
+
+      
+
 const resolvedQuickFacts =
   quickFacts.length > 0
     ? quickFacts
     : [
         { label: 'Based', value: 'Bogotá, Colombia', icon: 'location' },
-        { label: 'Open To', value: 'Collaboration', icon: 'collab' },
+        { label: 'Years Of Experience', value: `+${yearsOfExperience}` , icon: 'collab' },
         { label: 'Current', value: 'MSc Robotics', icon: 'current' },
         { label: 'Mode', value: 'Software + research', icon: 'mode' },
       ];
@@ -436,22 +441,19 @@ const getSocialIcon = (brand?: string) =>
  
 
     <div class="identity-metrics">
-      <div class="metric-item" style="border-bottom: none; margin-bottom: 4px;">
-        <span class="metric-label">Years of Experience</span>
-        <span class="metric-value metric-value--highlight">
-          +{yearsOfExperience}
-        </span>
+
+      <div class="tech-stack-badges">
+        {TECH_STACK_BADGES.map((badge) => (
+          <img
+            src={badge.src}
+            height={badge.height ?? 22}
+            alt={badge.alt ?? badge.label}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
       </div>
-      
-      <div class="tech-stack-badges" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 16px; border-top: 1px solid rgba(var(--color-primary-rgb, 0, 255, 170), 0.15);">
-        <img src="https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white" height="22" alt="Angular" />
-        <img src="https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white" height="22" alt="TypeScript" />
-        <img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white" height="22" alt="Python" />
-        <img src="https://img.shields.io/badge/C%2B%2B-00599C?style=flat&logo=c%2B%2B&logoColor=white" height="22" alt="C++" />
-        <img src="https://img.shields.io/badge/ROS-22314E?style=flat&logo=ros&logoColor=white" height="22" alt="ROS" />
-        <img src="https://img.shields.io/badge/MATLAB-e16737?style=flat&logo=mathworks&logoColor=white" height="22" alt="MATLAB" />
-        <img src="https://img.shields.io/badge/FPGA-4B5563?style=flat&logo=intel&logoColor=white" height="22" alt="FPGA" />
-      </div>
+
     </div>
   </div>
 
