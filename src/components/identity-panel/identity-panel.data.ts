@@ -59,7 +59,7 @@ export const identityPanelData = {
       'Software',
     ],
     quickFacts: [
-      { label: 'Based', value: 'Bogotá, Colombia', icon: 'location' },
+      { label: 'Based', value: 'Bogota, Colombia', icon: 'location' },
       { label: 'Years of Experience', value: '+9', icon: 'collab' },
       { label: 'Current', value: 'MSc Robotics', icon: 'current' },
       { label: 'Mode', value: 'Software + research', icon: 'mode' },
@@ -203,7 +203,7 @@ export const identityPanelData = {
   },
 
   poster: {
-    imageSrc: '/images/identity/poster/poster2.png',
+    imageSrc: '/images/identity/poster/poster1.png',
     imageAlt:
       'Illustrated poster of Jorge working on robotics, electronics, and software',
     eyebrow: 'Poster mode',
@@ -213,12 +213,12 @@ export const identityPanelData = {
   },
 
   'easter-egg': {
-    title: 'GO / hidden mode',
+    title: 'Signal alignment',
     lines: [
-      'boot sequence initialized',
+      'tap launch when sweep enters the lock window',
+      'three clean locks wake the hidden actuator',
+      'drift subtracts one calibration point',
       'robotics workspace online',
-      'embedded toolchain ready',
-      'signal estimation sandbox ready',
     ],
     action: {
       label: 'Launch',

@@ -1,0 +1,157 @@
+@use '../../tools/mixins' as *;
+
+// ============================================================
+// IDENTITY PANEL — FOOTER
+// Navigation, ports, footer label
+// ============================================================
+
+.identity-panel {
+  .panel-footer,
+  &__footer {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.875rem;
+    border-top: 1px solid var(--panel-border);
+    background: var(--lab-bg-dark);
+  }
+
+  &__nav {
+    @include inline-center;
+    width: 1.6rem;
+    height: 1.6rem;
+    padding: 0;
+    border: 1px solid var(--panel-border);
+    border-radius: 999px;
+    background: var(--lab-bg-elevated);
+    color: var(--lab-text-secondary);
+    cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease,
+      background-color 150ms ease,
+      transform 150ms ease;
+
+    &:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent-cyan);
+      outline-offset: 2px;
+    }
+
+    span {
+      font-size: 0.95rem;
+      line-height: 1;
+    }
+  }
+
+  .port-row,
+  &__ports {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 0;
+  }
+
+  .port,
+  &__port {
+    appearance: none;
+    display: inline-block;
+    width: 1rem;
+    height: 0.32rem;
+    padding: 0;
+    border: 1px solid var(--panel-border);
+    border-radius: 999px;
+    background: var(--lab-bg-elevated);
+    cursor: pointer;
+    opacity: 0.72;
+    transition:
+      opacity 150ms ease,
+      border-color 150ms ease,
+      background-color 150ms ease,
+      box-shadow 150ms ease,
+      transform 150ms ease;
+
+    &:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent-cyan);
+      outline-offset: 2px;
+    }
+  }
+
+  .port-active,
+  &__port[aria-selected='true'],
+  &__port.is-active,
+  &__port.port-active {
+    opacity: 1;
+    background: var(--accent-cyan);
+    border-color: color-mix(in srgb, var(--accent-cyan-glow) 40%, transparent);
+    box-shadow: 0 0 2px 2px color-mix(in srgb, var(--accent-cyan-glow) 40%, transparent);
+  }
+
+  .port-label,
+  &__footer-label {
+    color: var(--lab-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  @include respond-down('md') {
+    .panel-footer,
+    &__footer {
+      grid-template-columns: auto 1fr auto auto;
+      gap: 0.55rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    &__nav {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .identity-panel {
+    .panel-footer,
+    &__footer {
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas:
+        'prev ports next'
+        'label label label';
+      align-items: center;
+    }
+
+    &__nav--prev {
+      grid-area: prev;
+    }
+
+    &__ports {
+      grid-area: ports;
+      justify-content: center;
+    }
+
+    &__nav--next {
+      grid-area: next;
+    }
+
+    &__footer-label {
+      grid-area: label;
+      justify-self: start;
+    }
+  }
+}

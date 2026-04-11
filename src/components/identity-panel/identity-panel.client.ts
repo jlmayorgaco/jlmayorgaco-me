@@ -15,6 +15,76 @@ const PREV_SELECTOR = '[data-identity-prev]';
 const NEXT_SELECTOR = '[data-identity-next]';
 
 const ACTIVE_CLASS = 'is-active';
+const EGG_GAME_SELECTOR = '[data-egg-game]';
+const EGG_ACTION_SELECTOR = '[data-egg-action]';
+const EGG_STATUS_SELECTOR = '[data-egg-status]';
+const EGG_SCORE_SELECTOR = '[data-egg-score]';
+
+class IdentityEasterEggGame {
+  private readonly root: HTMLElement;
+  private readonly action?: HTMLElement | null;
+  private readonly status?: HTMLElement | null;
+  private readonly score?: HTMLElement | null;
+
+  private animationFrame = 0;
+  private phase = 12;
+  private locks = 0;
+  private readonly targetMin = 47;
+  private readonly targetMax = 64;
+
+  constructor(root: HTMLElement) {
+    this.root = root;
+    this.action = root.querySelector<HTMLElement>(EGG_ACTION_SELECTOR);
+    this.status = root.querySelector<HTMLElement>(EGG_STATUS_SELECTOR);
+    this.score = root.querySelector<HTMLElement>(EGG_SCORE_SELECTOR);
+
+    this.bindEvents();
+    this.tick();
+  }
+
+  private bindEvents(): void {
+    this.action?.addEventListener('click', (event) => {
+      if (this.action?.dataset.easterEggAction === 'launch') {
+        event.preventDefault();
+        this.tryLock();
+      }
+    });
+  }
+
+  private tick = (): void => {
+    this.phase = (this.phase + 0.42) % 100;
+    this.root.style.setProperty('--egg-sweep-x', `${this.phase}%`);
+    this.animationFrame = window.requestAnimationFrame(this.tick);
+  };
+
+  private tryLock(): void {
+    const hit = this.phase >= this.targetMin && this.phase <= this.targetMax;
+
+    if (hit) {
+      this.locks = Math.min(3, this.locks + 1);
+      this.setStatus(this.locks === 3 ? 'LOCKED' : 'SYNC');
+      this.root.classList.toggle('is-locked', this.locks === 3);
+    } else {
+      this.locks = Math.max(0, this.locks - 1);
+      this.setStatus('DRIFT');
+      this.root.classList.remove('is-locked');
+    }
+
+    if (this.score) {
+      this.score.textContent = `${this.locks}/3`;
+    }
+
+    if (this.action instanceof HTMLButtonElement) {
+      this.action.textContent = this.locks === 3 ? 'Locked' : 'Launch';
+    }
+  }
+
+  private setStatus(value: string): void {
+    if (this.status) {
+      this.status.textContent = value;
+    }
+  }
+}
 
 class IdentityPanelController {
   private readonly root: HTMLElement;
@@ -249,6 +319,15 @@ const initIdentityPanels = (): void => {
 
     root.dataset.identityPanelReady = 'true';
     new IdentityPanelController(elements);
+
+    root.querySelectorAll<HTMLElement>(EGG_GAME_SELECTOR).forEach((gameRoot) => {
+      if (gameRoot.dataset.eggGameReady === 'true') {
+        return;
+      }
+
+      gameRoot.dataset.eggGameReady = 'true';
+      new IdentityEasterEggGame(gameRoot);
+    });
   });
 };
 

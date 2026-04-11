@@ -87,8 +87,8 @@ const {
   experienceStartYear = 2018,
 
   name = 'Jorge L. Mayorga',
-  title = 'Software Engineer · Control & Robotics Researcher',
-  focus = 'Robotics · Distributed Systems · FPGA',
+  title = 'Software Engineer / Control & Robotics Researcher',
+  focus = 'Robotics / Distributed Systems / FPGA',
   tagline = 'Building real-time systems from algorithms and embedded control to software products and research tooling.',
 
   focusItems = [],
@@ -116,7 +116,7 @@ const resolvedFocusItems =
   focusItems.length > 0
     ? focusItems
     : focus
-        .split('·')
+        .split(/[\/·]/)
         .map((item) => item.trim())
         .filter(Boolean);
 
@@ -124,7 +124,7 @@ const resolvedQuickFacts =
   quickFacts.length > 0
     ? quickFacts
     : [
-        { label: 'Based', value: 'Bogotá, Colombia', icon: 'location' },
+        { label: 'Based', value: 'Bogota, Colombia', icon: 'location' },
         { label: 'Years of Experience', value: `+${yearsOfExperience}`, icon: 'collab' },
         { label: 'Current', value: 'MSc Robotics', icon: 'current' },
         { label: 'Mode', value: 'Software + research', icon: 'mode' },

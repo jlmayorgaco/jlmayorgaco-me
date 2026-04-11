@@ -1,0 +1,175 @@
+@use '../../tools/mixins' as *;
+
+// ============================================================
+// IDENTITY PANEL — HEADER
+// Panel top bar, eyebrow, module meta, status chip, LEDs
+// ============================================================
+
+.identity-panel {
+  .panel-header,
+  &__header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--lab-bg-elevated);
+    border-bottom: 1px solid var(--panel-border);
+  }
+
+  &__header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  &__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  .label-tag {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    padding: 2px 6px;
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    background: var(--lab-bg-dark);
+    color: var(--accent-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .module-id {
+    min-width: 0;
+    color: var(--lab-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    width: fit-content;
+    min-width: 0;
+    padding: 0.25rem 0.45rem;
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--lab-bg-dark) 78%, transparent);
+  }
+
+  &__chip-icon {
+    @include inline-center;
+    flex: 0 0 auto;
+    width: var(--chip-icon-size, 20px);
+    height: var(--chip-icon-size, 20px);
+    color: var(--accent-cyan);
+
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__chip-copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1;
+  }
+
+  &__chip-label {
+    color: var(--lab-text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__chip-sub {
+    margin-top: 0.14rem;
+    color: var(--lab-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.54rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .panel-leds,
+  &__leds {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex: 0 0 auto;
+  }
+
+  .led {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--lab-text-muted);
+    opacity: 0.4;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  }
+
+  .led-green {
+    background: var(--led-green);
+    opacity: 1;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.04),
+      0 0 0.45rem rgba(var(--led-green-rgb, 63, 185, 100), 0.25);
+  }
+
+  .led-pulse {
+    animation: identity-led-pulse 1.8s ease-in-out infinite;
+  }
+
+  @include respond-down('md') {
+    .panel-header,
+    &__header {
+      align-items: flex-start;
+      padding: 0.7rem 0.875rem;
+    }
+
+    &__header-left {
+      gap: 0.35rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .identity-panel {
+    .panel-header,
+    &__header {
+      gap: 0.6rem;
+    }
+
+    .label-tag {
+      font-size: 0.58rem;
+    }
+
+    .module-id {
+      font-size: 0.62rem;
+    }
+  }
+}

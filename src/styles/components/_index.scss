@@ -11,6 +11,6 @@
 @forward 'media/index';
 @forward 'research/index';
 @forward 'project/index';
-@forward 'panel/panel-shell';
-
+//@forward 'panel/panel-shell';
+@forward 'identity-panel/index';
 @forward '../../components/identity-panel/identity-panel';
