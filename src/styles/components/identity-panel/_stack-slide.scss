@@ -302,3 +302,58 @@
     opacity: 0;
   }
 }
+
+.identity-stack__item {
+  animation:
+    identity-stack-chip-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both,
+    identity-stack-chip-activate 420ms ease-out both;
+  animation-delay:
+    calc(var(--stack-item-index, 0) * 24ms + var(--stack-group-index, 0) * 60ms),
+    calc(var(--stack-item-index, 0) * 24ms + var(--stack-group-index, 0) * 60ms + 140ms);
+}
+
+@keyframes identity-stack-chip-activate {
+  0% {
+    box-shadow:
+      0 0 0 rgba(63, 185, 167, 0),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  45% {
+    box-shadow:
+      0 0 0 1px rgba(63, 185, 167, 0.14),
+      0 0 8px rgba(63, 185, 167, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.26);
+  }
+
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 1px 1px rgba(0, 0, 0, 0.04);
+  }
+}
+
+.identity-stack__badge {
+  animation: identity-stack-badge-pop 360ms ease-out both;
+  animation-delay: calc(var(--stack-item-index, 0) * 24ms + var(--stack-group-index, 0) * 60ms + 80ms);
+}
+
+@keyframes identity-stack-badge-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: saturate(0.9) brightness(0.98);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scale(1.04);
+    filter: saturate(1.04) brightness(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: saturate(1) brightness(1);
+  }
+}
