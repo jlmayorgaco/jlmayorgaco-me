@@ -1,58 +1,22 @@
 ---
 interface Props {
   panelLabel?: string;
-  moduleId?: string;
   ledPulse?: boolean;
-
-  chipIcon?: string;
-  chipIconSize?: number;
-  chipLabel?: string;
-  chipSub?: string;
 
   statusLabel?: string;
 }
 
 const {
   panelLabel = 'IDENTITY',
-  moduleId = 'ID: JLMT-001',
   ledPulse = true,
-
-  chipIcon,
-  chipIconSize = 20,
-  chipLabel = 'JLMT',
-  chipSub = 'LAB',
 
   statusLabel = 'Panel status',
 } = Astro.props as Props;
-
-const hasChip = Boolean(chipIcon || chipLabel || chipSub);
 ---
 
 <div class="panel-header identity-panel__header">
   <div class="identity-panel__header-left">
-    <div class="identity-panel__eyebrow">
-      <span class="label-tag">{panelLabel}</span>
-      <span class="module-id">{moduleId}</span>
-    </div>
-
-    {hasChip && (
-      <div class="identity-panel__chip" aria-hidden="true">
-        {chipIcon && (
-          <span
-            class="identity-panel__chip-icon"
-            style={`--chip-icon-size:${chipIconSize}px;`}
-            set:html={chipIcon}
-          ></span>
-        )}
-
-        {(chipLabel || chipSub) && (
-          <span class="identity-panel__chip-copy">
-            {chipLabel && <span class="identity-panel__chip-label">{chipLabel}</span>}
-            {chipSub && <span class="identity-panel__chip-sub">{chipSub}</span>}
-          </span>
-        )}
-      </div>
-    )}
+    <span class="label-tag">{panelLabel}</span>
   </div>
 
   <div class="panel-leds identity-panel__leds" aria-label={statusLabel}>

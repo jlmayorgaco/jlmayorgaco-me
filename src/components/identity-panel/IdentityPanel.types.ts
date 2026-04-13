@@ -120,20 +120,12 @@ export interface IdentityPanelProps {
   footerLabel?: string;
   ledPulse?: boolean;
 
-  chipIcon?: string;
-  chipIconSize?: number;
-  chipLabel?: string;
-  chipSub?: string;
-
   initialSlide?: IdentityPanelSlideId;
   slides?: IdentityPanelSlideBase[];
   data: IdentityPanelSlidesData;
 
   portCount?: number;
   activePortIndex?: number;
-
-  screwCount?: number;
-  brassScrews?: boolean;
 
   experienceStartYear?: number;
 

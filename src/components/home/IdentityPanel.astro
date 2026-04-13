@@ -46,13 +46,7 @@ interface Props {
   class?: string;
 
   panelLabel?: string;
-  moduleId?: string;
   ledPulse?: boolean;
-
-  chipIcon?: string;
-  chipIconSize?: number;
-  chipLabel?: string;
-  chipSub?: string;
 
   // old props kept for compatibility
   title?: string;
@@ -75,22 +69,13 @@ interface Props {
   footerLabel?: string;
   portCount?: number;
   activePortIndex?: number;
-
-  screwCount?: number;
-  brassScrews?: boolean;
 }
 
 const {
   class: className = '',
 
   panelLabel = 'IDENTITY',
-  moduleId = 'ID: JLMT-001',
   ledPulse = true,
-
-  chipIcon = 'chip',
-  chipIconSize = 20,
-  chipLabel = 'JLMT',
-  chipSub = 'LAB',
 
   name = 'Jorge L. Mayorga',
   title = 'Software Engineer \n Control & Robotics Researcher',
@@ -113,22 +98,17 @@ const {
 
   portCount = 4,
   activePortIndex = 1,
-
-  screwCount = 2,
-  brassScrews = true,
 } = Astro.props as Props;
 
 const currentYear = new Date().getFullYear();
 const yearsOfExperience = Math.max(0, currentYear - experienceStartYear);
 
-const normalizedScrewCount = Math.max(0, screwCount);
 const normalizedPortCount = Math.max(0, portCount);
 const normalizedActivePortIndex = Math.min(
   Math.max(0, activePortIndex),
   Math.max(0, normalizedPortCount - 1)
 );
 
-const extraScrews = Array.from({ length: Math.max(0, normalizedScrewCount - 2) });
 const ports = Array.from({ length: normalizedPortCount }, (_, i) => i);
 
 const isExternalUrl = (href?: string) =>
@@ -333,7 +313,6 @@ const getSocialIcon = (brand?: string) =>
   <div class="panel-header">
     <div class="header-left">
       <span class="label-tag">{panelLabel}</span>
-      <span class="module-id">{moduleId}</span>
     </div>
 
     <div class="panel-leds">

@@ -70,19 +70,12 @@ const {
   footerLabel = 'I/O',
   ledPulse = true,
 
-  chipIcon,
-  chipIconSize = 20,
-  chipLabel = 'JLMT',
-  chipSub = 'LAB',
-
   initialSlide = 'intro',
   slides = DEFAULT_SLIDES,
   data,
 
   portCount,
   activePortIndex,
-  screwCount = 2,
-  brassScrews = true,
 
   experienceStartYear = 2018,
 
@@ -286,8 +279,6 @@ const normalizedActivePortIndex =
     ? Math.min(Math.max(0, activePortIndex), Math.max(0, normalizedPortCount - 1))
     : resolvedInitialIndex;
 
-const screws = Array.from({ length: Math.max(0, screwCount) });
-
 const slugify = (value: string): string =>
   value
     .toLowerCase()
@@ -313,28 +304,9 @@ const getSlideLabel = (slideId: IdentityPanelSlideId): string => {
   data-active-index={String(normalizedActivePortIndex)}
   id={panelId}
 >
-  {screws.length > 0 && (
-    <div class="identity-panel__screws" aria-hidden="true">
-      {screws.map((_, index) => (
-        <span
-          class:list={[
-            'identity-panel__screw',
-            brassScrews && 'identity-panel__screw--brass',
-            `identity-panel__screw--${index + 1}`,
-          ]}
-        ></span>
-      ))}
-    </div>
-  )}
-
   <IdentityPanelHeader
     panelLabel={panelLabel}
-    moduleId={moduleId}
     ledPulse={ledPulse}
-    chipIcon={chipIcon}
-    chipIconSize={chipIconSize}
-    chipLabel={chipLabel}
-    chipSub={chipSub}
   />
 
   <div class="panel-content identity-panel__content">

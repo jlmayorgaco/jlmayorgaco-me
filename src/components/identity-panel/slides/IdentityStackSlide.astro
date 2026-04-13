@@ -10,6 +10,7 @@ interface Props extends IdentityStackSlideData {}
 const { groups = [] } = Astro.props as Props;
 
 const hasGroups = groups.length > 0;
+let stackItemSequence = 0;
 
 const getGroupLabel = (group: IdentityStackGroup, index: number): string =>
   group.title?.trim() || `Stack group ${index + 1}`;
@@ -26,15 +27,17 @@ const isExternalUrl = (href?: string): boolean =>
           <section
             class="identity-stack__group"
             aria-label={getGroupLabel(group, groupIndex)}
+            style={`--stack-group-index: ${groupIndex};`}
           >
             <h2 class="sr-only">{getGroupLabel(group, groupIndex)}</h2>
 
             <ul class="identity-stack__list" role="list">
-              {group.items.map((item: IdentityStackItem) => {
+              {group.items.map((item: IdentityStackItem, itemLocalIndex) => {
                 const openExternally = isExternalUrl(item.href);
+                const itemIndex = stackItemSequence++;
 
                 const content = (
-                  <>
+                  <span class="identity-stack__badge-shell">
                     <img
                       class="identity-stack__badge"
                       src={item.src}
@@ -44,11 +47,14 @@ const isExternalUrl = (href?: string): boolean =>
                       decoding="async"
                     />
                     <span class="sr-only">{item.label}</span>
-                  </>
+                  </span>
                 );
 
                 return (
-                  <li class="identity-stack__item">
+                  <li
+                    class="identity-stack__item"
+                    style={`--stack-item-index: ${itemIndex}; --stack-local-index: ${itemLocalIndex};`}
+                  >
                     {item.href ? (
                       <a
                         href={item.href}
