@@ -362,10 +362,12 @@ function useBodyPortal(): HTMLElement | null {
   useEffect(() => {
     const existing = document.getElementById('ee-drone-portal-root');
     if (existing) {
+      console.log('[DRONE] Found existing portal root');
       setTarget(existing);
       return;
     }
 
+    console.log('[DRONE] Creating new portal root');
     const el = document.createElement('div');
     el.id = 'ee-drone-portal-root';
     el.style.position = 'absolute';
@@ -468,8 +470,10 @@ export default function EasterEggDronePanel(): React.JSX.Element {
     };
   }, []);
 
-  useEffect(() => {
+   useEffect(() => {
     // if (reducedMotion) return;
+    
+    console.log('[DRONE] Physics loop useEffect running, status:', status);
 
     const tick = (ts: number) => {
       if (lastTsRef.current == null) {
@@ -525,6 +529,7 @@ export default function EasterEggDronePanel(): React.JSX.Element {
           setAutopilot(true);
         }
        } else if (status === 'airborne' || status === 'snapshot') {
+        console.log(`[DRONE] Physics loop: status=${status}, input=(${input.x},${input.y}), autopilot=${autopilot}`);
         if (input.x !== 0 || input.y !== 0) {
           vx += input.x * thrust * dt;
           vy += input.y * thrust * dt;
@@ -694,6 +699,7 @@ export default function EasterEggDronePanel(): React.JSX.Element {
     if (launched || status === 'launching') return;
     updateReturnTarget();
 
+    console.log('[DRONE] Launching drone');
     setLaunched(true);
     setStatus('launching');
     setAutopilot(true);
@@ -704,10 +710,12 @@ export default function EasterEggDronePanel(): React.JSX.Element {
     if (dockPosition) {
       positionRef.current = dockPosition;
       setPosition(dockPosition);
+      console.log(`[DRONE] Dock position: ${dockPosition.x},${dockPosition.y}`);
     }
 
     velocityRef.current = { x: 1.6, y: -2.2 };
     setVelocity(velocityRef.current);
+    console.log('[DRONE] Launch velocity set');
   };
 
   const recallDrone = (): void => {
@@ -728,6 +736,7 @@ export default function EasterEggDronePanel(): React.JSX.Element {
     event?.preventDefault();
 
     if (!launched) {
+      console.log('[DRONE] Directional input ignored: drone not launched');
       return;
     }
 
@@ -735,9 +744,14 @@ export default function EasterEggDronePanel(): React.JSX.Element {
       event?.currentTarget.setPointerCapture(event.pointerId);
     }
 
+    const newX = typeof dir.x === 'number' ? (active ? dir.x : 0) : inputRef.current.x;
+    const newY = typeof dir.y === 'number' ? (active ? dir.y : 0) : inputRef.current.y;
+    
+    console.log(`[DRONE] Directional input: active=${active}, x=${newX}, y=${newY}, launched=${launched}, status=${status}`);
+
     inputRef.current = {
-      x: typeof dir.x === 'number' ? (active ? dir.x : 0) : inputRef.current.x,
-      y: typeof dir.y === 'number' ? (active ? dir.y : 0) : inputRef.current.y,
+      x: newX,
+      y: newY,
     };
 
     if (active) {
